@@ -1,0 +1,130 @@
+.o_ages_mr_report.account_report {
+    .fit-content {
+        width: fit-content;
+    }
+
+    .o_control_panel_main {
+        min-height: unset;
+        flex-wrap: wrap !important;
+    }
+
+    .o_control_panel_actions {
+        min-height: unset;
+        flex-wrap: wrap;
+        min-width: 0;
+        justify-content: flex-start !important;
+    }
+
+    .o_ages_report_filters {
+        flex-wrap: wrap !important;
+        max-width: 100%;
+    }
+
+    .o_ages_mr_tax_toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        cursor: pointer;
+        user-select: none;
+
+        .form-check-input {
+            margin: 0;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+    }
+
+    .o_ages_mr_table {
+        table-layout: auto;
+        width: max-content;
+        min-width: 100%;
+    }
+
+    .o_ages_mr_table th.o_ages_mr_col-name,
+    .o_ages_mr_table tbody td.o_ages_mr_col-name {
+        min-width: 280px;
+        max-width: 420px;
+        white-space: normal !important;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        text-overflow: clip;
+        vertical-align: top;
+    }
+
+    .o_ages_mr_col-name .o_ages_line_label,
+    .o_ages_mr_col-name .o_ages_mr_line_name {
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        max-width: 100%;
+    }
+
+    .o_ages_mr_col-date {
+        min-width: 90px;
+        white-space: nowrap;
+    }
+
+    .o_ages_mr_col-account {
+        min-width: 160px;
+        white-space: nowrap;
+    }
+
+    .o_ages_mr_col-amount {
+        min-width: 120px;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .o_ages_mr_line_name {
+        cursor: pointer;
+        font-weight: inherit;
+
+        &:hover {
+            color: var(--o-action, #714b67);
+        }
+    }
+
+    .o_ages_mr_source_note {
+        display: block;
+        font-size: 11px;
+        font-weight: 400;
+        color: #6c757d;
+        margin-top: 2px;
+        white-space: normal;
+    }
+
+    .o_ages_mr_row-client td {
+        font-weight: 600;
+        background: #f8f9fa;
+    }
+
+    .o_ages_mr_row-client.o_ages_row-unfolded td {
+        font-weight: 700;
+        background: #e9ecef;
+        border-bottom: 1px solid #ced4da !important;
+    }
+
+    .o_ages_mr_row-contract td {
+        font-weight: 500;
+        background: #fcfcfd;
+    }
+
+    .o_ages_mr_row-initial td {
+        font-style: italic;
+        color: #6c757d;
+    }
+
+    .o_ages_mr_row-move_line td {
+        font-weight: 400;
+        color: #495057;
+    }
+
+    .o_ages_mr_row-total td {
+        background: #eef3f9;
+        font-weight: 700;
+        border-top: 2px solid #0f2744 !important;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}

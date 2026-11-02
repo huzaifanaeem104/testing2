@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_running_bill_list" model="ir.ui.view">
+        <field name="name">ages.running.bill.list</field>
+        <field name="model">ages.running.bill</field>
+        <field name="arch" type="xml">
+            <list string="Running Bills">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ages_running_bill_form" model="ir.ui.view">
+        <field name="name">ages.running.bill.form</field>
+        <field name="model">ages.running.bill</field>
+        <field name="arch" type="xml">
+            <form string="Running Bill">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ages_running_bill" model="ir.actions.act_window">
+        <field name="name">Running Bills</field>
+        <field name="res_model">ages.running.bill</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

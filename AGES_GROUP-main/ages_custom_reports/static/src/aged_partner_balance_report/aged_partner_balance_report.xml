@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ages_custom_reports.AgesAgedPartnerBalanceReport">
+        <div class="o_action o_ages_bs_report o_ages_apb_report account_report"
+             t-ref="root">
+            <Layout display="display">
+                <t t-set-slot="control-panel-create-button">
+                    <button class="btn btn-primary me-1"
+                            t-on-click="onPrintPdf">
+                        PDF
+                    </button>
+                    <button class="btn btn-secondary"
+                            t-on-click="onPrintExcel">
+                        XLSX
+                    </button>
+                </t>
+
+                <t t-set-slot="layout-actions">
+                    <div class="o_ages_apb_filters_area">
+                        <div class="d-flex gap-1 flex-wrap align-items-center o_ages_apb_filters o_ages_report_filters">
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-ref="dateBtn"
+                                    t-on-click="(ev) => this.toggleMenu('date', ev)">
+                                <i class="fa fa-calendar me-1"/>
+                                <t t-esc="dateFilterLabel"/>
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-ref="accountFilterBtn"
+                                    t-on-click="(ev) => this.toggleMenu('account', ev)">
+                                <i class="fa fa-user me-1"/>
+                                <t t-esc="accountFilterLabel"/>
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-ref="partnerBtn"
+                                    t-on-click="(ev) => this.toggleMenu('partner', ev)">
+                                <i class="fa fa-folder-open me-1"/>
+                                <t t-esc="partnerFilterLabel"/>
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-ref="basisBtn"
+                                    t-on-click="(ev) => this.toggleMenu('basis', ev)">
+                                <i class="fa fa-file me-1"/>
+                                Based on <t t-esc="agingBasisLabel"/>
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-ref="intervalBtn"
+                                    t-on-click="(ev) => this.toggleMenu('interval', ev)">
+                                <i class="fa fa-calendar-o me-1"/>
+                                <t t-esc="state.agingInterval"/> Days
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-ref="optionsBtn"
+                                    t-on-click="(ev) => this.toggleMenu('options', ev)">
+                                <i class="fa fa-sliders me-1"/>
+                                <t t-esc="optionsFilterLabel"/>
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-secondary o_ages_apb_currency_pill">
+                                <t t-esc="state.currencyLabel"/>
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-on-click="clearFilters">
+                                Clear
+                            </button>
+
+                            <button type="button"
+                                    class="btn btn-secondary o_ages_apb_gear_btn"
+                                    t-ref="gearBtn"
+                                    title="Report options"
+                                    t-on-click="(ev) => this.toggleMenu('options', ev)">
+                                <i class="fa fa-fw fa-cog"/>
+                            </button>
+
+                            <span t-if="state.loading" class="text-muted small ms-1">
+                                <i class="fa fa-spinner fa-spin"/>
+                            </span>
+                        </div>
+
+                        <div t-if="state.openMenu === 'date'"
+                             class="o_ages_apb_dropdown account_report_filter date"
+                             t-att-style="menuStyle()">
+                            <div class="dropdown-item date d-flex justify-content-between align-items-center">
+                                <label class="mb-0 me-3">Specific Date</label>
+                                <input type="date"
+                                       class="o_ages_apb_date_input"
+                                       t-att-value="state.dateTo"
+                                       t-on-change="onDateChange"/>
+                            </div>
+                        </div>
+
+                        <div t-if="state.openMenu === 'account'"
+                             class="o_ages_apb_dropdown"
+                             t-att-style="menuStyle()">
+                            <button type="button"
+                                    class="dropdown-item"
+                                    t-att-class="{ selected: state.filterTrade }"
+                                    t-on-click="() => this.toggleBoolean('filterTrade')">
+                                <t t-if="reportType === 'payable'">Payable</t>
+                                <t t-else="">Receivable</t>
+                            </button>
+                            <button type="button"
+                                    class="dropdown-item"
+                                    t-att-class="{ selected: state.filterNonTrade }"
+                                    t-on-click="() => this.toggleBoolean('filterNonTrade')">
+                                <t t-if="reportType === 'payable'">Non-Trade Payable</t>
+                                <t t-else="">Non-Trade Receivable</t>
+                            </button>
+                        </div>
+
+                        <div t-if="state.openMenu === 'partner'"
+                             class="o_ages_apb_dropdown o_ages_apb_partner_dropdown account_report_filter partner"
+                             t-att-style="menuStyle()">
+                            <div class="dropdown-item record">
+                                <MultiRecordSelector
+                                    resIds="state.partnerIds"
+                                    resModel="'res.partner'"
+                                    update.bind="onPartnerUpdate"
+                                    domain="partnerDomain"
+                                    placeholder="'Search partners...'"
+                                />
+                            </div>
+                            <div class="dropdown-item record">
+                                <MultiRecordSelector
+                                    resIds="state.partnerCategoryIds"
+                                    resModel="'res.partner.category'"
+                                    update.bind="onPartnerCategoryUpdate"
+                                    placeholder="'Search tags...'"
+                                />
+                            </div>
+                        </div>
+
+                        <div t-if="state.openMenu === 'basis'"
+                             class="o_ages_apb_dropdown"
+                             t-att-style="menuStyle()">
+                            <button type="button"
+                                    class="dropdown-item"
+                                    t-att-class="{ selected: state.agingBasedOn === 'maturity' }"
+                                    t-on-click="() => this.setAgingBasis('maturity')">
+                                Due Date
+                            </button>
+                            <button type="button"
+                                    class="dropdown-item"
+                                    t-att-class="{ selected: state.agingBasedOn === 'invoice' }"
+                                    t-on-click="() => this.setAgingBasis('invoice')">
+                                Invoice Date
+                            </button>
+                        </div>
+
+                        <div t-if="state.openMenu === 'interval'"
+                             class="o_ages_apb_dropdown account_report_filter intervals"
+                             t-att-style="menuStyle()">
+                            <div class="dropdown-item interval d-flex justify-content-between align-items-center">
+                                <input type="number"
+                                       min="1"
+                                       step="1"
+                                       class="o_ages_apb_interval_input"
+                                       t-att-value="state.agingInterval"
+                                       t-on-change="onIntervalChange"/>
+                                <span class="mx-2">Days</span>
+                            </div>
+                        </div>
+
+                        <div t-if="state.openMenu === 'options'"
+                             class="o_ages_apb_dropdown"
+                             t-att-style="menuStyle()">
+                            <button type="button"
+                                    class="dropdown-item"
+                                    t-att-class="{ selected: state.allEntries }"
+                                    t-on-click="() => this.toggleBoolean('allEntries')">
+                                Draft Entries
+                            </button>
+                            <button type="button"
+                                    class="dropdown-item"
+                                    t-att-class="{ selected: state.unfoldAll }"
+                                    t-on-click="onToggleUnfoldAll">
+                                Unfold All
+                            </button>
+                            <button t-if="state.multiCurrency"
+                                    type="button"
+                                    class="dropdown-item"
+                                    t-att-class="{ selected: state.showCurrency }"
+                                    t-on-click="() => this.toggleBoolean('showCurrency')">
+                                Show Currency
+                            </button>
+                            <button type="button"
+                                    class="dropdown-item"
+                                    t-att-class="{ selected: state.showAccount }"
+                                    t-on-click="() => this.toggleBoolean('showAccount')">
+                                Show Account
+                            </button>
+                            <div class="dropdown-divider"/>
+                            <button type="button"
+                                    class="dropdown-item"
+                                    t-att-class="{ selected: state.hideZeroLines }"
+                                    t-on-click="() => this.toggleBoolean('hideZeroLines')">
+                                Hide lines at 0
+                            </button>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-if="state.warnings.length">
+                    <div class="o_ages_apb_warnings warnings d-print-none">
+                        <t t-foreach="state.warnings"
+                           t-as="warning"
+                           t-key="warning">
+                            <div class="alert alert-info text-center">
+                                <t t-esc="warning"/>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+
+                <div class="mx-auto fit-content o_ages_apb_sheet">
+                    <table class="table table-borderless table-hover striped o_ages_apb_table mb-0">
+                        <thead class="sticky">
+                            <tr>
+                                <th/>
+                                <th class="column_header"
+                                    t-att-colspan="displayedColumns.length">
+                                    As of <t t-esc="formattedAsOf"/>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th/>
+                                <t t-foreach="displayedColumns"
+                                   t-as="column"
+                                   t-key="column.key">
+                                    <th t-att-class="headerCellClass(column)">
+                                        <button t-if="column.sortable"
+                                                type="button"
+                                                class="btn btn_sortable"
+                                                t-att-class="{ 'o_sorted': state.sortBy === column.key }"
+                                                t-on-click="() => this.sortBy(column.key)">
+                                            <i t-att-class="sortIcon(column.key)"/>
+                                        </button>
+                                        <t t-if="column.key === 'total'">
+                                            <div class="o_ages_report_col_measure">
+                                                <span t-esc="column.name"/>
+                                                <ReportOptionalColumns columns="optionalColumnDefs"
+                                                                       visible="optionalColumnVisible"
+                                                                       onToggle.bind="toggleOptionalColumn"/>
+                                            </div>
+                                        </t>
+                                        <t t-else="" t-esc="column.name"/>
+                                    </th>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="visibleLines"
+                               t-as="line"
+                               t-key="line.id">
+                                <tr t-if="line.line_type === 'total'" class="empty">
+                                    <td/>
+                                    <t t-foreach="displayedColumns" t-as="column" t-key="'empty_' + column.key">
+                                        <td/>
+                                    </t>
+                                </tr>
+                                <tr t-att-class="rowClass(line)">
+                                    <td class="line_name"
+                                        t-att-class="line.foldable ? 'unfoldable' : ''"
+                                        t-on-click="() => this.toggleFold(line)">
+                                        <div class="wrapper">
+                                            <t t-if="line.foldable">
+                                                <button type="button" class="btn btn_foldable" tabindex="-1">
+                                                    <i t-if="isPartnerLoading(line)" class="fa fa-spinner fa-spin"/>
+                                                    <i t-else=""
+                                                       t-att-class="isExpanded(line) ? 'fa fa-caret-down' : 'fa fa-caret-right'"/>
+                                                </button>
+                                            </t>
+                                            <t t-else="">
+                                                <button type="button" class="btn btn_foldable_empty" tabindex="-1"/>
+                                            </t>
+                                            <t t-if="line.trust === 'good'">
+                                                <i class="fa fa-circle text-success partner_trust" title="Partner is good"/>
+                                            </t>
+                                            <t t-elif="line.trust === 'bad'">
+                                                <i class="fa fa-circle text-danger partner_trust" title="Partner is bad"/>
+                                            </t>
+                                            <div class="content">
+                                                <t t-if="line.line_type === 'move_line'">
+                                                    <span class="name o_ages_move_name o_ages_move_link"
+                                                          t-on-click.stop="() => this.openJournalEntry(line)"
+                                                          t-esc="line.name"/>
+                                                    <span t-if="line.communication and line.communication !== line.name"
+                                                          class="o_ages_move_comm"
+                                                          t-esc="' (' + line.communication + ')'"/>
+                                                    <ReportLineMenu t-if="getMoveLineMenuItems(line).length"
+                                                                    items="getMoveLineMenuItems(line)"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="name" t-esc="line.name"/>
+                                                </t>
+                                                <t t-if="line.line_type === 'partner' and line.partner_id">
+                                                    <button type="button"
+                                                            class="btn btn_action"
+                                                            t-on-click.stop="() => this.openPartner(line)">
+                                                        Partner
+                                                    </button>
+                                                    <button type="button"
+                                                            class="btn btn_action"
+                                                            t-on-click.stop="() => this.openPartnerLedger(line)">
+                                                        Statement
+                                                    </button>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <t t-foreach="displayedColumns"
+                                       t-as="column"
+                                       t-key="column.key">
+                                        <td t-att-class="'line_cell ' + columnClass(column, line)">
+                                            <div class="wrapper">
+                                                <div class="content">
+                                                    <button t-if="isAuditableCell(line, column)"
+                                                            type="button"
+                                                            class="o_ages_apb_amount_link"
+                                                            t-on-click="() => this.openBucket(line, column)"
+                                                            t-esc="displayCell(line, column)"/>
+                                                    <t t-else=""
+                                                       t-esc="displayCell(line, column)"/>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </Layout>
+        </div>
+    </t>
+
+</templates>

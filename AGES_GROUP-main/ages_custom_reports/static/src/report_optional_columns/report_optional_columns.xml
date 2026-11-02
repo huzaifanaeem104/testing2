@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ages_custom_reports.ReportOptionalColumns">
+        <div class="o_ages_optional_columns" t-on-click.stop="">
+            <button type="button"
+                    class="btn o_ages_report_unfold_btn o_ages_optional_columns_btn"
+                    title="Optional columns"
+                    t-att-class="{ 'o_ages_unfold_active': hasActive }"
+                    t-on-click="toggleMenu">
+                <i class="fa fa-sliders"/>
+            </button>
+            <div t-if="state.open"
+                 class="o_ages_optional_columns_menu"
+                 t-att-style="menuStyle">
+                <div class="o_ages_optional_columns_title">Optional columns</div>
+                <t t-foreach="props.columns" t-as="column" t-key="column.id">
+                    <label class="o_ages_optional_columns_item">
+                        <span t-esc="column.label"/>
+                        <div class="form-check form-switch mb-0">
+                            <input type="checkbox"
+                                   class="form-check-input"
+                                   role="switch"
+                                   t-att-checked="isOn(column.id)"
+                                   t-on-change="(ev) => this.onSwitch(ev, column.id)"/>
+                        </div>
+                    </label>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

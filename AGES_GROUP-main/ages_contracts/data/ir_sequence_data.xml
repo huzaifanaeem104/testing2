@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="seq_ages_contract" model="ir.sequence">
+        <field name="name">Contract Sequence</field>
+        <field name="code">ages.contract</field>
+        <field name="prefix">Contract/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+</odoo>

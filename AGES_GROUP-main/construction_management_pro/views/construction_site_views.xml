@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_daily_log_list" model="ir.ui.view">
+        <field name="name">construction.daily.log.list</field>
+        <field name="model">construction.daily.log</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="log_date"/>
+                <field name="project_id"/>
+                <field name="prepared_by"/>
+                <field name="weather"/>
+                <field name="manpower"/>
+                <field name="attachment_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_construction_daily_log_form" model="ir.ui.view">
+        <field name="name">construction.daily.log.form</field>
+        <field name="model">construction.daily.log</field>
+        <field name="arch" type="xml">
+            <form string="Daily Site Log">
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="log_date"/>
+                            <field name="prepared_by"/>
+                        </group>
+                        <group>
+                            <field name="weather"/>
+                            <field name="manpower"/>
+                            <field name="attachment_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Work Completed"><field name="work_completed"/></page>
+                        <page string="Materials"><field name="materials_received"/></page>
+                        <page string="Equipment"><field name="equipment_used"/></page>
+                        <page string="Delays / Issues"><field name="delays_issues"/></page>
+                        <page string="Safety"><field name="safety_notes"/></page>
+                        <page string="Visitors"><field name="visitor_notes"/></page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_daily_log" model="ir.actions.act_window">
+        <field name="name">Daily Site Logs</field>
+        <field name="res_model">construction.daily.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_construction_progress_list" model="ir.ui.view">
+        <field name="name">construction.progress.entry.list</field>
+        <field name="model">construction.progress.entry</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'approved'">
+                <field name="date"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="planned_qty"/>
+                <field name="quantity_today"/>
+                <field name="cumulative_qty"/>
+                <field name="uom_id"/>
+                <field name="progress_percent" widget="progressbar"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_construction_progress_form" model="ir.ui.view">
+        <field name="name">construction.progress.entry.form</field>
+        <field name="model">construction.progress.entry</field>
+        <field name="arch" type="xml">
+            <form string="Progress Measurement">
+                <header>
+                    <button name="action_approve" type="object" string="Approve" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state == 'cancel'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <h1><field name="name"/></h1>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="project_id"/>
+                            <field name="task_id"/>
+                            <field name="boq_line_id"/>
+                        </group>
+                        <group>
+                            <field name="planned_qty"/>
+                            <field name="previous_qty"/>
+                            <field name="quantity_today"/>
+                            <field name="cumulative_qty"/>
+                            <field name="uom_id"/>
+                            <field name="progress_percent" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <field name="notes" placeholder="Progress details, constraints, inspection remarks..."/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_progress" model="ir.actions.act_window">
+        <field name="name">Progress Measurements</field>
+        <field name="res_model">construction.progress.entry</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_construction_rfi_list" model="ir.ui.view">
+        <field name="name">construction.rfi.list</field>
+        <field name="model">construction.rfi</field>
+        <field name="arch" type="xml">
+            <list decoration-warning="state == 'open'" decoration-success="state == 'closed'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="subject"/>
+                <field name="raised_by"/>
+                <field name="assigned_to"/>
+                <field name="due_date"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_construction_rfi_form" model="ir.ui.view">
+        <field name="name">construction.rfi.form</field>
+        <field name="model">construction.rfi</field>
+        <field name="arch" type="xml">
+            <form string="Request for Information">
+                <header>
+                    <button name="action_open" type="object" string="Open" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_answered" type="object" string="Mark Answered" class="btn-primary" invisible="state != 'open'"/>
+                    <button name="action_close" type="object" string="Close" invisible="state != 'answered'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <h1><field name="subject"/></h1>
+                    <group>
+                        <group><field name="name"/><field name="project_id"/><field name="task_id"/></group>
+                        <group><field name="raised_by"/><field name="assigned_to"/><field name="due_date"/></group>
+                    </group>
+                    <notebook>
+                        <page string="Question"><field name="question"/></page>
+                        <page string="Response"><field name="response"/></page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_rfi" model="ir.actions.act_window">
+        <field name="name">RFIs</field>
+        <field name="res_model">construction.rfi</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

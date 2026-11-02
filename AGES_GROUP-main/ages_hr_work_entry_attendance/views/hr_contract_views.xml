@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form_inherit_ages_work_entry_attendance" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.ages.work.entry.attendance</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_work_entry_contract.hr_contract_view_form_inherit_work_entry"/>
+        <field name="arch" type="xml">
+            <!-- Attendances source is available: surface the selector on the form -->
+            <xpath expr="//field[@name='work_entry_source']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_gate_pass_security" model="res.groups">
+        <field name="name">Security Desk</field>
+        <field name="category_id" ref="ages_gate_pass.module_category_ages_gate_pass"/>
+        <field name="implied_ids" eval="[(4, ref('ages_gate_pass.group_gate_pass_user'))]"/>
+        <field name="comment">
+            Can clear Gate Passes waiting at security (approve to Posted or reject),
+            mark vehicles Gate In / Gate Out, and see the Vehicles Inside dashboard.
+            Cannot edit product/quantity lines once a pass leaves Draft.
+        </field>
+    </record>
+
+    <record id="ages_gate_pass.group_gate_pass_edit_approval" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_gate_pass_security'))]"/>
+    </record>
+
+    <record id="group_gate_pass_manager" model="res.groups">
+        <field name="name">Gate Pass Manager</field>
+        <field name="category_id" ref="ages_gate_pass.module_category_ages_gate_pass"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_gate_pass_security')),
+            (4, ref('ages_gate_pass.group_gate_pass_edit_approval')),
+        ]"/>
+        <field name="comment">
+            Full control: sees every Active Company's Gate Passes regardless
+            of the per-user restriction, can approve edit requests, reset a
+            posted/rejected Gate Pass back to Draft, and force-close an RGP
+            return without a matching Return Gate Pass (data-correction only
+            — the normal return path is "Return Items").
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,25 @@
+{
+    'name': 'AGES Mobilization Received',
+    'summary': 'Mobilization Received / Advance with direct receive payment from contracts',
+    'version': '18.0.1.4.0',
+    'category': 'Project',
+    'author': 'Muhammad Sana Ullah',
+    'depends': [
+        'mail',
+        'account',
+        'project',
+        'ages_contracts',
+        'ages_running_bills',
+        'ages_project_configs',
+        'ages_company',
+    ],
+    'data': [
+        'data/ir_sequence_data.xml',
+        'views/ages_mobilization_advance_views.xml',
+        'views/account_move_views.xml',
+    ],
+    'license': 'LGPL-3',
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

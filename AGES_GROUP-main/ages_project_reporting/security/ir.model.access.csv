@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_retention_report_wizard_project,retention.report.wizard.project,model_retention_report_wizard,project.group_project_user,1,1,1,1
+access_retention_report_wizard_manager,retention.report.wizard.manager,model_retention_report_wizard,project.group_project_manager,1,1,1,1
+access_retention_report_wizard_account,retention.report.wizard.account,model_retention_report_wizard,account.group_account_readonly,1,1,1,1
+access_retention_report_wizard_invoice,retention.report.wizard.invoice,model_retention_report_wizard,account.group_account_invoice,1,1,1,1
+access_mobilization_report_wizard_project,mobilization.report.wizard.project,model_mobilization_report_wizard,project.group_project_user,1,1,1,1
+access_mobilization_report_wizard_manager,mobilization.report.wizard.manager,model_mobilization_report_wizard,project.group_project_manager,1,1,1,1
+access_mobilization_report_wizard_account,mobilization.report.wizard.account,model_mobilization_report_wizard,account.group_account_readonly,1,1,1,1
+access_mobilization_report_wizard_invoice,mobilization.report.wizard.invoice,model_mobilization_report_wizard,account.group_account_invoice,1,1,1,1

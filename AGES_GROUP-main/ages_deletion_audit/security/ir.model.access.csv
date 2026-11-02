@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_deletion_audit_viewer,ages.deletion.audit.viewer,model_ages_deletion_audit,group_deletion_audit_viewer,1,0,0,0
+access_ages_deletion_audit_exception_manager,ages.deletion.audit.exception.manager,model_ages_deletion_audit_exception,group_deletion_audit_manager,1,1,1,1

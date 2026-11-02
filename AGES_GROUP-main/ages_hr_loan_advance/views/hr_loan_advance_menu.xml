@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_hr_advance_application"
+              name="Advance Applications"
+              action="action_hr_advance_application"
+              parent="ages_hr_payroll.menu_hr_payroll_employees_root"
+              sequence="30"
+              groups="ages_hr_payroll.group_hr_payroll_user"/>
+
+    <menuitem id="menu_hr_loan_application"
+              name="Loan Applications"
+              action="action_hr_loan_application"
+              parent="ages_hr_payroll.menu_hr_payroll_employees_root"
+              sequence="40"
+              groups="ages_hr_payroll.group_hr_payroll_user"/>
+</odoo>

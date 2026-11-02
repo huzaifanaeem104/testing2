@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="config_narc_direct_print_enabled" model="ir.config_parameter">
+        <field name="key">narc_direct_print.enabled</field>
+        <field name="value">True</field>
+    </record>
+</odoo>

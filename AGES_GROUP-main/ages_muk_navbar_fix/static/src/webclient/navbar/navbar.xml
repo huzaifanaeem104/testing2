@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="muk_web_theme.NavBar.AppsMenu" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='content']/DropdownItem" position="before">
+            <div class="mk_apps_menu_top_spacer"/>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.NavBar" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='web.NavBar.SectionsMenu']" position="attributes">
+            <attribute name="t-if">!env.isSmall and currentAppSections.length and !isNavbarInHomeMenu</attribute>
+        </xpath>
+        <xpath expr="//DropdownItem[contains(@class, 'o_menu_brand')]" position="attributes">
+            <attribute name="t-if">!env.isSmall and currentApp and !isNavbarInHomeMenu</attribute>
+        </xpath>
+    </t>
+
+</templates>

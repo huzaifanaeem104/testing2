@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_animal_form_milking" model="ir.ui.view">
+        <field name="name">dairy.animal.form.milking</field>
+        <field name="model">dairy.animal</field>
+        <field name="inherit_id" ref="dairy_farm_core.view_dairy_animal_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_milking_lines" type="object" class="oe_stat_button" icon="fa-tint"
+                        invisible="gender != 'female'">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="milk_last_30d"/> L</span>
+                        <span class="o_stat_text">Milk 30 Days</span>
+                    </div>
+                </button>
+            </div>
+            <group name="production_kpi" position="inside">
+                <field name="milk_lactation_total"/>
+                <field name="yield_avg_7d"/>
+                <field name="yield_avg_prev_7d"/>
+                <field name="yield_decline_pct"/>
+                <field name="yield_decline_alert" invisible="not yield_decline_alert"/>
+                <field name="milking_record_count"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_dairy_animal_list_milking" model="ir.ui.view">
+        <field name="name">dairy.animal.list.milking</field>
+        <field name="model">dairy.animal</field>
+        <field name="inherit_id" ref="dairy_farm_core.view_dairy_animal_list"/>
+        <field name="arch" type="xml">
+            <field name="production_status" position="after">
+                <field name="yield_avg_7d" optional="show"/>
+                <field name="yield_decline_pct" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_dairy_animal_search_milking" model="ir.ui.view">
+        <field name="name">dairy.animal.search.milking</field>
+        <field name="model">dairy.animal</field>
+        <field name="inherit_id" ref="dairy_farm_core.view_dairy_animal_search"/>
+        <field name="arch" type="xml">
+            <filter name="filter_restricted" position="after">
+                <filter name="filter_yield_decline" string="Yield Decline" domain="[('yield_decline_alert', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="action_dairy_animal_yield_decline" model="ir.actions.act_window">
+        <field name="name">Yield Decline Alerts</field>
+        <field name="res_model">dairy.animal</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('yield_decline_alert', '=', True)]</field>
+    </record>
+</odoo>

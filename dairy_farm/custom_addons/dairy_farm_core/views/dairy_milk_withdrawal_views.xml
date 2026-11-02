@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_milk_withdrawal_search" model="ir.ui.view">
+        <field name="name">dairy.milk.withdrawal.search</field>
+        <field name="model">dairy.milk.withdrawal</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="animal_id"/>
+                <field name="name"/>
+                <field name="origin"/>
+                <filter name="filter_active" string="Active" domain="[('state', '=', 'active')]"/>
+                <filter name="filter_awaiting" string="Awaiting Release" domain="[('is_overdue_release', '=', True)]"/>
+                <filter name="filter_released" string="Released" domain="[('state', '=', 'released')]"/>
+                <group string="Group By">
+                    <filter name="groupby_animal" string="Animal" context="{'group_by': 'animal_id'}"/>
+                    <filter name="groupby_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dairy_milk_withdrawal_list" model="ir.ui.view">
+        <field name="name">dairy.milk.withdrawal.list</field>
+        <field name="model">dairy.milk.withdrawal</field>
+        <field name="arch" type="xml">
+            <list string="Milk Withdrawals" decoration-danger="state == 'active'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="animal_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="release_effective_date"/>
+                <field name="origin"/>
+                <field name="released_by_id" optional="show"/>
+                <field name="state" widget="badge" decoration-danger="state == 'active'" decoration-success="state == 'released'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_milk_withdrawal_form" model="ir.ui.view">
+        <field name="name">dairy.milk.withdrawal.form</field>
+        <field name="model">dairy.milk.withdrawal</field>
+        <field name="arch" type="xml">
+            <form string="Milk Withdrawal">
+                <header>
+                    <button name="action_release" type="object" string="Release" class="btn-primary"
+                            invisible="state != 'active' or not id" groups="dairy_farm_core.group_dairy_veterinarian"/>
+                    <button name="action_cancel" type="object" string="Cancel Restriction"
+                            invisible="state != 'active' or not id" groups="dairy_farm_core.group_dairy_veterinarian"
+                            confirm="Cancel this restriction? Use only when it was created in error."/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="animal_id" readonly="state != 'active'"/>
+                            <field name="start_date" readonly="state != 'active'"/>
+                            <field name="end_date" readonly="state != 'active'"/>
+                            <field name="origin" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="release_effective_date" readonly="1"/>
+                            <field name="released_by_id"/>
+                            <field name="released_on"/>
+                            <field name="release_test_reference" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reason" readonly="state != 'active'"/>
+                        <field name="release_note" readonly="1" invisible="state != 'released'"/>
+                        <field name="cancel_reason" readonly="state != 'active'"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dairy_milk_withdrawal" model="ir.actions.act_window">
+        <field name="name">Milk Withdrawals</field>
+        <field name="res_model">dairy.milk.withdrawal</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_active': 1}</field>
+    </record>
+
+    <record id="view_dairy_withdrawal_release_wizard_form" model="ir.ui.view">
+        <field name="name">dairy.milk.withdrawal.release.wizard.form</field>
+        <field name="model">dairy.milk.withdrawal.release.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Release Milk Restriction">
+                <group>
+                    <group>
+                        <field name="withdrawal_id" readonly="1"/>
+                        <field name="animal_id"/>
+                        <field name="end_date"/>
+                    </group>
+                    <group>
+                        <field name="effective_date"/>
+                        <field name="test_reference" placeholder="e.g. antibiotic residue test #"/>
+                    </group>
+                </group>
+                <field name="note" placeholder="Veterinary basis for release (examination, test result, label withdrawal period)"/>
+                <footer>
+                    <button name="action_release" type="object" string="Release" class="btn-primary"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,25 @@
+{
+    'name': 'AGES Gate Pass',
+    'summary': 'Inbound / Outbound / Returnable Gate Pass with GRN links and edit-approval workflow',
+    'version': '18.0.1.0.1',
+    'category': 'Inventory/Inventory',
+    'author': 'Muhammad Sana Ullah',
+    'depends': [
+        'mail',
+        'stock',
+        'product',
+    ],
+    'data': [
+        'security/ages_gate_pass_security.xml',
+        'security/ir.model.access.csv',
+        'data/ir_sequence_data.xml',
+        'views/ages_gate_pass_views.xml',
+        'views/stock_picking_views.xml',
+        'views/res_config_settings_views.xml',
+        'views/ages_receipt_validation_wizard_views.xml',
+    ],
+    'license': 'LGPL-3',
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

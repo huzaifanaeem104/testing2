@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="tax_return_hierarchy_row">
+        <tr t-att-class="line.get('pdf_row_class') or line['line_type']">
+            <td class="fin-label"
+                t-att-style="'padding-left: %spx;' % (line.get('pdf_indent_px') or (8 + line.get('level', 0) * 14))">
+                <t t-esc="line['name']"/>
+            </td>
+            <td class="col-amount">
+                <t t-if="line.get('show_base')">
+                    <span t-out="line['base']"
+                          t-att-class="'ages-fin-negative' if line['base'] &lt; 0 else ('ages-fin-zero' if line['base'] == 0 else '')"
+                          t-options='{"widget": "monetary", "display_currency": currency}'/>
+                </t>
+            </td>
+            <td class="col-amount">
+                <t t-if="line.get('show_tax')">
+                    <span t-out="line['tax']"
+                          t-att-class="'ages-fin-negative' if line['tax'] &lt; 0 else ('ages-fin-zero' if line['tax'] == 0 else '')"
+                          t-options='{"widget": "monetary", "display_currency": currency}'/>
+                </t>
+            </td>
+            <t t-if="comparison">
+                <td class="col-amount">
+                    <t t-if="line.get('show_base')">
+                        <span t-out="line['comp_base']"
+                              t-att-class="'ages-fin-negative' if line['comp_base'] &lt; 0 else ('ages-fin-zero' if line['comp_base'] == 0 else '')"
+                              t-options='{"widget": "monetary", "display_currency": currency}'/>
+                    </t>
+                </td>
+                <td class="col-amount">
+                    <t t-if="line.get('show_tax')">
+                        <span t-out="line['comp_tax']"
+                              t-att-class="'ages-fin-negative' if line['comp_tax'] &lt; 0 else ('ages-fin-zero' if line['comp_tax'] == 0 else '')"
+                              t-options='{"widget": "monetary", "display_currency": currency}'/>
+                    </t>
+                </td>
+                <td class="col-amount">
+                    <t t-if="line.get('show_tax') and line.get('pct_tax') is not False">
+                        <t t-esc="'%.2f%%' % line['pct_tax']"/>
+                    </t>
+                </td>
+            </t>
+        </tr>
+    </template>
+
+    <template id="tax_return_report">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-set="currency" t-value="currency or company.currency_id"/>
+                <t t-call="ages_custom_reports.ages_report_pdf_styles"/>
+                <style type="text/css">
+                    .ages-fin-report .ages-tax-table thead th.label-col { width: 52%; }
+                    .ages-fin-report .ages-tax-table thead th.amount-col { width: auto; text-align: center; }
+                    .ages-fin-report .ages-tax-table td.col-amount { width: 16%; }
+                </style>
+
+                <div class="ages-fin-report ages-report-branded">
+                    <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+
+                    <div class="report-meta">
+                        <span class="meta-pair"><span class="meta-k">Period</span><span class="meta-v"><t t-esc="date_label"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Report</span><span class="meta-v"><t t-esc="report_name"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Target</span><span class="meta-v"><t t-esc="target_move_label"/></span></span>
+                    </div>
+
+                    <table class="fin-table ages-tax-table">
+                        <thead>
+                            <tr>
+                                <th class="label-col" rowspan="2"/>
+                                <th class="amount-col text-center" colspan="2"><t t-esc="period_label"/></th>
+                                <t t-if="comparison">
+                                    <th class="amount-col text-center" colspan="2"><t t-esc="comparison_label"/></th>
+                                    <th class="amount-col text-center" rowspan="2">%</th>
+                                </t>
+                            </tr>
+                            <tr>
+                                <th class="amount-col text-center">base</th>
+                                <th class="amount-col text-center">Tax Amount</th>
+                                <t t-if="comparison">
+                                    <th class="amount-col text-center">base</th>
+                                    <th class="amount-col text-center">Tax Amount</th>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="lines" t-as="line">
+                                <t t-call="ages_custom_reports.tax_return_hierarchy_row"/>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

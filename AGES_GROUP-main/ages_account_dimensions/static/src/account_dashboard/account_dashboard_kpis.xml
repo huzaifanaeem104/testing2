@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account.DashboardKanbanRenderer" t-inherit="account.DashboardKanbanRenderer" t-inherit-mode="extension">
+        <xpath expr="//div[@t-ref='root']" position="inside">
+            <div class="o_ages_account_overview_kpis">
+                <div class="o_ages_kpi_card o_ages_kpi_clickable"
+                     t-on-click.stop="(ev) => this.openOverviewKpi('gross_margin', ev)"
+                     title="Open income and cost of sales journal items">
+                    <div class="o_ages_kpi_label">Gross Margin</div>
+                    <div class="o_ages_kpi_value" t-att-title="overviewKpis.gross_margin" t-esc="overviewKpis.gross_margin || '—'"/>
+                </div>
+                <div class="o_ages_kpi_card o_ages_kpi_clickable"
+                     t-on-click.stop="(ev) => this.openOverviewKpi('revenue', ev)"
+                     title="Open revenue journal items">
+                    <div class="o_ages_kpi_label">Revenue</div>
+                    <div class="o_ages_kpi_value" t-att-title="overviewKpis.revenue" t-esc="overviewKpis.revenue || '—'"/>
+                </div>
+                <div class="o_ages_kpi_card o_ages_kpi_clickable"
+                     t-on-click.stop="(ev) => this.openOverviewKpi('net_margin', ev)"
+                     title="Open income and expense journal items">
+                    <div class="o_ages_kpi_label">Net Margin</div>
+                    <div class="o_ages_kpi_value" t-att-title="overviewKpis.net_margin" t-esc="overviewKpis.net_margin || '—'"/>
+                </div>
+                <div class="o_ages_kpi_card o_ages_kpi_clickable"
+                     t-on-click.stop="(ev) => this.openOverviewKpi('expenses', ev)"
+                     title="Open expense journal items">
+                    <div class="o_ages_kpi_label">Expenses</div>
+                    <div class="o_ages_kpi_value" t-att-title="overviewKpis.expenses" t-esc="overviewKpis.expenses || '—'"/>
+                </div>
+                <div class="o_ages_kpi_card o_ages_kpi_card--split">
+                    <div class="o_ages_kpi_label o_ages_kpi_clickable"
+                         t-on-click.stop="(ev) => this.openOverviewKpi('unpaid', ev)"
+                         title="Open all unpaid invoices and bills">
+                        Unpaid
+                    </div>
+                    <div class="o_ages_kpi_split">
+                        <div class="o_ages_kpi_clickable"
+                             t-on-click.stop="(ev) => this.openOverviewKpi('unpaid_customers', ev)"
+                             title="Open unpaid customer invoices">
+                            <div class="o_ages_kpi_sub">Customers</div>
+                            <div class="o_ages_kpi_value" t-att-title="overviewKpis.unpaid_customers" t-esc="overviewKpis.unpaid_customers || '—'"/>
+                        </div>
+                        <div class="o_ages_kpi_clickable"
+                             t-on-click.stop="(ev) => this.openOverviewKpi('unpaid_suppliers', ev)"
+                             title="Open unpaid vendor bills">
+                            <div class="o_ages_kpi_sub">Suppliers</div>
+                            <div class="o_ages_kpi_value" t-att-title="overviewKpis.unpaid_suppliers" t-esc="overviewKpis.unpaid_suppliers || '—'"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_ages_kpi_card o_ages_kpi_card--split">
+                    <div class="o_ages_kpi_label o_ages_kpi_clickable"
+                         t-on-click.stop="(ev) => this.openOverviewKpi('cash_flow', ev)"
+                         title="Open cash and bank journal items">
+                        Cash Flow
+                    </div>
+                    <div class="o_ages_kpi_split">
+                        <div class="o_ages_kpi_clickable"
+                             t-on-click.stop="(ev) => this.openOverviewKpi('cash_in', ev)"
+                             title="Open cash in journal items">
+                            <div class="o_ages_kpi_sub">Cash In</div>
+                            <div class="o_ages_kpi_value" t-att-title="overviewKpis.cash_in" t-esc="overviewKpis.cash_in || '—'"/>
+                        </div>
+                        <div class="o_ages_kpi_clickable"
+                             t-on-click.stop="(ev) => this.openOverviewKpi('cash_out', ev)"
+                             title="Open cash out journal items">
+                            <div class="o_ages_kpi_sub">Cash Out</div>
+                            <div class="o_ages_kpi_value" t-att-title="overviewKpis.cash_out" t-esc="overviewKpis.cash_out || '—'"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

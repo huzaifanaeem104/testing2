@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_animal_group_list" model="ir.ui.view">
+        <field name="name">dairy.animal.group.list</field>
+        <field name="model">dairy.animal.group</field>
+        <field name="arch" type="xml">
+            <list string="Animal Groups">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="group_type"/>
+                <field name="location_id"/>
+                <field name="responsible_id"/>
+                <field name="animal_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_animal_group_form" model="ir.ui.view">
+        <field name="name">dairy.animal.group.form</field>
+        <field name="model">dairy.animal.group</field>
+        <field name="arch" type="xml">
+            <form string="Animal Group">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_animals" type="object" class="oe_stat_button" icon="fa-paw">
+                            <field name="animal_count" widget="statinfo" string="Head Count"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-secondary" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title"><h1><field name="name" placeholder="e.g. High Yielders"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="group_type"/>
+                        </group>
+                        <group>
+                            <field name="location_id"/>
+                            <field name="responsible_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Animals" name="animals">
+                            <field name="animal_ids" readonly="1">
+                                <list>
+                                    <field name="tag_number"/>
+                                    <field name="nickname"/>
+                                    <field name="animal_type"/>
+                                    <field name="production_status"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dairy_animal_group" model="ir.actions.act_window">
+        <field name="name">Animal Groups</field>
+        <field name="res_model">dairy.animal.group</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

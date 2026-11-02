@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="partner_ledger_report">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-set="currency" t-value="currency or company.currency_id"/>
+                <t t-set="col_count" t-value="5"/>
+                <t t-call="ages_custom_reports.ages_report_pdf_styles"/>
+
+                <div class="ages-ledger-report ages-report-branded">
+                    <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+
+                    <div class="report-meta">
+                        <span class="meta-pair"><span class="meta-k">Period</span><span class="meta-v"><t t-esc="date_label"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Target</span><span class="meta-v"><t t-esc="target_move_label"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Project</span><span class="meta-v"><t t-esc="project_label"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Currency</span><span class="meta-v"><t t-esc="currency.name"/></span></span>
+                    </div>
+
+                    <t t-if="not grouped_lines">
+                        <p style="text-align:center;padding:16px;color:#5c6b7f;">No partner ledger entries found.</p>
+                    </t>
+
+                    <t t-if="grouped_lines">
+                        <table class="ledger-table">
+                            <colgroup>
+                                <col style="width:42%"/>
+                                <col style="width:12%"/>
+                                <col style="width:15%"/>
+                                <col style="width:15%"/>
+                                <col style="width:16%"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Partner / Entry</th>
+                                    <th>Date</th>
+                                    <th class="col-amount text-end">Debit</th>
+                                    <th class="col-amount text-end">Credit</th>
+                                    <th class="col-amount text-end">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="grouped_lines" t-as="group">
+                                    <tr class="group-row">
+                                        <td t-att-colspan="col_count">
+                                            Partner: <t t-esc="group['header']['name']"/>
+                                        </td>
+                                    </tr>
+
+                                    <t t-foreach="group['details']" t-as="line">
+                                        <tr t-att-class="'initial-row' if line['line_type'] == 'initial' else 'data-row'">
+                                            <td class="col-desc">
+                                                <t t-esc="line.get('communication') or line['name']"/>
+                                                <t t-if="line.get('analytic_name')">
+                                                    <span class="ages-ledger-meta"> · <t t-esc="line.get('analytic_name')"/></span>
+                                                </t>
+                                                <t t-if="line.get('badge')">
+                                                    <span class="ages-ledger-badge"><t t-esc="line.get('badge')"/></span>
+                                                </t>
+                                            </td>
+                                            <td><t t-esc="line.get('date') or ''"/></td>
+                                            <td class="col-amount">
+                                                <t t-if="line.get('debit')">
+                                                    <span t-esc="pdf_format_amount(line['debit'])"/>
+                                                </t>
+                                            </td>
+                                            <td class="col-amount">
+                                                <t t-if="line.get('credit')">
+                                                    <span t-esc="pdf_format_amount(line['credit'])"/>
+                                                </t>
+                                            </td>
+                                            <td class="col-amount">
+                                                <span t-esc="pdf_format_amount(line.get('balance', 0.0))"
+                                                      t-att-class="'ages-ledger-negative' if line.get('balance', 0.0) &lt; 0 else ''"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+
+                                    <tr class="subtotal-row">
+                                        <td/>
+                                        <td class="subtotal-label">Subtotal</td>
+                                        <td class="col-amount">
+                                            <span t-esc="pdf_format_amount(group['header'].get('debit', 0.0))"/>
+                                        </td>
+                                        <td class="col-amount">
+                                            <span t-esc="pdf_format_amount(group['header'].get('credit', 0.0))"/>
+                                        </td>
+                                        <td class="col-amount">
+                                            <span t-esc="pdf_format_amount(group['header'].get('balance', 0.0))"
+                                                  t-att-class="'ages-ledger-negative' if group['header'].get('balance', 0.0) &lt; 0 else ''"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <t t-call="ages_custom_reports.ages_report_ledger_grand_total"/>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_session_timeout" model="ir.ui.view">
+        <field name="name">res.config.settings.ages.user.session.timeout</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Session Timeout" string="Session Timeout"
+                     name="ages_user_session_timeout" groups="base.group_system">
+                    <block title="Default inactivity logout" name="ages_session_timeout_block">
+                        <setting id="ages_session_timeout_enabled"
+                                 string="Default inactivity timeout"
+                                 help="Applies to users whose policy is Use default settings. Custom users keep their own timeout even if this is off. Disabled users never auto-logout.">
+                            <field name="ages_session_timeout_enabled"/>
+                        </setting>
+                        <setting id="ages_session_timeout_idle"
+                                 string="Default idle timeout (minutes)"
+                                 help="No mouse, keyboard, or touch activity for this long logs the user out. Each browser session is timed separately.">
+                            <field name="ages_session_timeout_idle_minutes"/>
+                        </setting>
+                        <setting id="ages_session_timeout_warning"
+                                 string="Default warning before logout (seconds)"
+                                 help="Show a Continue Session countdown this many seconds before logout. Custom users can set minutes on the user form.">
+                            <field name="ages_session_timeout_warning_seconds"/>
+                        </setting>
+                        <setting id="ages_session_timeout_max"
+                                 string="Maximum session length (hours)"
+                                 help="Force logout after this many hours even if the user is still active. 0 = no maximum.">
+                            <field name="ages_session_timeout_max_hours"/>
+                        </setting>
+                    </block>
+                    <block title="Who the default applies to" name="ages_session_timeout_who_block">
+                        <setting id="ages_session_timeout_internal"
+                                 string="Internal users"
+                                 help="Apply the default timeout to employees (Internal User group).">
+                            <field name="ages_session_timeout_apply_internal"/>
+                        </setting>
+                        <setting id="ages_session_timeout_portal"
+                                 string="Portal users"
+                                 help="Apply the default timeout to portal / website customers.">
+                            <field name="ages_session_timeout_apply_portal"/>
+                        </setting>
+                        <setting id="ages_session_timeout_admins"
+                                 string="Exclude Settings administrators"
+                                 help="Users in Administration / Settings skip the default policy so they can change this configuration. Custom policy on the user still applies.">
+                            <field name="ages_session_timeout_exclude_admins"/>
+                        </setting>
+                        <setting id="ages_session_timeout_users"
+                                 string="Specific users (custom policy)"
+                                 help="Sets Timeout Policy = Custom on these users. Edit minutes on each user form. Users not listed keep Use default or Disabled as set on their form.">
+                            <field name="ages_session_timeout_user_ids" widget="many2many_tags"/>
+                        </setting>
+                        <setting id="ages_session_timeout_groups"
+                                 string="Additional groups"
+                                 help="Also apply the default timeout to these groups.">
+                            <field name="ages_session_timeout_group_ids" widget="many2many_tags"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,172 @@
+.o_ages_ja_report.account_report {
+    .o_ages_bs_content {
+        padding: 0;
+    }
+
+    .o_ages_ja_sheet {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        margin: 0;
+        padding: 0 24px 32px;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .o_ages_ja_table {
+        width: max-content;
+        min-width: 100%;
+        table-layout: auto;
+        font-size: 0.8125rem;
+        background: $o-view-background-color;
+        border-collapse: separate;
+        border-spacing: 0;
+
+        thead.sticky {
+            background: $o-view-background-color;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        thead th {
+            border-bottom: 1px solid $o-gray-300;
+            font-size: 10px;
+            text-transform: uppercase;
+            color: $o-gray-500;
+            font-weight: 600;
+            padding: 8px 12px;
+            vertical-align: bottom;
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 5px 12px;
+            border-bottom: 1px solid var(--AccountReport-fine-line-separator-color, #{$o-gray-200});
+            font-size: 13px;
+            vertical-align: middle;
+            line-height: 1.45;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    }
+
+    .o_ages_ja_col-name {
+        min-width: 280px;
+        max-width: 420px;
+        white-space: normal;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        vertical-align: top;
+    }
+    .o_ages_ja_col-code { width: 10%; white-space: nowrap; }
+    .o_ages_ja_col-amount {
+        width: 15%;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .o_ages_ja_journal_name {
+        font-weight: 600;
+        color: $o-main-text-color;
+    }
+
+    .o_ages_ja_account_name {
+        cursor: pointer;
+        color: $o-enterprise-action-color;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .o_ages_ja_link {
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 500;
+        color: $o-enterprise-action-color;
+        white-space: nowrap;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .o_ages_ja_row-journal td {
+        font-weight: 600;
+        background: $o-gray-100;
+    }
+
+    .o_ages_ja_row-account td {
+        font-weight: 400;
+        color: $o-gray-700;
+    }
+
+    .o_ages_ja_tax_header {
+        margin-top: 24px;
+        padding: 8px 12px;
+        background: mix($o-info, $o-view-background-color, 18%);
+        font-weight: 700;
+        font-size: 13px;
+        color: $o-gray-900;
+    }
+
+    .o_ages_ja_tax_panels {
+        border-top: 1px solid $o-gray-300;
+    }
+
+    .o_ages_ja_tax_panel {
+        padding: 12px 12px 0;
+        border-right: 1px solid $o-gray-200;
+
+        &:last-child {
+            border-right: none;
+        }
+    }
+
+    .o_ages_ja_tax_panel_title {
+        font-weight: 600;
+        font-size: 12px;
+        margin-bottom: 8px;
+        color: $o-gray-700;
+    }
+
+    .o_ages_ja_tax_table {
+        width: 100%;
+        font-size: 12px;
+
+        thead th {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: $o-gray-500;
+            font-weight: 600;
+            padding: 6px 8px;
+            border-bottom: 1px solid $o-gray-300;
+        }
+
+        tbody td {
+            padding: 4px 8px;
+            border-bottom: 1px solid var(--AccountReport-fine-line-separator-color, #{$o-gray-200});
+            font-variant-numeric: tabular-nums;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .o_ages_ja_sheet {
+            padding: 0 12px 24px;
+        }
+
+        .o_ages_ja_table {
+            table-layout: auto;
+        }
+
+        .o_ages_ja_tax_panel {
+            border-right: none;
+            border-bottom: 1px solid var(--AccountReport-fine-line-separator-color, #{$o-gray-200});
+            padding-bottom: 16px;
+        }
+    }
+}

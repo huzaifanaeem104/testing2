@@ -1,0 +1,147 @@
+// Enterprise-style report filter pills (Aged Receivable / account_reports).
+.account_report {
+    .o_control_panel {
+        border-bottom: 1px solid $o-gray-300;
+        gap: 0.5rem !important;
+        padding-top: 0.35rem !important;
+        padding-bottom: 0.5rem !important;
+        background: $o-view-background-color;
+
+        .btn:not(:disabled):not(.disabled):hover,
+        .btn:not(:disabled):not(.disabled):active {
+            transform: none;
+            box-shadow: none;
+        }
+    }
+
+    .o_ages_report_filters_area,
+    .o_ages_apb_filters_area,
+    .o_ages_pdl_filters_area,
+    .o_ages_pl_filters_area {
+        position: relative;
+        max-width: 100%;
+    }
+
+    .o_ages_report_filters,
+    .o_ages_apb_filters {
+        max-width: 100%;
+
+        > .btn-secondary,
+        > .btn-primary {
+            flex-shrink: 0;
+            white-space: nowrap;
+            font-weight: 500;
+            font-size: 13px;
+            line-height: 1.2;
+            padding: 0.28rem 0.7rem;
+            box-shadow: none;
+        }
+
+        > .btn-secondary.o_ages_filter_selected {
+            font-weight: 600;
+        }
+    }
+
+    .o_ages_report_currency_pill,
+    .o_ages_apb_currency_pill {
+        pointer-events: none;
+    }
+
+    .o_ages_report_gear_btn,
+    .o_ages_apb_gear_btn {
+        min-width: 38px;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .o_ages_report_dropdown,
+    .o_ages_apb_dropdown {
+        position: fixed;
+        z-index: 1050;
+        display: block;
+        min-width: 280px;
+        max-width: #{"min(420px, calc(100vw - 16px))"};
+        padding: 8px 0;
+        margin: 0;
+        background: $o-view-background-color;
+        border: 1px solid $o-gray-300;
+        border-radius: 0.25rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+
+        .dropdown-item {
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            padding: 6px 16px;
+
+            &.selected {
+                font-weight: 600;
+            }
+        }
+
+        .dropdown-item.date,
+        .dropdown-item.record {
+            cursor: default;
+        }
+
+        .dropdown-item.record {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 8px 12px;
+            white-space: normal;
+
+            label {
+                display: none;
+            }
+
+            .o-autocomplete,
+            .o_field_many2one,
+            .o_multi_record_selector,
+            .o_record_selector {
+                flex-grow: 1;
+                min-width: 240px;
+            }
+
+            .o_multi_record_selector {
+                border: 0;
+                padding: 0;
+                background: transparent;
+                gap: 6px;
+
+                .o_tag {
+                    margin: 0;
+                    max-width: 100%;
+                }
+
+                input {
+                    min-width: 140px;
+                }
+            }
+
+            input {
+                width: 100%;
+            }
+        }
+
+        label.dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            padding: 6px 16px;
+            cursor: pointer;
+        }
+    }
+
+    .o_ages_report_date_input,
+    .o_ages_apb_date_input {
+        width: 132px;
+        margin: 0 8px;
+        border: 0;
+        border-bottom: 1px solid $o-gray-300;
+        background: transparent;
+        text-align: center;
+        font-size: 13px;
+    }
+}

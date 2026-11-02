@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- noupdate="0" so upgrades rename/update rows by xml id (main payroll data uses noupdate="1"). -->
+    <data noupdate="0">
+        <record id="decimal_payroll" model="decimal.precision">
+            <field name="name">OpenHRMS Payroll</field>
+            <field name="digits">2</field>
+        </record>
+        <record id="decimal_payroll_rate" model="decimal.precision">
+            <field name="name">OpenHRMS Payroll Rate</field>
+            <field name="digits">4</field>
+        </record>
+    </data>
+</odoo>

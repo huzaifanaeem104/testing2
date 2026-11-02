@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_order_form_purchaser" model="ir.ui.view">
+        <field name="name">purchase.order.form.purchaser</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="purchaser_id"
+                       options="{'no_create': True, 'no_open': False}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_tree_purchaser" model="ir.ui.view">
+        <field name="name">purchase.order.list.purchaser</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="purchaser_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_kpis_tree_purchaser" model="ir.ui.view">
+        <field name="name">purchase.order.kpis.list.purchaser</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="purchaser_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="project_dir_ledger">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-set="currency" t-value="currency or company.currency_id"/>
+                <t t-set="col_count" t-value="5"/>
+                <t t-set="is_html_preview" t-value="report_type in ('qweb-html', 'html')"/>
+
+                <t t-call="ages_custom_reports.ages_report_pdf_styles"/>
+                <style type="text/css">
+                    .ages-pdl-report {
+                        font-family: Helvetica, Arial, sans-serif;
+                        color: #1a2332;
+                        font-size: <t t-if="is_html_preview">15px</t><t t-else="">13px</t>;
+                        line-height: 1.45;
+                        margin: 0;
+                        padding: 0;
+                        background: #ffffff;
+                    }
+                    .ages-pdl-report .report-top {
+                        display: none;
+                    }
+                    .ages-pdl-report .report-meta {
+                        display: block;
+                        width: 100%;
+                        margin: 0 0 8px 0;
+                        padding: 0;
+                        border: 0 !important;
+                        outline: none !important;
+                        box-shadow: none !important;
+                        background: transparent !important;
+                    }
+                    .ages-pdl-report .report-meta .meta-pair {
+                        display: inline-block;
+                        margin: 0 14px 4px 0;
+                        border: 0 !important;
+                        background: transparent !important;
+                    }
+                    .ages-pdl-report .report-meta .meta-k {
+                        display: inline;
+                        white-space: nowrap;
+                        background: transparent;
+                        color: #8b1a1a;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                        letter-spacing: 0.03em;
+                        margin-right: 6px;
+                        font-size: <t t-if="is_html_preview">12px</t><t t-else="">10px</t>;
+                    }
+                    .ages-pdl-report .report-meta .meta-v {
+                        display: inline;
+                        color: #1a2332;
+                        font-size: <t t-if="is_html_preview">12px</t><t t-else="">10px</t>;
+                    }
+                    .ages-pdl-report .ledger-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        table-layout: fixed;
+                        margin: 0;
+                        background: #ffffff;
+                    }
+                    .ages-pdl-report .ledger-table thead {
+                        display: table-header-group;
+                    }
+                    .ages-pdl-report .ledger-table thead th {
+                        background: #ffffff !important;
+                        color: #8b1a1a !important;
+                        font-size: <t t-if="is_html_preview">11px</t><t t-else="">10px</t>;
+                        text-transform: uppercase;
+                        font-weight: bold;
+                        padding: 7px 5px;
+                        border: 1px solid #8b1a1a;
+                        text-align: left;
+                        vertical-align: middle;
+                    }
+                    .ages-pdl-report .ledger-table thead th.text-end {
+                        text-align: right;
+                    }
+                    .ages-pdl-report .ledger-table tbody td {
+                        padding: 5px 5px;
+                        border: 1px solid #d7dde5;
+                        vertical-align: top;
+                        font-size: <t t-if="is_html_preview">13px</t><t t-else="">11px</t>;
+                        line-height: 1.35;
+                        word-wrap: break-word;
+                        overflow-wrap: anywhere;
+                        background: #ffffff;
+                    }
+                    .ages-pdl-report .ledger-table .group-row td {
+                        background: #ffffff !important;
+                        color: #8b1a1a;
+                        font-weight: bold;
+                        font-size: <t t-if="is_html_preview">14px</t><t t-else="">12px</t>;
+                        padding: 6px 6px;
+                        border-top: 2px solid #8b1a1a;
+                        page-break-after: avoid;
+                    }
+                    .ages-pdl-report .ledger-table .subtotal-row td {
+                        background: #ffffff !important;
+                        font-weight: bold;
+                        font-size: <t t-if="is_html_preview">13px</t><t t-else="">12px</t>;
+                        border-top: 1px solid #8b1a1a;
+                        color: #8b1a1a;
+                        page-break-before: avoid;
+                    }
+                    .ages-pdl-report .ledger-table .subtotal-row td.subtotal-label {
+                        text-align: right !important;
+                        white-space: nowrap;
+                    }
+                    .ages-pdl-report .ledger-table .col-date { width: 12%; }
+                    .ages-pdl-report .ledger-table .col-desc { width: 40%; }
+                    .ages-pdl-report .ledger-table .col-amount {
+                        width: 16%;
+                        text-align: right !important;
+                        white-space: nowrap;
+                        font-size: <t t-if="is_html_preview">14px</t><t t-else="">13px</t> !important;
+                        font-variant-numeric: tabular-nums;
+                    }
+                    .ages-pdl-report .grand-total-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 8px;
+                        border: 1px solid #8b1a1a;
+                        page-break-inside: avoid;
+                        background: #ffffff;
+                    }
+                    .ages-pdl-report .grand-total-table td {
+                        padding: 8px 6px;
+                        text-align: center;
+                        border: 1px solid #d7dde5;
+                        vertical-align: middle;
+                        background: #ffffff;
+                    }
+                    .ages-pdl-report .grand-total-table .gt-head {
+                        background: #ffffff !important;
+                        color: #8b1a1a !important;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                        font-size: <t t-if="is_html_preview">13px</t><t t-else="">11px</t>;
+                        border-bottom: 2px solid #8b1a1a;
+                    }
+                    .ages-pdl-report .grand-total-table .gt-label {
+                        color: #5c6b7f;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                        font-size: <t t-if="is_html_preview">10px</t><t t-else="">9px</t>;
+                    }
+                    .ages-pdl-report .grand-total-table .gt-value {
+                        font-size: <t t-if="is_html_preview">16px</t><t t-else="">14px</t>;
+                        font-weight: bold;
+                        color: #8b1a1a;
+                    }
+                    .ages-pdl-report .report-footer-note {
+                        margin-top: 6px;
+                        font-size: <t t-if="is_html_preview">10px</t><t t-else="">9px</t>;
+                        color: #7a8798;
+                        text-align: center;
+                    }
+                </style>
+
+                <div class="ages-pdl-report ages-report-branded">
+                    <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+
+                    <div class="report-meta">
+                        <span class="meta-pair"><span class="meta-k">Filters</span><span class="meta-v"><t t-foreach="filter_labels" t-as="filter_item">
+                                    <t t-if="filter_item_index"> · </t>
+                                    <t t-esc="filter_item[0]"/>: <t t-esc="filter_item[1]"/>
+                                </t></span></span>
+                        <span class="meta-pair"><span class="meta-k">Groups</span><span class="meta-v"><t t-esc="group_count"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Lines</span><span class="meta-v"><t t-esc="line_count"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Currency</span><span class="meta-v"><t t-esc="currency.name"/></span></span>
+                    </div>
+
+                    <t t-if="not grouped_data">
+                        <p style="text-align:center;padding:16px;color:#5c6b7f;">No ledger entries found.</p>
+                    </t>
+
+                    <t t-if="grouped_data">
+                        <table class="ledger-table">
+                            <colgroup>
+                                <col style="width:12%"/>
+                                <col style="width:40%"/>
+                                <col style="width:16%"/>
+                                <col style="width:16%"/>
+                                <col style="width:16%"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="col-date">Date</th>
+                                    <th class="col-desc">Description</th>
+                                    <th class="col-amount text-end">Debit</th>
+                                    <th class="col-amount text-end">Credit</th>
+                                    <th class="col-amount text-end">Balance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="grouped_data.keys()" t-as="group_key">
+                                    <tr class="group-row">
+                                        <td t-att-colspan="col_count">
+                                            <t t-esc="group_by_label"/>: <t t-esc="group_key"/>
+                                            (<t t-esc="len(grouped_data[group_key])"/> lines)
+                                        </td>
+                                    </tr>
+
+                                    <t t-set="total_credit" t-value="0.0"/>
+                                    <t t-set="total_debit" t-value="0.0"/>
+                                    <t t-set="total_balance" t-value="0.0"/>
+
+                                    <t t-foreach="grouped_data[group_key]" t-as="line">
+                                        <tr class="data-row">
+                                            <td class="col-date">
+                                                <t t-if="line.date"><span t-field="line.date"/></t>
+                                                <t t-else="">—</t>
+                                            </td>
+                                            <td class="col-desc">
+                                                <t t-if="line.move_id.name"><span t-field="line.move_id.name"/></t>
+                                                <t t-if="line.name">
+                                                    <t t-if="line.move_id.name"> — </t>
+                                                    <span t-field="line.name"/>
+                                                </t>
+                                                <t t-if="line.partner_id">
+                                                    <div class="ages-ledger-meta">
+                                                        <t t-esc="line.partner_id.display_name"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="line.account_id">
+                                                    <div class="ages-ledger-meta">
+                                                        <t t-esc="line.account_id.display_name"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="line_project_names.get(line.id)">
+                                                    <div class="ages-ledger-meta">
+                                                        <t t-esc="line_project_names.get(line.id)"/>
+                                                    </div>
+                                                </t>
+                                            </td>
+                                            <td class="col-amount">
+                                                <span t-field="line.debit" t-options='{"widget": "monetary", "display_currency": line.company_id.currency_id}'/>
+                                            </td>
+                                            <td class="col-amount">
+                                                <span t-field="line.credit" t-options='{"widget": "monetary", "display_currency": line.company_id.currency_id}'/>
+                                            </td>
+                                            <td class="col-amount">
+                                                <span t-out="running_balances.get(line.id, line.balance)" t-options='{"widget": "monetary", "display_currency": line.company_id.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <t t-set="total_credit" t-value="total_credit + line.credit"/>
+                                        <t t-set="total_debit" t-value="total_debit + line.debit"/>
+                                        <t t-set="total_balance" t-value="total_balance + line.balance"/>
+                                    </t>
+
+                                    <tr class="subtotal-row">
+                                        <td/>
+                                        <td class="subtotal-label">Subtotal</td>
+                                        <td class="col-amount">
+                                            <span t-out="total_debit" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </td>
+                                        <td class="col-amount">
+                                            <span t-out="total_credit" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </td>
+                                        <td class="col-amount">
+                                            <span t-out="total_balance" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <table class="grand-total-table">
+                            <tr>
+                                <td class="gt-head" colspan="3">Report Grand Total</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="gt-label">Total Debit</div>
+                                    <div class="gt-value">
+                                        <span t-out="grand_totals['debit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="gt-label">Total Credit</div>
+                                    <div class="gt-value">
+                                        <span t-out="grand_totals['credit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="gt-label">Net Balance</div>
+                                    <div class="gt-value">
+                                        <span t-out="grand_totals['balance']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </t>
+
+                    <div class="report-footer-note">
+                        Project Directory Ledger · <t t-esc="company.name"/>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

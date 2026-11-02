@@ -1,0 +1,18 @@
+.account_report {
+    .o_ages_opal_badge_opal {
+        background: #8b1a1a;
+        color: #fff;
+    }
+
+    .o_ages_opal_ledger_row td {
+        font-style: italic;
+        color: #4b5563;
+        background: #faf0f1;
+    }
+
+    .o_ages_opal_ledger_label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+}

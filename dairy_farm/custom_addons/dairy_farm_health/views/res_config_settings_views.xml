@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_dairy_health" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.dairy.health</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="dairy_farm_core.res_config_settings_view_form_dairy"/>
+        <field name="arch" type="xml">
+            <block name="dairy_milk_collection" position="before">
+                <block title="Medicine Inventory" name="dairy_health">
+                    <setting id="dairy_medicine_locations" company_dependent="1"
+                             help="Medicines are issued from the store location to the consumption location">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="dairy_medicine_location_id" class="col-lg-5 o_light_label"/>
+                                <field name="dairy_medicine_location_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="dairy_medicine_consumption_location_id" class="col-lg-5 o_light_label"/>
+                                <field name="dairy_medicine_consumption_location_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="dairy_medicine_expense_account_id" class="col-lg-5 o_light_label"/>
+                                <field name="dairy_medicine_expense_account_id"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </block>
+        </field>
+    </record>
+</odoo>

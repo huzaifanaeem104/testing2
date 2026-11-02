@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ages_custom_reports.AgesJournalAuditReport">
+        <div class="o_action o_ages_bs_report o_ages_ja_report account_report" t-ref="root">
+            <Layout display="display">
+                <t t-set-slot="control-panel-create-button">
+                    <button class="btn btn-primary me-1" t-on-click="onPrintPdf">PDF</button>
+                    <button class="btn btn-secondary" t-on-click="onPrintExcel">XLSX</button>
+                </t>
+
+                <t t-set-slot="layout-actions">
+                    <div class="o_ages_report_filters_area">
+                        <div class="d-flex gap-1 flex-wrap align-items-center o_ages_report_filters">
+                            <button type="button" class="btn btn-secondary" t-on-click="(ev) => this.toggleFilterMenu('date', ev)">
+                                <i class="fa fa-calendar me-1"/>
+                                <t t-esc="dateRangeFilterLabel"/>
+                            </button>
+                            <button type="button" class="btn btn-secondary" t-on-click="(ev) => this.toggleFilterMenu('journals', ev)">
+                                <i class="fa fa-book me-1"/>
+                                <t t-esc="journalFilterLabel"/>
+                            </button>
+                            <button type="button" class="btn btn-secondary" t-on-click="(ev) => this.toggleFilterMenu('entries', ev)">
+                                <i class="fa fa-sliders me-1"/>
+                                <t t-esc="targetMoveFilterLabel"/>
+                            </button>
+                            <button t-if="currencyFilterLabel" type="button" class="btn btn-secondary o_ages_report_currency_pill">
+                                <t t-esc="currencyFilterLabel"/>
+                            </button>
+                            <button type="button" class="btn btn-secondary" t-on-click="clearFilters">
+                                Clear
+                            </button>
+                            <button type="button" class="btn btn-secondary o_ages_report_gear_btn" title="Report options" t-on-click="(ev) => this.toggleFilterMenu('options', ev)">
+                                <i class="fa fa-fw fa-cog"/>
+                            </button>
+                            <span t-if="state.loading" class="text-muted small ms-1">
+                                <i class="fa fa-spinner fa-spin"/>
+                            </span>
+                        </div>
+                        <div t-if="state.openMenu === 'date'" class="o_ages_report_dropdown" t-att-style="filterMenuStyle()">
+                            <div class="dropdown-item date d-flex justify-content-between align-items-center">
+                                <label class="mb-0">From</label>
+                                <input type="date" class="o_ages_report_date_input" t-att-value="state.dateFrom" t-on-change="onDateFromChange"/>
+                            </div>
+                            <div class="dropdown-item date d-flex justify-content-between align-items-center">
+                                <label class="mb-0">To</label>
+                                <input type="date" class="o_ages_report_date_input" t-att-value="state.dateTo" t-on-change="onDateToChange"/>
+                            </div>
+                        </div>
+                        <div t-if="state.openMenu === 'journals'" class="o_ages_report_dropdown" t-att-style="filterMenuStyle()">
+                            <ReportRecordPicker
+                                resIds="state.journalIds"
+                                resModel="'account.journal'"
+                                update.bind="onJournalUpdate"
+                                placeholder="'Search journals...'"
+                                fieldString="'Journals'"
+                            />
+                        </div>
+                        <div t-if="state.openMenu === 'entries'" class="o_ages_report_dropdown" t-att-style="filterMenuStyle()">
+                            <button type="button" class="dropdown-item" t-att-class="{ selected: state.targetMove === 'posted' }" t-on-click="() => this.setTargetMove('posted')">Posted Entries</button>
+                            <button type="button" class="dropdown-item" t-att-class="{ selected: state.targetMove === 'all' }" t-on-click="() => this.setTargetMove('all')">All Entries</button>
+                        </div>
+                        <div t-if="state.openMenu === 'options'" class="o_ages_report_dropdown" t-att-style="filterMenuStyle()">
+                            <button type="button" class="dropdown-item" t-att-class="{ selected: state.unfoldAll }" t-on-click="() => this.toggleUnfoldAllOption()">Unfold All</button>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="o_ages_bs_content">
+                    <t t-if="state.warnings.length">
+                        <div class="o_ages_bs_warnings">
+                            <t t-foreach="state.warnings" t-as="warning" t-key="warning">
+                                <div class="alert alert-info text-center mb-0">
+                                    <t t-esc="warning"/>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+
+                    <div class="o_ages_ja_sheet">
+                        <table class="table table-borderless table-hover o_ages_ja_table mb-0">
+                            <thead class="sticky">
+                                <tr>
+                                    <th class="o_ages_ja_col-name">Name</th>
+                                    <th t-if="isColumnVisible('code')" class="o_ages_ja_col-code">Code</th>
+                                    <th class="o_ages_ja_col-amount text-end">
+                                        <div class="o_ages_bs_col_date"><t t-esc="state.dateLabel"/></div>
+                                        <div>Debit</div>
+                                    </th>
+                                    <th class="o_ages_ja_col-amount text-end">Credit</th>
+                                    <th class="o_ages_ja_col-amount text-end">
+                                        <div class="o_ages_report_col_measure">
+                                            <span>Balance</span>
+                                            <ReportOptionalColumns columns="optionalColumnDefs"
+                                                                   visible="state.optionalColumns"
+                                                                   onToggle.bind="toggleOptionalColumn"/>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="visibleLines" t-as="line" t-key="line.id">
+                                    <tr t-att-class="rowClass(line)">
+                                        <td class="o_ages_ja_col-name"
+                                            t-att-style="'padding-left: ' + (8 + line.level * 16) + 'px'">
+                                            <t t-if="line.line_type === 'journal'">
+                                                <span t-if="line.foldable"
+                                                      class="o_ages_bs_caret"
+                                                      t-on-click="() => this.toggleFold(line)">
+                                                    <i t-if="isJournalLoading(line)" class="fa fa-spinner fa-spin"/>
+                                                    <i t-else="" t-att-class="isExpanded(line) ? 'fa fa-caret-down' : 'fa fa-caret-right'"/>
+                                                </span>
+                                                <span t-else="" class="o_ages_bs_caret-spacer"/>
+                                                <span class="o_ages_ja_journal_name" t-esc="line.name"/>
+                                                <span class="o_ages_ja_link ms-2"
+                                                      t-on-click="() => this.openJournalAudit(line)">
+                                                    Audit
+                                                </span>
+                                            </t>
+                                            <t t-else="">
+                                                <span class="o_ages_ja_account_name"
+                                                      t-on-click="() => this.openAccountLines(line)"
+                                                      t-esc="line.name"/>
+                                            </t>
+                                        </td>
+                                        <td t-if="isColumnVisible('code')" class="o_ages_ja_col-code" t-esc="line.code or ''"/>
+                                        <td class="o_ages_ja_col-amount text-end"
+                                            t-att-class="amountClass(line.debit)">
+                                            <t t-if="line.debit" t-esc="formatAmount(line.debit)"/>
+                                        </td>
+                                        <td class="o_ages_ja_col-amount text-end"
+                                            t-att-class="amountClass(line.credit)">
+                                            <t t-if="line.credit" t-esc="formatAmount(line.credit)"/>
+                                        </td>
+                                        <td class="o_ages_ja_col-amount text-end"
+                                            t-att-class="amountClass(line.balance)">
+                                            <t t-if="line.balance !== false and line.balance !== null and line.balance !== undefined"
+                                               t-esc="formatAmount(line.balance)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <t t-if="state.taxSummary">
+                            <div class="o_ages_ja_tax_header">Global Tax Summary</div>
+                            <div class="o_ages_ja_tax_panels row g-0">
+                                <div class="col-lg-6 o_ages_ja_tax_panel">
+                                    <div class="o_ages_ja_tax_panel_title">
+                                        <span>Taxes Applied</span>
+                                        <span t-if="state.taxSummary.taxes_applied and state.taxSummary.taxes_applied.length"
+                                              class="o_ages_ja_link ms-2"
+                                              t-on-click="() => this.openTaxAudit(state.taxSummary.taxes_applied[0])">
+                                            Audit
+                                        </span>
+                                    </div>
+                                    <table class="table table-borderless table-hover o_ages_ja_tax_table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th class="text-end">Base Amount</th>
+                                                <th class="text-end">Tax Amount</th>
+                                                <th t-if="state.taxSummary.show_non_deductible" class="text-end">Non-Deductible</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="state.taxSummary.taxes_applied or []" t-as="tax" t-key="tax.id">
+                                                <tr>
+                                                    <td>
+                                                        <span t-esc="tax.name"/>
+                                                        <span class="o_ages_ja_link ms-2"
+                                                              t-on-click="() => this.openTaxAudit(tax)">
+                                                            Audit
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-end" t-esc="formatAmount(tax.base_amount)"/>
+                                                    <td class="text-end" t-esc="formatAmount(tax.tax_amount)"/>
+                                                    <td t-if="state.taxSummary.show_non_deductible"
+                                                        class="text-end"
+                                                        t-esc="formatAmount(tax.non_deductible)"/>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-lg-6 o_ages_ja_tax_panel">
+                                    <div class="o_ages_ja_tax_panel_title">
+                                        <span>Impacted Tax Grids</span>
+                                        <span t-if="state.taxSummary.tax_grids and state.taxSummary.tax_grids.length"
+                                              class="o_ages_ja_link ms-2"
+                                              t-on-click="() => this.openTaxGridAudit(state.taxSummary.tax_grids[0])">
+                                            Audit
+                                        </span>
+                                    </div>
+                                    <table class="table table-borderless table-hover o_ages_ja_tax_table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Grid</th>
+                                                <th class="text-end">+</th>
+                                                <th class="text-end">-</th>
+                                                <th class="text-end">Impact On Grid</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="state.taxSummary.tax_grids or []" t-as="grid" t-key="grid.id">
+                                                <tr>
+                                                    <td>
+                                                        <span t-esc="grid.name"/>
+                                                        <span class="o_ages_ja_link ms-2"
+                                                              t-on-click="() => this.openTaxGridAudit(grid)">
+                                                            Audit
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <t t-if="grid.plus" t-esc="formatAmount(grid.plus)"/>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <t t-if="grid.minus" t-esc="formatAmount(grid.minus)"/>
+                                                    </td>
+                                                    <td class="text-end" t-esc="formatAmount(grid.impact)"/>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </Layout>
+        </div>
+    </t>
+
+</templates>

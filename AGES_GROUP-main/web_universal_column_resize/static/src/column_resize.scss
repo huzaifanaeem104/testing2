@@ -1,0 +1,146 @@
+/* Universal column resize — lists + AGES / account_report tables */
+
+// ---------------------------------------------------------------------------
+// List views: resize handle affordance + compact rows
+// ---------------------------------------------------------------------------
+.o_list_renderer .o_list_table {
+    thead th {
+        span.o_resize {
+            width: 6px !important;
+            cursor: col-resize;
+            opacity: 0.15;
+            transition: opacity 0.15s ease, background-color 0.15s ease;
+
+            &:hover,
+            &.opacity-100 {
+                opacity: 0.9 !important;
+                background-color: var(--o-brand-primary, #714B67) !important;
+            }
+        }
+
+        &:hover span.o_resize {
+            opacity: 0.45;
+        }
+    }
+
+    tbody > tr.o_data_row > td.o_data_cell {
+        vertical-align: middle;
+        // Keep rows compact (product/label autoresize + tag widgets otherwise inflate them)
+        padding-top: 0.2rem;
+        padding-bottom: 0.2rem;
+        line-height: 1.35;
+
+        .o_field_tags,
+        .o_field_analytic_distribution .o_field_tags {
+            flex-wrap: nowrap !important;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .o_field_analytic_distribution .badge .o_tag_badge_text {
+            max-width: 100%;
+        }
+
+        .o_field_product_label_section_and_note_cell {
+            max-width: 100%;
+            overflow: hidden;
+        }
+    }
+}
+
+// Allow horizontally oversized (user-resized) tables to scroll
+.o_list_renderer,
+.o_field_x2many .o_list_renderer {
+    overflow-x: auto;
+}
+
+// ---------------------------------------------------------------------------
+// AGES reports + enterprise .account_report tables
+// Enterprise account_report.scss sets table { padding: 24px } which makes the
+// sheet look sparse / "tall rows". Force compact, resizable layout.
+// ---------------------------------------------------------------------------
+.o_ages_bs_report,
+.o_ages_gl_report,
+.o_ages_pl_report,
+.o_ages_ja_report,
+.o_ages_es_report,
+.o_ages_cf_report,
+.o_ages_pdl_report,
+.o_ages_tr_report,
+.o_ages_tb_report,
+.account_report {
+    overflow-x: auto;
+}
+
+.account_report table.table,
+.o_ages_bs_report table,
+.o_ages_gl_report table,
+.o_ages_pl_report table,
+.o_ages_ja_report table,
+.o_ages_es_report table,
+.o_ages_cf_report table,
+.o_ages_pdl_report table,
+.o_ages_tr_report table,
+.o_ages_tb_report table,
+.o_universal_resizable_table {
+    padding: 0 !important;
+
+    thead th {
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        line-height: 1.3;
+        padding-top: 8px !important;
+        padding-bottom: 6px !important;
+    }
+
+    tbody td {
+        padding-top: 4px !important;
+        padding-bottom: 4px !important;
+        line-height: 1.35 !important;
+        vertical-align: middle;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    tbody tr {
+        height: auto !important;
+    }
+}
+
+.o_universal_resizable_table {
+    table-layout: fixed;
+    max-width: none !important;
+
+    thead th {
+        .o_universal_resize {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 6px;
+            cursor: col-resize;
+            z-index: 2;
+            background: transparent;
+            opacity: 0.15;
+            transition: opacity 0.15s ease, background-color 0.15s ease;
+
+            &:hover {
+                opacity: 0.9;
+                background-color: var(--o-brand-primary, #714B67);
+            }
+        }
+
+        &:hover .o_universal_resize {
+            opacity: 0.45;
+            background-color: var(--o-brand-primary, #714B67);
+        }
+    }
+
+    &.o_resizing {
+        user-select: none;
+        cursor: col-resize;
+    }
+}

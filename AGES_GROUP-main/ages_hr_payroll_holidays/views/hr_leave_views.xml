@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_leave_view_search_ages_payroll_holidays" model="ir.ui.view">
+        <field name="name">hr.leave.view.search.ages.payroll.holidays</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_search_manager"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='group_employee']" position="before">
+                <separator/>
+                <filter string="To Defer" name="to_defer"
+                        domain="[('payslip_state', '=', 'blocked')]"
+                        groups="hr_holidays.group_hr_holidays_user"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_form_ages_payroll_holidays" model="ir.ui.view">
+        <field name="name">hr.leave.view.form.ages.payroll.holidays</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_manager"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='holiday_status_id']" position="after">
+                <field name="payslip_state" widget="state_selection"
+                         options="{'hide_label': False}"
+                         class="ms-auto mb-2"/>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="before">
+                <button name="action_report_to_next_month"
+                        type="object"
+                        string="Report to Next Month"
+                        class="oe_highlight"
+                        groups="ages_hr_payroll.group_hr_payroll_user"
+                        invisible="payslip_state != 'blocked' or state != 'validate'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_tree_ages_payroll_holidays" model="ir.ui.view">
+        <field name="name">hr.leave.view.list.ages.payroll.holidays</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="payslip_state" widget="state_selection"
+                         options="{'hide_label': False}" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_type_view_form_ages_payroll_holidays" model="ir.ui.view">
+        <field name="name">hr.leave.type.view.form.ages.payroll.holidays</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='configuration']" position="inside">
+                <field name="ages_payroll_defer"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_action_open_to_defer" model="ir.actions.act_window">
+        <field name="name">Time Off to Defer</field>
+        <field name="res_model">hr.leave</field>
+        <field name="view_mode">list,kanban,form,calendar,activity</field>
+        <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
+        <field name="domain">[('payslip_state', '=', 'blocked'), ('state', '=', 'validate')]</field>
+        <field name="context">{'search_default_to_defer': 1}</field>
+    </record>
+
+    <menuitem id="menu_hr_leave_to_defer"
+              name="Time Off to Defer"
+              action="hr_leave_action_open_to_defer"
+              parent="hr_holidays.menu_hr_holidays_management"
+              sequence="20"
+              groups="hr_holidays.group_hr_holidays_user"/>
+</odoo>

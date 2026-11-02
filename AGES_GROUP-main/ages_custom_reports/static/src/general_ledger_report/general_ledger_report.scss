@@ -1,0 +1,129 @@
+.o_ages_gl_report.account_report {
+    height: 100%;
+    background: $o-webclient-background-color;
+
+    .fit-content {
+        width: fit-content;
+    }
+
+    .o_ages_bs_content {
+        padding: 0;
+    }
+
+    .o_ages_gl_sheet {
+        margin: 16px auto 32px;
+        padding: 24px;
+        width: max-content;
+        min-width: #{"min(100% - 32px, 800px)"};
+        max-width: none;
+        overflow-x: auto;
+        background: $o-view-background-color;
+        border: 1px solid $o-gray-300;
+        border-radius: 0.25rem;
+        box-shadow: none;
+    }
+
+    .o_ages_gl_table {
+        width: max-content;
+        min-width: 100%;
+        table-layout: auto;
+        font-size: 0.8rem;
+        background: transparent;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 0;
+        padding: 0;
+
+        thead.sticky {
+            background: $o-view-background-color;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        thead th.o_ages_gl_period_header {
+            border: 1px solid $o-gray-300;
+            font-weight: 500;
+            color: $o-gray-700;
+        }
+
+        tbody td {
+            padding: 4px 12px;
+            border-bottom: 1px solid var(--AccountReport-fine-line-separator-color, #{$o-gray-200});
+            font-size: 13px;
+            vertical-align: middle;
+            line-height: 1.35;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+    }
+
+    .o_ages_gl_col-date { min-width: 90px; white-space: nowrap; }
+    .o_ages_gl_col-comm {
+        min-width: 280px;
+        max-width: 420px;
+        white-space: normal;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        vertical-align: top;
+    }
+    .o_ages_gl_col-partner { min-width: 140px; white-space: nowrap; }
+    .o_ages_gl_col-currency { min-width: 90px; text-align: right; white-space: nowrap; }
+    .o_ages_gl_col-amount {
+        min-width: 120px;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .o_ages_gl_account_cell {
+        min-width: 280px;
+        max-width: 420px;
+        white-space: normal;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        vertical-align: top;
+    }
+
+    .o_ages_bs_row-account td {
+        font-weight: 600;
+        background: transparent;
+    }
+
+    .o_ages_bs_row-account.o_ages_row-unfolded td {
+        font-weight: 700;
+        background: transparent;
+        border-bottom: 1px solid $o-gray-300 !important;
+    }
+
+    .o_ages_gl_row-initial td {
+        font-style: italic;
+        color: $o-gray-600;
+        font-weight: 400;
+        background: transparent;
+    }
+
+    .o_ages_gl_row-detail td {
+        font-weight: 400;
+        background: transparent;
+    }
+
+    .o_ages_bs_row-total td {
+        font-weight: 700;
+        background: transparent;
+    }
+
+    @media (max-width: 1200px) {
+        .o_ages_gl_sheet {
+            min-width: 0;
+            margin-left: 8px;
+            margin-right: 8px;
+            padding: 16px;
+        }
+    }
+}

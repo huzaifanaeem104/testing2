@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Sales > Orders > Customers -->
+    <record id="sale.res_partner_menu" model="ir.ui.menu">
+        <field name="name">Clients</field>
+    </record>
+
+    <!-- Sales > Reporting > Customers -->
+    <record id="sale.menu_reporting_customer" model="ir.ui.menu">
+        <field name="name">Clients</field>
+    </record>
+
+</odoo>

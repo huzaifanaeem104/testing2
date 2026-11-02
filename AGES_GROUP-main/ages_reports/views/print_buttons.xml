@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_ages_reports_print" model="ir.ui.view">
+        <field name="name">account.move.form.ages.reports.print</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button name="action_print_bill" type="object" string="Print Bill"
+                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
+                <button name="action_print_journal_entry" type="object" string="Print JEs"/>
+                <button name="action_print_journal_items" type="object" string="Print Journal Items"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_tree_ages_reports_print" model="ir.ui.view">
+        <field name="name">account.move.list.ages.reports.print</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="action_print_journal_entry" type="object" string="Print JEs"/>
+                    <button name="action_print_journal_items" type="object" string="Print Journal Items"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_line_tree_ages_reports_print" model="ir.ui.view">
+        <field name="name">account.move.line.list.ages.reports.print</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="action_print_journal_items" type="object" string="Print Journal Items"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_form_ages_reports_print" model="ir.ui.view">
+        <field name="name">account.payment.form.ages.reports.print</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button name="action_print_payment" type="object" string="Print Payment"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_tree_ages_reports_print" model="ir.ui.view">
+        <field name="name">account.payment.list.ages.reports.print</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list/header" position="inside">
+                <button name="action_print_payment" type="object" string="Print Payment"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ages_expense_form_print" model="ir.ui.view">
+        <field name="name">ages.expense.form.print</field>
+        <field name="model">ages.expense</field>
+        <field name="inherit_id" ref="ages_expense.view_ages_expense_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_print_expense" type="object" string="Print Expense"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ages_expense_tree_print" model="ir.ui.view">
+        <field name="name">ages.expense.list.print</field>
+        <field name="model">ages.expense</field>
+        <field name="inherit_id" ref="ages_expense.view_ages_expense_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="action_print_expense" type="object" string="Print Expense"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_form_ages_reports_print" model="ir.ui.view">
+        <field name="name">purchase.order.form.ages.reports.print</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button name="action_print_rfq" type="object" string="Print RFQ"
+                        invisible="state in ('purchase', 'done')"/>
+                <button name="action_print_po" type="object" string="Print PO"
+                        invisible="state in ('draft', 'sent', 'to approve')"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_kpis_tree_ages_reports_print" model="ir.ui.view">
+        <field name="name">purchase.order.kpis.list.ages.reports.print</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list/header" position="inside">
+                <button name="action_print_rfq" type="object" string="Print RFQ"/>
+                <button name="action_print_po" type="object" string="Print PO"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_tree_ages_reports_print" model="ir.ui.view">
+        <field name="name">purchase.order.list.ages.reports.print</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list/header" position="inside">
+                <button name="action_print_rfq" type="object" string="Print RFQ"/>
+                <button name="action_print_po" type="object" string="Print PO"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_base_tree_ages_reports_print" model="ir.ui.view">
+        <field name="name">purchase.order.base.list.ages.reports.print</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <header>
+                    <button name="action_print_rfq" type="object" string="Print RFQ"/>
+                    <button name="action_print_po" type="object" string="Print PO"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_form_ages_reports_print" model="ir.ui.view">
+        <field name="name">stock.picking.form.ages.reports.print</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button name="action_print_receipt" type="object" string="Print Receipt"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_tree_ages_reports_print" model="ir.ui.view">
+        <field name="name">stock.picking.list.ages.reports.print</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="priority">90</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list/header" position="inside">
+                <button name="action_print_receipt" type="object" string="Print Receipt"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

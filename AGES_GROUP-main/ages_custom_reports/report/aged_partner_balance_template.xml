@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="aged_partner_balance_report">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-set="currency" t-value="currency or company.currency_id"/>
+                <t t-call="ages_custom_reports.ages_report_pdf_styles"/>
+
+                <style type="text/css">
+                    .ages-aged-report .report-meta .meta-partners {
+                        max-width: 380px;
+                        word-wrap: break-word;
+                    }
+                    .ages-aged-report .ledger-table {
+                        table-layout: auto;
+                    }
+                    .ages-aged-report .ledger-table thead th {
+                        padding: 6px 4px !important;
+                        font-size: 9px !important;
+                        white-space: nowrap;
+                    }
+                    .ages-aged-report .ledger-table tbody td {
+                        padding: 5px 4px !important;
+                        font-size: 9px !important;
+                    }
+                    .ages-aged-report .name-col {
+                        min-width: 155px;
+                    }
+                    .ages-aged-report .date-col {
+                        white-space: nowrap;
+                    }
+                    .ages-aged-report .total-row td {
+                        background: #eef3f9 !important;
+                        color: #1a2332 !important;
+                        font-weight: bold;
+                        border-bottom: 2px solid #8b1a1a;
+                    }
+                    .ages-aged-report .partner-row td {
+                        background: #faf0f1 !important;
+                        color: #8b1a1a;
+                        font-weight: bold;
+                    }
+                    .ages-aged-report .detail-row td {
+                        background: #ffffff;
+                    }
+                </style>
+
+                <div class="ages-ledger-report ages-aged-report ages-report-branded">
+                    <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+
+                    <div class="report-meta">
+                        <span class="meta-pair"><span class="meta-k">As of</span><span class="meta-v"><t t-esc="date_label"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Aging Basis</span><span class="meta-v"><t t-esc="basis_label"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Interval</span><span class="meta-v"><t t-esc="interval_label"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Accounts</span><span class="meta-v"><t t-esc="account_scope_label"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Partners</span><span class="meta-v"><t t-esc="partner_label"/></span></span>
+                    </div>
+
+                    <t t-foreach="warnings" t-as="warning">
+                        <div class="ages-pl-warning" t-esc="warning"/>
+                    </t>
+
+                    <table class="ledger-table">
+                        <thead>
+                            <tr>
+                                <th class="name-col">Partner / Entry</th>
+                                <t t-foreach="columns" t-as="column">
+                                    <th t-att-class="'text-end' if column['type'] in ('monetary', 'amount_currency') else ''">
+                                        <t t-esc="column['name']"/>
+                                    </th>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="lines" t-as="line">
+                                <tr t-att-class="'total-row' if line['line_type'] == 'total' else ('partner-row' if line['line_type'] == 'partner' else 'detail-row')">
+                                    <td class="name-col">
+                                        <span t-if="line['line_type'] == 'move_line'">
+                                            &#160;&#160;<t t-esc="line.get('communication') or line['name']"/>
+                                        </span>
+                                        <span t-else="" t-esc="line['name']"/>
+                                    </td>
+                                    <t t-foreach="columns" t-as="column">
+                                        <t t-set="value" t-value="line.get(column['key'])"/>
+                                        <td t-att-class="('col-amount ' if column['type'] in ('monetary', 'amount_currency') else '') + ('ages-ledger-negative' if column['type'] in ('monetary', 'amount_currency') and value and value &lt; 0 else '')">
+                                            <t t-if="value not in (False, None, 0)">
+                                                <span t-if="column['type'] == 'monetary'"
+                                                      t-out="value"
+                                                      t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                <span t-elif="column['type'] == 'amount_currency'"
+                                                      t-esc="'{:,.2f}'.format(value)"/>
+                                                <span t-else="" t-esc="value"/>
+                                            </t>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

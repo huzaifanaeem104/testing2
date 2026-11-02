@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_breeding_event_search" model="ir.ui.view">
+        <field name="name">dairy.breeding.event.search</field>
+        <field name="model">dairy.breeding.event</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="animal_id"/>
+                <field name="name"/>
+                <field name="sire_id"/>
+                <field name="semen_reference"/>
+                <field name="technician_id"/>
+                <filter name="filter_heat" string="Heat" domain="[('event_type', '=', 'heat')]"/>
+                <filter name="filter_breeding" string="Services" domain="[('event_type', '=', 'breeding')]"/>
+                <separator/>
+                <filter name="filter_pending" string="Awaiting Check" domain="[('result', '=', 'pending')]"/>
+                <filter name="filter_check_due" string="Check Due"
+                        domain="[('result', '=', 'pending'), ('pregnancy_check_due', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_pregnant" string="Pregnant" domain="[('result', '=', 'pregnant')]"/>
+                <filter name="filter_failed" string="Failed / Lost" domain="[('result', 'in', ('open', 'lost'))]"/>
+                <filter name="filter_repeat" string="Repeat Breeders (3+ services)" domain="[('service_number', '&gt;=', 3)]"/>
+                <separator/>
+                <filter name="filter_date" string="Date" date="event_date"/>
+                <group string="Group By">
+                    <filter name="groupby_animal" string="Animal" context="{'group_by': 'animal_id'}"/>
+                    <filter name="groupby_type" string="Type" context="{'group_by': 'event_type'}"/>
+                    <filter name="groupby_method" string="Method" context="{'group_by': 'method'}"/>
+                    <filter name="groupby_result" string="Result" context="{'group_by': 'result'}"/>
+                    <filter name="groupby_month" string="Month" context="{'group_by': 'event_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dairy_breeding_event_list" model="ir.ui.view">
+        <field name="name">dairy.breeding.event.list</field>
+        <field name="model">dairy.breeding.event</field>
+        <field name="arch" type="xml">
+            <list string="Breeding Events" decoration-muted="state == 'cancelled'" decoration-info="state == 'draft'">
+                <field name="name"/>
+                <field name="animal_id"/>
+                <field name="event_type"/>
+                <field name="event_date"/>
+                <field name="method" optional="show"/>
+                <field name="sire_id" optional="show"/>
+                <field name="semen_reference" optional="hide"/>
+                <field name="service_number" optional="show"/>
+                <field name="pregnancy_check_due" optional="show"/>
+                <field name="result" widget="badge" decoration-success="result in ('pregnant', 'calved')"
+                       decoration-danger="result in ('open', 'lost')" decoration-warning="result == 'pending'"/>
+                <field name="state" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_breeding_event_form" model="ir.ui.view">
+        <field name="name">dairy.breeding.event.form</field>
+        <field name="model">dairy.breeding.event</field>
+        <field name="arch" type="xml">
+            <form string="Breeding Event">
+                <header>
+                    <button name="action_done" type="object" string="Record" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_create_breeding_from_heat" type="object" string="Record Insemination"
+                            class="btn-primary" invisible="state != 'done' or event_type != 'heat'"/>
+                    <button name="action_create_pregnancy_check" type="object" string="Pregnancy Check"
+                            class="btn-primary" invisible="state != 'done' or event_type != 'breeding' or result != 'pending'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state == 'cancelled'"
+                            confirm="Cancel this event?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="animal_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="event_type" readonly="state != 'draft'" widget="radio" options="{'horizontal': true}"/>
+                            <field name="heat_date" readonly="state != 'draft'" required="event_type == 'heat'"/>
+                            <field name="heat_signs" readonly="state != 'draft'" invisible="event_type != 'heat'"/>
+                            <field name="heat_event_id" readonly="state != 'draft'" invisible="event_type != 'breeding'"/>
+                        </group>
+                        <group invisible="event_type != 'breeding'">
+                            <field name="breeding_date" readonly="state != 'draft'" required="event_type == 'breeding'"/>
+                            <field name="method" readonly="state != 'draft'" required="event_type == 'breeding'"/>
+                            <field name="sire_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="semen_reference" readonly="state != 'draft'"/>
+                            <field name="technician_id" readonly="state != 'draft'"/>
+                            <field name="service_number" invisible="state == 'draft'"/>
+                            <field name="pregnancy_check_due"/>
+                            <field name="result" invisible="state == 'draft'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Pregnancy Checks" name="checks" invisible="event_type != 'breeding'">
+                            <field name="pregnancy_check_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="method"/>
+                                    <field name="result"/>
+                                    <field name="expected_calving_date"/>
+                                    <field name="veterinarian_id"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dairy_heat_detection" model="ir.actions.act_window">
+        <field name="name">Heat Detection</field>
+        <field name="res_model">dairy.breeding.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('event_type', '=', 'heat')]</field>
+        <field name="context">{'default_event_type': 'heat'}</field>
+    </record>
+
+    <record id="action_dairy_breeding_event" model="ir.actions.act_window">
+        <field name="name">Breeding Events</field>
+        <field name="res_model">dairy.breeding.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('event_type', '=', 'breeding')]</field>
+        <field name="context">{'default_event_type': 'breeding', 'default_method': 'ai'}</field>
+    </record>
+
+    <record id="action_dairy_breeding_event_all" model="ir.actions.act_window">
+        <field name="name">Reproductive History</field>
+        <field name="res_model">dairy.breeding.event</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

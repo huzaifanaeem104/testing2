@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_access_profile_list" model="ir.ui.view">
+        <field name="name">access.profile.list</field>
+        <field name="model">access.profile</field>
+        <field name="arch" type="xml">
+            <list string="Access Profiles">
+                <field name="name"/>
+                <field name="user_ids" widget="many2many_tags"/>
+                <field name="group_ids" widget="many2many_tags"/>
+                <field name="company_ids" widget="many2many_tags" optional="hide"/>
+                <field name="restrict_new"/>
+                <field name="restrict_delete"/>
+                <field name="restrict_export"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_access_profile_form" model="ir.ui.view">
+        <field name="name">access.profile.form</field>
+        <field name="model">access.profile</field>
+        <field name="arch" type="xml">
+            <form string="Access Profile">
+                <header>
+                    <button name="action_open_preset" type="object" string="Apply Preset"
+                            class="btn-primary"/>
+                    <button name="action_open_scan" type="object" string="Scan model…"/>
+                    <button name="action_open_menu_wizard" type="object" string="Hide apps &amp; menus…"/>
+                    <button name="action_sync" type="object" string="Resync"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. View Only"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="description" placeholder="What this role is for"/>
+                            <field name="generated_group_id" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="company_ids" widget="many2many_tags"
+                                   placeholder="Empty = all companies"/>
+                        </group>
+                    </group>
+                    <group string="Hide and block these actions (all models)">
+                        <div class="alert alert-info" role="alert" colspan="2">
+                            These write native button.access.rule rows on the generated group.
+                            Confirm / Print / Archive still need this engine — Access Rights do
+                            not remove those buttons. Save/Edit are not hidden here: uncheck
+                            Write on a model line instead.
+                        </div>
+                        <group>
+                            <field name="restrict_new"/>
+                            <field name="restrict_delete"/>
+                            <field name="restrict_duplicate"/>
+                            <field name="restrict_import"/>
+                            <field name="restrict_export"/>
+                            <field name="restrict_archive"/>
+                            <field name="restrict_print"/>
+                            <field name="restrict_cancel"/>
+                        </group>
+                        <group>
+                            <field name="restrict_reset_draft"/>
+                            <field name="restrict_confirm"/>
+                            <field name="restrict_post"/>
+                            <field name="restrict_lock"/>
+                            <field name="restrict_unlock"/>
+                            <field name="restrict_send_email"/>
+                            <field name="restrict_done"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Models" name="models">
+                            <field name="model_line_ids">
+                                <list editable="bottom">
+                                    <field name="model_id" options="{'no_create': True}"/>
+                                    <field name="perm_read"/>
+                                    <field name="perm_write"/>
+                                    <field name="perm_create"/>
+                                    <field name="perm_unlink"/>
+                                    <field name="record_rule_preset"/>
+                                    <field name="domain_force" optional="hide"
+                                           invisible="record_rule_preset != 'custom'"/>
+                                </list>
+                            </field>
+                            <group string="Generated Access Rights" groups="base.group_no_one">
+                                <field name="generated_access_ids" nolabel="1">
+                                    <list create="false" delete="false">
+                                        <field name="name"/>
+                                        <field name="model_id"/>
+                                        <field name="perm_read"/>
+                                        <field name="perm_write"/>
+                                        <field name="perm_create"/>
+                                        <field name="perm_unlink"/>
+                                    </list>
+                                </field>
+                            </group>
+                            <group string="Generated Record Rules" groups="base.group_no_one">
+                                <field name="generated_rule_ids" nolabel="1">
+                                    <list create="false" delete="false">
+                                        <field name="name"/>
+                                        <field name="model_id"/>
+                                        <field name="domain_force"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Buttons" name="buttons">
+                            <field name="button_access_rule_ids" nolabel="1">
+                                <list create="false" delete="false">
+                                    <field name="model_name"/>
+                                    <field name="button_type"/>
+                                    <field name="button_string"/>
+                                    <field name="technical_name"/>
+                                    <field name="is_global"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Hide Apps &amp; Menus" name="hidden_menus">
+                            <div class="alert alert-info" role="alert">
+                                Hiding an app here writes menu rules on the generated group.
+                                It does not revoke Sales User / Purchase User. Use model lines
+                                if the user must not read those records. Menu hiding is not
+                                company-specific even when this profile is limited to companies.
+                            </div>
+                            <button name="action_open_menu_wizard" type="object"
+                                    string="Configure apps &amp; menus…"
+                                    class="btn-primary mb-3"/>
+                            <field name="hidden_menu_ids" widget="many2many_tags"
+                                   context="{'ir.ui.menu.full_list': True}"/>
+                            <field name="hidden_menu_rule_ids" nolabel="1">
+                                <list create="false" delete="false">
+                                    <field name="menu_complete"/>
+                                    <field name="is_root"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Exceptions" name="exceptions">
+                            <div class="alert alert-warning" role="alert">
+                                An exception allows this user the action even if the profile
+                                (or any other Hide Buttons rule) denies it. Deny unless exception.
+                            </div>
+                            <field name="exception_ids">
+                                <list editable="bottom">
+                                    <field name="user_id"/>
+                                    <field name="model_id" options="{'no_create': True}"/>
+                                    <field name="button_type"/>
+                                    <field name="technical_name"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Assigned users" name="users">
+                            <group>
+                                <field name="user_ids" widget="many2many_tags"/>
+                                <field name="group_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                        <page string="Audit" name="audit">
+                            <field name="log_ids" readonly="1">
+                                <list create="false" delete="false">
+                                    <field name="create_date"/>
+                                    <field name="user_id"/>
+                                    <field name="message"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_access_profile_search" model="ir.ui.view">
+        <field name="name">access.profile.search</field>
+        <field name="model">access.profile</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="user_ids"/>
+                <field name="group_ids"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_access_profile" model="ir.actions.act_window">
+        <field name="name">Access Profiles</field>
+        <field name="res_model">access.profile</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_access_profile_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create an Access Profile</p>
+            <p>Named roles such as View Only or Warehouse Operator. Each profile
+               writes real Access Rights and hides/blocks Confirm, Print, Archive,
+               and other buttons.</p>
+        </field>
+    </record>
+
+    <record id="view_access_block_log_list" model="ir.ui.view">
+        <field name="name">access.block.log.list</field>
+        <field name="model">access.block.log</field>
+        <field name="arch" type="xml">
+            <list string="Blocked Actions" create="false" edit="false">
+                <field name="create_date"/>
+                <field name="user_id"/>
+                <field name="model_name"/>
+                <field name="button_type"/>
+                <field name="technical_name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_access_block_log" model="ir.actions.act_window">
+        <field name="name">Blocked Actions</field>
+        <field name="res_model">access.block.log</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="view_access_profile_preset_wizard_form" model="ir.ui.view">
+        <field name="name">access.profile.preset.wizard.form</field>
+        <field name="model">access.profile.preset.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Apply Preset">
+                <group>
+                    <field name="profile_id" invisible="1"/>
+                    <field name="preset"/>
+                </group>
+                <div class="alert alert-info" role="alert">
+                    Models that are not installed are skipped. No extra apps are required.
+                </div>
+                <footer>
+                    <button name="action_apply" type="object" string="Apply"
+                            class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_access_profile_simulator_form" model="ir.ui.view">
+        <field name="name">access.profile.simulator.form</field>
+        <field name="model">access.profile.simulator</field>
+        <field name="arch" type="xml">
+            <form string="User Access Simulator">
+                <group>
+                    <field name="user_id" options="{'no_create': True}"/>
+                    <field name="profile_id" options="{'no_create': True}"/>
+                </group>
+                <group string="Groups">
+                    <field name="group_names" nolabel="1" colspan="2"/>
+                </group>
+                <notebook>
+                    <page string="CRUD">
+                        <field name="line_ids" nolabel="1">
+                            <list create="false" delete="false">
+                                <field name="model_name"/>
+                                <field name="perm_read"/>
+                                <field name="perm_write"/>
+                                <field name="perm_create"/>
+                                <field name="perm_unlink"/>
+                            </list>
+                        </field>
+                    </page>
+                    <page string="Hidden buttons">
+                        <field name="hidden_buttons" nolabel="1" colspan="2"/>
+                    </page>
+                    <page string="Hidden apps &amp; menus">
+                        <field name="hidden_menus" nolabel="1" colspan="2"/>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="action_refresh" type="object" string="Refresh"
+                            class="btn-primary"/>
+                    <button name="action_assign_profile" type="object"
+                            string="Assign Profile" class="btn-secondary"
+                            invisible="not profile_id"/>
+                    <button string="Close" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_access_profile_simulator" model="ir.actions.act_window">
+        <field name="name">User Simulator</field>
+        <field name="res_model">access.profile.simulator</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_button_access_settings" model="ir.actions.act_window">
+        <field name="name">Allowlist</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'button_access_manager'}</field>
+    </record>
+
+    <menuitem id="menu_access_profile_root"
+              name="Access Profiles"
+              groups="base.group_system"
+              web_icon="button_access_manager,static/description/icon.png"
+              sequence="68"/>
+
+    <menuitem id="menu_access_profile"
+              name="Profiles"
+              parent="menu_access_profile_root"
+              action="action_access_profile"
+              sequence="10"/>
+
+    <menuitem id="menu_access_profile_simulator"
+              name="User Simulator"
+              parent="menu_access_profile_root"
+              action="action_access_profile_simulator"
+              sequence="20"/>
+
+    <menuitem id="menu_access_block_log"
+              name="Blocked Actions"
+              parent="menu_access_profile_root"
+              action="action_access_block_log"
+              sequence="30"/>
+
+    <menuitem id="menu_button_access_settings"
+              name="Allowlist"
+              parent="menu_access_profile_root"
+              action="action_button_access_settings"
+              sequence="40"/>
+
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="param_enabled" model="ir.config_parameter">
+        <field name="key">ages_user_presence.enabled</field>
+        <field name="value">True</field>
+    </record>
+    <record id="param_heartbeat" model="ir.config_parameter">
+        <field name="key">ages_user_presence.heartbeat_seconds</field>
+        <field name="value">30</field>
+    </record>
+    <record id="param_idle_minutes" model="ir.config_parameter">
+        <field name="key">ages_user_presence.idle_minutes</field>
+        <field name="value">5</field>
+    </record>
+    <record id="param_inactive_seconds" model="ir.config_parameter">
+        <field name="key">ages_user_presence.inactive_seconds</field>
+        <field name="value">90</field>
+    </record>
+    <record id="param_track_portal" model="ir.config_parameter">
+        <field name="key">ages_user_presence.track_portal</field>
+        <field name="value">False</field>
+    </record>
+    <record id="param_retention_days" model="ir.config_parameter">
+        <field name="key">ages_user_presence.retention_days</field>
+        <field name="value">14</field>
+    </record>
+</odoo>

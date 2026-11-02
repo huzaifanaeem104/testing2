@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_construction_boq" model="ir.sequence">
+        <field name="name">Construction BOQ</field>
+        <field name="code">construction.boq</field>
+        <field name="prefix">BOQ/%(year)s/</field>
+        <field name="padding">5</field>
+    </record>
+    <record id="seq_construction_material_request" model="ir.sequence">
+        <field name="name">Construction Material Request</field>
+        <field name="code">construction.material.request</field>
+        <field name="prefix">MR/%(year)s/</field>
+        <field name="padding">5</field>
+    </record>
+    <record id="seq_construction_daily_log" model="ir.sequence">
+        <field name="name">Construction Daily Log</field>
+        <field name="code">construction.daily.log</field>
+        <field name="prefix">DL/%(year)s/</field>
+        <field name="padding">5</field>
+    </record>
+    <record id="seq_construction_change_order" model="ir.sequence">
+        <field name="name">Construction Change Order</field>
+        <field name="code">construction.change.order</field>
+        <field name="prefix">CO/%(year)s/</field>
+        <field name="padding">5</field>
+    </record>
+    <record id="seq_construction_subcontract" model="ir.sequence">
+        <field name="name">Construction Subcontract</field>
+        <field name="code">construction.subcontract</field>
+        <field name="prefix">SC/%(year)s/</field>
+        <field name="padding">5</field>
+    </record>
+    <record id="seq_construction_equipment" model="ir.sequence">
+        <field name="name">Equipment Assignment</field>
+        <field name="code">construction.equipment.assignment</field>
+        <field name="prefix">EQ/%(year)s/</field>
+        <field name="padding">5</field>
+    </record>
+    <record id="seq_construction_rfi" model="ir.sequence">
+        <field name="name">Construction RFI</field>
+        <field name="code">construction.rfi</field>
+        <field name="prefix">RFI/%(year)s/</field>
+        <field name="padding">5</field>
+    </record>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Portal users: only rows for their assigned Portal Project -->
+    <record id="rule_project_portal_attendance_portal" model="ir.rule">
+        <field name="name">Portal Attendance: portal user own project</field>
+        <field name="model_id" ref="model_project_portal_attendance"/>
+        <field name="domain_force">[('project_id', '=', user.portal_project_id.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Internal users: full access -->
+    <record id="rule_project_portal_attendance_internal" model="ir.rule">
+        <field name="name">Portal Attendance: internal users</field>
+        <field name="model_id" ref="model_project_portal_attendance"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

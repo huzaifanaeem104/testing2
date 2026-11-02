@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mail_template_gate_pass_edit_request" model="mail.template">
+        <field name="name">Gate Pass: Edit Access Requested</field>
+        <field name="model_id" ref="ages_gate_pass.model_ages_gate_pass"/>
+        <field name="subject">Edit access requested for {{ object.name }}</field>
+        <field name="body_html" type="html">
+            <p>Edit access was requested on Gate Pass <strong><t t-out="object.name"/></strong>
+               by <t t-out="object.edit_requested_by_id.name"/>.</p>
+            <p>Please open the Gate Pass and approve or refuse the request.</p>
+        </field>
+    </record>
+
+    <record id="mail_template_gate_pass_edit_approved" model="mail.template">
+        <field name="name">Gate Pass: Edit Access Approved</field>
+        <field name="model_id" ref="ages_gate_pass.model_ages_gate_pass"/>
+        <field name="subject">Edit access approved for {{ object.name }}</field>
+        <field name="partner_to">{{ object.edit_requested_by_id.partner_id.id }}</field>
+        <field name="body_html" type="html">
+            <p>Your edit request on Gate Pass <strong><t t-out="object.name"/></strong>
+               was approved by <t t-out="object.edit_approved_by_id.name"/>.</p>
+            <p>You may edit once; approval is cleared after you save.</p>
+        </field>
+    </record>
+
+    <record id="mail_template_gate_pass_security" model="mail.template">
+        <field name="name">Gate Pass: Waiting Security</field>
+        <field name="model_id" ref="ages_gate_pass.model_ages_gate_pass"/>
+        <field name="subject">Security clearance required: {{ object.name }}</field>
+        <field name="body_html" type="html">
+            <p>Gate Pass <strong><t t-out="object.name"/></strong> is waiting at security.</p>
+            <p>Type: <t t-out="object.gate_type"/> | Vendor: <t t-out="object.partner_id.name"/> |
+               Truck: <t t-out="object.truck_no"/></p>
+        </field>
+    </record>
+
+    <record id="mail_template_gate_pass_posted" model="mail.template">
+        <field name="name">Gate Pass: Posted</field>
+        <field name="model_id" ref="ages_gate_pass.model_ages_gate_pass"/>
+        <field name="subject">Gate Pass posted: {{ object.name }}</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="body_html" type="html">
+            <p>Gate Pass <strong><t t-out="object.name"/></strong> has been posted.</p>
+            <p>Pass date: <t t-out="object.pass_date"/></p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dairy_health" name="Animal Health" parent="dairy_farm_core.menu_dairy_root" sequence="50"
+              groups="dairy_farm_core.group_dairy_veterinarian,dairy_farm_core.group_dairy_accountant"/>
+    <menuitem id="menu_dairy_health_case" name="Health Cases" parent="menu_dairy_health"
+              action="action_dairy_health_case" sequence="1"/>
+    <menuitem id="menu_dairy_treatment" name="Treatments" parent="menu_dairy_health"
+              action="action_dairy_treatment" sequence="10"/>
+    <menuitem id="menu_dairy_vaccination" name="Vaccinations" parent="menu_dairy_health"
+              action="action_dairy_vaccination" sequence="20"/>
+    <menuitem id="menu_dairy_vaccination_plan" name="Plan Herd Vaccination" parent="menu_dairy_health"
+              action="action_dairy_vaccination_plan_wizard" sequence="25" groups="dairy_farm_core.group_dairy_veterinarian"/>
+    <menuitem id="menu_dairy_followup" name="Follow-ups" parent="menu_dairy_health"
+              action="action_dairy_health_followup" sequence="30"/>
+    <menuitem id="menu_dairy_health_withdrawals" name="Milk Withdrawals" parent="menu_dairy_health"
+              action="dairy_farm_core.action_dairy_milk_withdrawal" sequence="40"/>
+    <menuitem id="menu_dairy_medicines" name="Medicines &amp; Vaccines" parent="menu_dairy_health"
+              action="action_dairy_medicine_products" sequence="50" groups="stock.group_stock_user"/>
+    <menuitem id="menu_dairy_medicine_lots" name="Medicine Expiry" parent="menu_dairy_health"
+              action="action_dairy_medicine_lots" sequence="60" groups="stock.group_stock_user"/>
+    <menuitem id="menu_dairy_vet_expense" name="Medicine Cost Analysis" parent="menu_dairy_health"
+              action="action_dairy_vet_expense_report" sequence="70"/>
+</odoo>

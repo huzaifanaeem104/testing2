@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_milking_session_search" model="ir.ui.view">
+        <field name="name">dairy.milking.session.search</field>
+        <field name="model">dairy.milking.session</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="shift_id"/>
+                <field name="operator_id"/>
+                <field name="location_id"/>
+                <filter name="filter_today" string="Today"
+                        domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_last_7" string="Last 7 Days"
+                        domain="[('date', '>=', (context_today() - relativedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_date" string="Date" date="date"/>
+                <separator/>
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_submitted" string="Awaiting Confirmation" domain="[('state', '=', 'submitted')]"/>
+                <filter name="filter_confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="filter_not_cancelled" string="Not Cancelled" domain="[('state', '!=', 'cancelled')]"/>
+                <separator/>
+                <filter name="filter_incomplete" string="Incomplete"
+                        domain="['|', ('state', '=', 'draft'), ('pending_count', '>', 0)]"/>
+                <filter name="filter_withheld" string="With Withheld Milk" domain="[('withheld_liters', '>', 0)]"/>
+                <group string="Group By">
+                    <filter name="groupby_date" string="Date" context="{'group_by': 'date:day'}"/>
+                    <filter name="groupby_shift" string="Shift" context="{'group_by': 'shift_id'}"/>
+                    <filter name="groupby_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="groupby_operator" string="Operator" context="{'group_by': 'operator_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dairy_milking_session_list" model="ir.ui.view">
+        <field name="name">dairy.milking.session.list</field>
+        <field name="model">dairy.milking.session</field>
+        <field name="arch" type="xml">
+            <list string="Milking Sessions" decoration-muted="state == 'cancelled'" decoration-info="state == 'draft'"
+                  decoration-warning="state == 'submitted'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="shift_id"/>
+                <field name="operator_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="location_id" optional="hide"/>
+                <field name="expected_count" optional="show"/>
+                <field name="recorded_count" optional="show"/>
+                <field name="pending_count" optional="show" decoration-danger="pending_count > 0"/>
+                <field name="total_liters" sum="Total"/>
+                <field name="saleable_liters" sum="Saleable" optional="show"/>
+                <field name="withheld_liters" sum="Withheld" optional="show"/>
+                <field name="discarded_liters" sum="Discarded" optional="hide"/>
+                <field name="average_liters" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'confirmed'"
+                       decoration-warning="state == 'submitted'" decoration-info="state == 'draft'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_milking_session_form" model="ir.ui.view">
+        <field name="name">dairy.milking.session.form</field>
+        <field name="model">dairy.milking.session</field>
+        <field name="arch" type="xml">
+            <form string="Milking Session">
+                <header>
+                    <button name="action_load_animals" type="object" string="Load Lactating Cows" class="btn-primary"
+                            invisible="state != 'draft' or not id or expected_count"/>
+                    <button name="action_load_animals" type="object" string="Load Missing Cows"
+                            invisible="state != 'draft' or not id or not expected_count"/>
+                    <button name="action_submit" type="object" string="Submit" class="btn-primary"
+                            invisible="state != 'draft' or not expected_count"/>
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary"
+                            invisible="state != 'submitted'" groups="dairy_farm_core.group_dairy_manager"/>
+                    <button name="action_return_to_draft" type="object" string="Return to Operator"
+                            invisible="state != 'submitted'" groups="dairy_farm_core.group_dairy_manager"/>
+                    <button name="action_cancel" type="object" string="Cancel Session"
+                            invisible="state == 'cancelled' or not id" groups="dairy_farm_core.group_dairy_manager"
+                            confirm="Cancel this session? A cancellation reason is required and the records are kept."/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_corrections" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
+                                invisible="not correction_count">
+                            <field name="correction_count" widget="statinfo" string="Corrections"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="shift_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="location_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="operator_id" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="start_datetime" readonly="state != 'draft'"/>
+                            <field name="end_datetime" readonly="state != 'draft'"/>
+                            <field name="confirmed_by_id" invisible="not confirmed_by_id"/>
+                            <field name="confirmed_on" invisible="not confirmed_on"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <div class="row g-2 mb-3 text-center">
+                        <div class="col-6 col-md-2"><div class="border rounded p-2">
+                            <div class="text-muted small">Total (L)</div><field name="total_liters" class="fs-4 fw-bold"/></div></div>
+                        <div class="col-6 col-md-2"><div class="border rounded p-2">
+                            <div class="text-muted small">Saleable (L)</div><field name="saleable_liters" class="fs-4 text-success"/></div></div>
+                        <div class="col-6 col-md-2"><div class="border rounded p-2">
+                            <div class="text-muted small">Withheld (L)</div><field name="withheld_liters" class="fs-4 text-danger"/></div></div>
+                        <div class="col-6 col-md-2"><div class="border rounded p-2">
+                            <div class="text-muted small">Milked / Animals</div>
+                            <field name="recorded_count" class="fs-4"/> / <field name="expected_count" class="fs-4"/></div></div>
+                        <div class="col-6 col-md-2"><div class="border rounded p-2">
+                            <div class="text-muted small">Not Entered</div><field name="pending_count" class="fs-4"/></div></div>
+                        <div class="col-6 col-md-2"><div class="border rounded p-2">
+                            <div class="text-muted small">Avg / Cow (L)</div><field name="average_liters" class="fs-4"/></div></div>
+                    </div>
+                    <notebook>
+                        <page string="Cow Records" name="lines">
+                            <field name="line_ids" readonly="state != 'draft'"
+                                   context="{'default_session_id': id}">
+                                <list editable="bottom" decoration-danger="milk_destination == 'withheld'"
+                                      decoration-warning="entry_status == 'pending'"
+                                      decoration-muted="entry_status in ('missed', 'zero')">
+                                    <field name="animal_id" options="{'no_create': True, 'no_open': True}"
+                                           domain="[('is_milking_eligible', '=', True)]"/>
+                                    <field name="quantity_liters"/>
+                                    <field name="entry_status"/>
+                                    <field name="quality_status" optional="show"/>
+                                    <field name="milk_destination" widget="badge" optional="show"
+                                           decoration-success="milk_destination == 'saleable'"
+                                           decoration-danger="milk_destination == 'withheld'"
+                                           decoration-warning="milk_destination == 'discarded'"/>
+                                    <field name="remarks" optional="show"/>
+                                    <field name="recorded_by" optional="hide"/>
+                                    <field name="recorded_at" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" readonly="state in ('confirmed', 'cancelled')"/>
+                            <group>
+                                <field name="cancel_reason" readonly="state == 'cancelled'"
+                                       groups="dairy_farm_core.group_dairy_manager"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dairy_milking_session_graph" model="ir.ui.view">
+        <field name="name">dairy.milking.session.graph</field>
+        <field name="model">dairy.milking.session</field>
+        <field name="arch" type="xml">
+            <graph string="Production by Shift" type="bar" stacked="1">
+                <field name="date" interval="day"/>
+                <field name="shift_id"/>
+                <field name="total_liters" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_dairy_milking_session_pivot" model="ir.ui.view">
+        <field name="name">dairy.milking.session.pivot</field>
+        <field name="model">dairy.milking.session</field>
+        <field name="arch" type="xml">
+            <pivot string="Production by Shift">
+                <field name="date" interval="day" type="row"/>
+                <field name="shift_id" type="col"/>
+                <field name="total_liters" type="measure"/>
+                <field name="saleable_liters" type="measure"/>
+                <field name="withheld_liters" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_dairy_milking_session_today" model="ir.actions.act_window">
+        <field name="name">Today's Sessions</field>
+        <field name="res_model">dairy.milking.session</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_today': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Start today's milking</p>
+            <p>Create a session for the shift, load the lactating cows and enter each cow's yield.</p>
+        </field>
+    </record>
+
+    <record id="action_dairy_milking_session" model="ir.actions.act_window">
+        <field name="name">Milking Sessions</field>
+        <field name="res_model">dairy.milking.session</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+    </record>
+
+    <record id="action_dairy_milking_session_incomplete" model="ir.actions.act_window">
+        <field name="name">Incomplete Sessions</field>
+        <field name="res_model">dairy.milking.session</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_incomplete': 1, 'search_default_filter_not_cancelled': 1}</field>
+    </record>
+
+    <record id="action_dairy_milking_shift_report" model="ir.actions.act_window">
+        <field name="name">Production by Shift</field>
+        <field name="res_model">dairy.milking.session</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{'search_default_filter_not_cancelled': 1, 'search_default_filter_last_7': 1}</field>
+    </record>
+</odoo>

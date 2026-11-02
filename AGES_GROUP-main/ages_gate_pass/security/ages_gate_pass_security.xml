@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="module_category_ages_gate_pass" model="ir.module.category">
+        <field name="name">Gate Pass</field>
+        <field name="parent_id" ref="base.module_category_inventory"/>
+        <field name="sequence">60</field>
+    </record>
+
+    <record id="group_gate_pass_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="module_category_ages_gate_pass"/>
+        <field name="implied_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+    </record>
+
+    <record id="group_gate_pass_edit" model="res.groups">
+        <field name="name">Edit</field>
+        <field name="category_id" ref="module_category_ages_gate_pass"/>
+        <field name="implied_ids" eval="[(4, ref('group_gate_pass_user'))]"/>
+        <field name="comment">
+            Can request edit access on posted gate passes. Cannot edit freely
+            until an Edit Approval user grants access.
+        </field>
+    </record>
+
+    <record id="group_gate_pass_edit_approval" model="res.groups">
+        <field name="name">Edit Approval</field>
+        <field name="category_id" ref="module_category_ages_gate_pass"/>
+        <field name="implied_ids" eval="[(4, ref('group_gate_pass_edit'))]"/>
+        <field name="comment">
+            Can approve edit requests, reset posted gate passes to draft,
+            and edit gate passes without restriction.
+        </field>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="group_gate_pass_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_ages_gate_pass"/>
+        <field name="implied_ids" eval="[(4, ref('group_gate_pass_edit_approval')), (4, ref('stock.group_stock_manager'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Standalone Tree View for Payment Details -->
+    <record id="view_account_payment_detail_line_tree" model="ir.ui.view">
+        <field name="name">account.payment.detail.line.tree</field>
+        <field name="model">account.payment.detail.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="partner_id" optional="show" options="{'no_create': True}"/>
+                <field name="destination_journal_id" options="{'no_create': True}"/>
+                <field name="ages_project_id" options="{'no_create': True}"/>
+                <field name="description"/>
+                <field name="analytic_distribution" widget="analytic_distribution" optional="hide"/>
+                <field name="ages_analytic_account_id" optional="hide"/>
+                <field name="amount" widget="monetary" sum="Total Amount"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/>
+                <field name="parent_journal_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Inherited Payment Form View -->
+    <record id="view_account_payment_form_ages_dimensions" model="ir.ui.view">
+        <field name="name">account.payment.form.ages.dimensions</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <!-- Description header removed for Internal Transfer -->
+            <xpath expr="//group[@name='group1']/field[@name='partner_id'][1]" position="attributes">
+                <attribute name="string">Client</attribute>
+                <attribute name="invisible">is_internal_transfer or is_vendors_transfer or partner_type != 'customer'</attribute>
+                <attribute name="required">not is_internal_transfer and not is_vendors_transfer and partner_type == 'customer'</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group1']/field[@name='partner_id'][2]" position="attributes">
+                <attribute name="string">Vendor</attribute>
+                <attribute name="invisible">is_internal_transfer or is_vendors_transfer or partner_type != 'supplier'</attribute>
+                <attribute name="required">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount']" position="attributes">
+                <attribute name="readonly">state != 'draft' or is_internal_transfer or is_vendors_transfer</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group2']/field[@name='partner_bank_id'][1]" position="attributes">
+                <attribute name="string">Client Bank Account</attribute>
+            </xpath>
+            <!-- Left: Active Company (optional) + Contract -->
+            <xpath expr="//group[@name='group1']/field[@name='memo']" position="after">
+                <field name="ages_sub_company_id"
+                         required="0"
+                         readonly="state != 'draft'"
+                         domain="[('company_id', '=', company_id)]"
+                         options="{'no_create': True}"/>
+                <field name="ages_contract_id"
+                         readonly="state != 'draft'"
+                         domain="ages_project_id and [('company_id', '=', company_id), ('project_id', '=', ages_project_id)] or [('company_id', '=', company_id)]"
+                         options="{'no_create': True}"/>
+            </xpath>
+            <!-- Right: hide destination/project on header for split payments; always hide analytic -->
+            <xpath expr="//group[@name='group2']" position="inside">
+                <field name="destination_journal_id"
+                       invisible="1"
+                       required="0"
+                       readonly="state != 'draft'"
+                       options="{'no_create': True}"/>
+                <field name="ages_project_wise_contract" readonly="1"
+                         invisible="not ages_contract_id"/>
+                <field name="ages_contract_description" readonly="1" class="fw-bold"
+                         invisible="not ages_contract_id"/>
+                <field name="ages_project_id"
+                         invisible="is_internal_transfer or is_vendors_transfer"
+                         readonly="state != 'draft'"
+                         domain="[('company_id', 'in', [company_id, False])]"
+                         options="{'no_create': True}"/>
+                <field name="is_internal_transfer" readonly="state != 'draft'"/>
+                <field name="is_vendors_transfer" invisible="partner_type != 'supplier'" readonly="state != 'draft'"/>
+                <field name="ages_apply_100_payment_analytic"
+                       invisible="not is_internal_transfer and not is_vendors_transfer"
+                       readonly="state != 'draft'"/>
+                <field name="ages_payment_analytic_account_id"
+                       invisible="not is_internal_transfer and not is_vendors_transfer or not ages_apply_100_payment_analytic"
+                       required="ages_apply_100_payment_analytic"
+                       readonly="state != 'draft'"
+                       options="{'no_create': True}"
+                       domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
+                <field name="ages_analytic_account_id"
+                         invisible="1"
+                         readonly="state != 'draft'"
+                         options="{'no_create': True}"/>
+                <field name="ages_running_bill_id" readonly="1"
+                         invisible="not ages_running_bill_id"/>
+                <field name="ages_mobilization_advance_id" readonly="1"
+                         invisible="not ages_mobilization_advance_id"/>
+                <field name="ages_retention_recovery_id" readonly="1"
+                         invisible="not ages_retention_recovery_id"/>
+            </xpath>
+
+            <!-- Notebook Page: Payment Details -->
+            <xpath expr="//notebook[@name='payment_notebook']" position="inside">
+                <page string="Payment Details" name="payment_details" invisible="not is_internal_transfer and not is_vendors_transfer">
+                    <field name="payment_detail_line_ids" readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <field name="partner_id"
+                                     string="Vendor"
+                                     column_invisible="not parent.is_vendors_transfer"
+                                     required="parent.is_vendors_transfer"
+                                     options="{'no_create': True, 'no_quick_create': True}"
+                                     context="{'default_is_company': True}"
+                                     domain="[('parent_id', '=', False)]"/>
+                            <field name="destination_journal_id"
+                                     column_invisible="not parent.is_internal_transfer"
+                                     required="parent.is_internal_transfer"
+                                     options="{'no_create': True}"
+                                     domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', parent.company_id), ('id', '!=', parent.journal_id)]"/>
+                            <field name="ages_project_id"
+                                     required="0"
+                                     options="{'no_create': True}"
+                                     domain="[('company_id', 'in', [parent.company_id, False])]"/>
+                            <field name="description"
+                                     placeholder="Description..."
+                                     required="parent.is_internal_transfer"/>
+                            <field name="analytic_distribution"
+                                     widget="analytic_distribution"
+                                     column_invisible="not parent.is_vendors_transfer"/>
+                            <field name="ages_analytic_account_id"
+                                     column_invisible="parent.is_vendors_transfer"
+                                     optional="hide"
+                                     readonly="1"/>
+                            <field name="amount" widget="monetary" sum="Total Amount" required="1"/>
+                            <field name="currency_id" column_invisible="True"/>
+                            <field name="company_id" column_invisible="True"/>
+                            <field name="parent_journal_id" column_invisible="True"/>
+                            <field name="analytic_precision" column_invisible="True"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_tree_ages_client_label" model="ir.ui.view">
+        <field name="name">account.payment.list.ages.client.label</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Client</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

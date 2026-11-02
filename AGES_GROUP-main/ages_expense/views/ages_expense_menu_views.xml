@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top-level Root Menu -->
+    <menuitem id="menu_ages_expense_root"
+              name="Expense"
+              web_icon="ages_expense,static/description/icon.png"
+              sequence="25"/>
+
+    <!-- Main Expense Submenu -->
+    <menuitem id="menu_ages_expense_main"
+              name="Expense"
+              parent="menu_ages_expense_root"
+              action="action_ages_expense"
+              sequence="10"/>
+</odoo>

@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_milking_session_user,milking.session user,model_dairy_milking_session,dairy_farm_core.group_dairy_user,1,0,0,0
+access_milking_session_operator,milking.session operator,model_dairy_milking_session,dairy_farm_core.group_dairy_milking_operator,1,1,1,0
+access_milking_session_manager,milking.session manager,model_dairy_milking_session,dairy_farm_core.group_dairy_manager,1,1,1,1
+access_milking_line_user,milking.line user,model_dairy_milking_line,dairy_farm_core.group_dairy_user,1,0,0,0
+access_milking_line_operator,milking.line operator,model_dairy_milking_line,dairy_farm_core.group_dairy_milking_operator,1,1,1,1
+access_milking_correction_user,milking.correction user,model_dairy_milking_correction,dairy_farm_core.group_dairy_user,1,0,0,0
+access_milking_correction_operator,milking.correction operator,model_dairy_milking_correction,dairy_farm_core.group_dairy_milking_operator,1,1,1,1

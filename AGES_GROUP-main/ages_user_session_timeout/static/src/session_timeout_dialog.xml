@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ages_user_session_timeout.SessionTimeoutDialog">
+        <Dialog size="'sm'" title="title" contentClass="'o_ages_session_timeout_dialog'">
+            <p class="mb-2">
+                You have been inactive in Odoo.
+                <t t-if="props.idleMinutes">
+                    The inactivity limit is <t t-esc="props.idleMinutes"/> minutes.
+                </t>
+            </p>
+            <p class="mb-2">You will be automatically logged out in:</p>
+            <p class="o_ages_session_timeout_countdown text-center mb-0">
+                <t t-esc="countdownLabel"/>
+            </p>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="stayLoggedIn">Continue Session</button>
+                <button class="btn btn-secondary" t-on-click="logoutNow">Logout Now</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

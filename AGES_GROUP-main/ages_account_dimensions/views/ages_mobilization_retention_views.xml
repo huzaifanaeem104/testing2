@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Mobilization Received: payment status + buttons -->
+    <record id="view_ages_mobilization_advance_list_payment" model="ir.ui.view">
+        <field name="name">ages.mobilization.advance.list.payment</field>
+        <field name="model">ages.mobilization.advance</field>
+        <field name="inherit_id" ref="ages_mobilization_received.view_ages_mobilization_advance_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_payment_state']" position="replace">
+                <field name="payment_state" string="Payment Status" widget="badge"
+                         decoration-danger="payment_state == 'not_paid'"
+                         decoration-warning="payment_state == 'partial'"
+                         decoration-success="payment_state == 'paid'"
+                         optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ages_mobilization_advance_form_payment" model="ir.ui.view">
+        <field name="name">ages.mobilization.advance.form.payment</field>
+        <field name="model">ages.mobilization.advance</field>
+        <field name="inherit_id" ref="ages_mobilization_received.view_ages_mobilization_advance_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_confirm']" position="after">
+                <button name="action_register_payment" type="object" string="Register Payment"
+                        class="btn-primary"
+                        invisible="state != 'confirmed' or payment_state == 'paid'"/>
+            </xpath>
+            <xpath expr="//button[@name='action_view_invoice']" position="replace">
+                <button name="action_view_payments" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        invisible="payment_count == 0">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value"><field name="payment_count"/></span>
+                        <span class="o_stat_text">Payments</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='invoice_payment_state']" position="replace">
+                <field name="payment_state" string="Payment Status" widget="badge"
+                         decoration-danger="payment_state == 'not_paid'"
+                         decoration-warning="payment_state == 'partial'"
+                         decoration-success="payment_state == 'paid'"
+                         readonly="1"/>
+                <field name="amount_paid" readonly="1"/>
+                <field name="amount_remaining" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='wth_amount']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='wth_amount']" position="after">
+                <field name="ages_wth_amount_display" readonly="1"
+                         invisible="not wht_on_mobilization"/>
+                <field name="ages_wth_amount_remaining" readonly="1"
+                         invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_id']" position="attributes">
+                <attribute name="groups">base.group_no_one</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Retention Recovery: payment status + buttons -->
+    <record id="view_ages_retention_recovery_list_payment" model="ir.ui.view">
+        <field name="name">ages.retention.recovery.list.payment</field>
+        <field name="model">ages.retention.recovery</field>
+        <field name="inherit_id" ref="ages_retention_recovery.view_ages_retention_recovery_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_payment_state']" position="replace">
+                <field name="payment_state" string="Payment Status" widget="badge"
+                         decoration-danger="payment_state == 'not_paid'"
+                         decoration-warning="payment_state == 'partial'"
+                         decoration-success="payment_state == 'paid'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ages_retention_recovery_form_payment" model="ir.ui.view">
+        <field name="name">ages.retention.recovery.form.payment</field>
+        <field name="model">ages.retention.recovery</field>
+        <field name="inherit_id" ref="ages_retention_recovery.view_ages_retention_recovery_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_confirm']" position="after">
+                <button name="action_register_payment" type="object" string="Register Payment"
+                        class="btn-primary"
+                        invisible="state != 'confirmed' or payment_state == 'paid'"/>
+            </xpath>
+            <xpath expr="//button[@name='action_view_invoice']" position="replace">
+                <button name="action_view_payments" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        invisible="payment_count == 0">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value"><field name="payment_count"/></span>
+                        <span class="o_stat_text">Payments</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='invoice_payment_state']" position="replace">
+                <field name="payment_state" string="Payment Status" widget="badge"
+                         decoration-danger="payment_state == 'not_paid'"
+                         decoration-warning="payment_state == 'partial'"
+                         decoration-success="payment_state == 'paid'"
+                         readonly="1"/>
+                <field name="amount_paid" readonly="1"/>
+                <field name="amount_remaining" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='wth_amount']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='wth_amount']" position="after">
+                <field name="ages_wth_amount_display" readonly="1"
+                         invisible="not wht_on_retention"/>
+                <field name="ages_wth_amount_remaining" readonly="1"
+                         invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_id']" position="attributes">
+                <attribute name="groups">base.group_no_one</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

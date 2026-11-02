@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_opal_vendor_balance_pdf" model="ir.actions.report">
+        <field name="name">OPAL Vendor Balance</field>
+        <field name="model">opal.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_opal_vendor_balance.opal_vendor_balance_report</field>
+        <field name="report_file">ages_opal_vendor_balance.opal_vendor_balance_report</field>
+        <field name="print_report_name">'OPAL_Vendor_Balance_%s' % (object.tab or 'report')</field>
+        <field name="paperformat_id" ref="ages_custom_reports.paperformat_general_ledger"/>
+    </record>
+
+    <record id="action_report_opal_vendor_balance_xlsx" model="ir.actions.report">
+        <field name="name">OPAL Vendor Balance Excel</field>
+        <field name="model">opal.report.wizard</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">ages_opal_vendor_balance.opal_vendor_balance_report_xlsx</field>
+        <field name="report_file">ages_opal_vendor_balance.opal_vendor_balance_report_xlsx</field>
+        <field name="print_report_name">'OPAL_Vendor_Balance_%s' % (object.tab or 'report')</field>
+    </record>
+
+    <record id="action_opal_vendor_balance_report" model="ir.actions.client">
+        <field name="name">OPAL Vendor Balance by Project</field>
+        <field name="tag">opal_vendor_balance_report</field>
+        <field name="target">main</field>
+    </record>
+
+    <menuitem id="menu_opal_vendor_balance_report"
+              name="OPAL Vendor Balance by Project"
+              parent="ages_custom_reports.menu_ages_reporting_partners"
+              action="action_opal_vendor_balance_report"
+              sequence="40"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+
+    <menuitem id="menu_opal_vendor_balance_setup"
+              name="OPAL Vendor Balance"
+              parent="account.menu_finance_configuration"
+              sequence="90"
+              groups="account.group_account_manager"/>
+
+    <menuitem id="menu_opal_import_wizard"
+              name="Import OPAL Excel"
+              parent="menu_opal_vendor_balance_setup"
+              action="action_opal_import_wizard"
+              sequence="10"
+              groups="account.group_account_manager"/>
+
+    <menuitem id="menu_opal_vendor_map"
+              name="Vendor Mapping"
+              parent="menu_opal_vendor_balance_setup"
+              action="action_opal_vendor_map"
+              sequence="20"
+              groups="account.group_account_manager"/>
+
+    <menuitem id="menu_opal_project_map"
+              name="Project Mapping"
+              parent="menu_opal_vendor_balance_setup"
+              action="action_opal_project_map"
+              sequence="30"
+              groups="account.group_account_manager"/>
+
+    <menuitem id="menu_opal_import_history"
+              name="Import History"
+              parent="menu_opal_vendor_balance_setup"
+              action="action_opal_import_history"
+              sequence="40"
+              groups="account.group_account_manager"/>
+</odoo>

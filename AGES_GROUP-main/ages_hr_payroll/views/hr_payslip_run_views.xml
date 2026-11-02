@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_run_view_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.run.list</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="payslip_count"/>
+                <field name="state" widget="badge"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+    <record id="hr_payslip_run_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.form</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="arch" type="xml">
+            <form string="Payslips Batch">
+                <header>
+                    <button name="action_generate_payslips" type="object" string="Generate Payslips" class="btn-primary"
+                            invisible="state not in ('draft', 'verify')"/>
+                    <button name="action_validate" type="object" string="Validate" class="btn-primary"
+                            invisible="state != 'verify'"/>
+                    <button name="action_paid" type="object" string="Mark as Paid" invisible="state != 'close'"/>
+                    <button name="action_draft" type="object" string="Set to Draft" invisible="state in ('draft', 'paid')"/>
+                    <button name="action_payment_report" type="object" string="Payment Report" invisible="not slip_ids"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,verify,close,paid"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_payslips" type="object" class="oe_stat_button" icon="fa-book">
+                            <field name="payslip_count" widget="statinfo" string="Payslips"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="slip_ids" readonly="state in ('close', 'paid')">
+                        <list>
+                            <field name="number"/>
+                            <field name="employee_id"/>
+                            <field name="net_wage"/>
+                            <field name="state"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="action_hr_payslip_run_tree" model="ir.actions.act_window">
+        <field name="name">Payslips Batches</field>
+        <field name="res_model">hr.payslip.run</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_construction_root" name="Construction" sequence="35" groups="construction_management_pro.group_construction_user"/>
+
+    <menuitem id="menu_construction_projects" name="Projects" parent="menu_construction_root" action="action_construction_projects" sequence="10"/>
+
+    <menuitem id="menu_construction_planning_root" name="Planning &amp; Site" parent="menu_construction_root" sequence="20"/>
+    <menuitem id="menu_construction_boq" name="Bills of Quantities" parent="menu_construction_planning_root" action="action_construction_boq" sequence="10"/>
+    <menuitem id="menu_construction_tasks" name="Construction Tasks" parent="menu_construction_planning_root" action="action_construction_tasks" sequence="20"/>
+    <menuitem id="menu_construction_progress" name="Progress Measurements" parent="menu_construction_planning_root" action="action_construction_progress" sequence="30"/>
+    <menuitem id="menu_construction_daily_logs" name="Daily Site Logs" parent="menu_construction_planning_root" action="action_construction_daily_log" sequence="40"/>
+    <menuitem id="menu_construction_rfi" name="RFIs" parent="menu_construction_planning_root" action="action_construction_rfi" sequence="50"/>
+    <menuitem id="menu_construction_change_orders" name="Change Orders" parent="menu_construction_planning_root" action="action_construction_change_order" sequence="60"/>
+
+    <menuitem id="menu_construction_materials_root" name="Materials &amp; Procurement" parent="menu_construction_root" sequence="30"/>
+    <menuitem id="menu_construction_material_requests" name="Material Requests" parent="menu_construction_materials_root" action="action_construction_material_request" sequence="10"/>
+    <menuitem id="menu_construction_purchase_orders" name="Purchase Orders" parent="menu_construction_materials_root" action="action_construction_purchase_orders" sequence="20" groups="construction_management_pro.group_construction_procurement,construction_management_pro.group_construction_manager"/>
+    <menuitem id="menu_construction_transfers" name="Site Transfers" parent="menu_construction_materials_root" action="action_construction_transfers" sequence="30"/>
+
+    <menuitem id="menu_construction_mrp_root" name="Manufacturing" parent="menu_construction_root" sequence="40"/>
+    <menuitem id="menu_construction_mrp_orders" name="Manufacturing Orders" parent="menu_construction_mrp_root" action="action_construction_manufacturing" sequence="10"/>
+
+    <menuitem id="menu_construction_contracts_root" name="Contracts &amp; Resources" parent="menu_construction_root" sequence="50"/>
+    <menuitem id="menu_construction_subcontracts" name="Subcontracts" parent="menu_construction_contracts_root" action="action_construction_subcontract" sequence="10"/>
+    <menuitem id="menu_construction_equipment" name="Equipment Assignments" parent="menu_construction_contracts_root" action="action_construction_equipment" sequence="20"/>
+</odoo>

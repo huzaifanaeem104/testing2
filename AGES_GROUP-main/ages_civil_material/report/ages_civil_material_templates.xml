@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- PO-bound statement — same AGES branding as partner/general ledger -->
+    <template id="report_civil_material_statement">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-call="ages_custom_reports.ages_report_pdf_styles"/>
+                <t t-foreach="docs" t-as="o">
+                    <div class="ages-ledger-report ages-report-branded">
+                        <t t-set="report_title" t-value="'Civil Material Statement'"/>
+                        <t t-set="report_subtitle" t-value="o.name"/>
+                        <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+
+                        <div class="report-meta">
+                            <span class="meta-pair">
+                                <span class="meta-k">PO</span>
+                                <span class="meta-v"><t t-esc="o.name"/></span>
+                            </span>
+                            <span class="meta-pair">
+                                <span class="meta-k">Vendor</span>
+                                <span class="meta-v"><t t-esc="o.partner_id.display_name"/></span>
+                            </span>
+                            <t t-if="o.ages_project_id">
+                                <span class="meta-pair">
+                                    <span class="meta-k">Project</span>
+                                    <span class="meta-v"><t t-esc="o.ages_project_id.display_name"/></span>
+                                </span>
+                            </t>
+                        </div>
+
+                        <table class="ledger-table">
+                            <colgroup>
+                                <col style="width:4%"/>
+                                <col style="width:9%"/>
+                                <col style="width:10%"/>
+                                <col style="width:10%"/>
+                                <col style="width:28%"/>
+                                <col style="width:7%"/>
+                                <col style="width:10%"/>
+                                <col style="width:10%"/>
+                                <col style="width:12%"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Truck #</th>
+                                    <th>Slip No</th>
+                                    <th>Description (Material)</th>
+                                    <th>Unit</th>
+                                    <th class="col-amount text-end">Measurement</th>
+                                    <th class="col-amount text-end">Rate</th>
+                                    <th class="col-amount text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="seq" t-value="0"/>
+                                <t t-set="total" t-value="0.0"/>
+                                <t t-foreach="o.civil_slip_ids.filtered(lambda s: s.state in ('received', 'billed')).sorted(key=lambda s: (s.date, s.id))" t-as="slip">
+                                    <t t-foreach="slip.line_ids" t-as="line">
+                                        <t t-set="seq" t-value="seq + 1"/>
+                                        <t t-set="total" t-value="total + line.amount"/>
+                                        <tr class="data-row">
+                                            <td><t t-esc="seq"/></td>
+                                            <td><span t-field="slip.date"/></td>
+                                            <td><span t-field="slip.truck_no"/></td>
+                                            <td><t t-esc="slip.first_measurement_slip or slip.name"/></td>
+                                            <td class="col-desc"><span t-field="line.name"/></td>
+                                            <td><span t-field="line.product_uom_id"/></td>
+                                            <td class="col-amount"><t t-esc="'%.2f' % line.quantity"/></td>
+                                            <td class="col-amount"><t t-esc="pdf_format_amount(line.rate)"/></td>
+                                            <td class="col-amount"><t t-esc="pdf_format_amount(line.amount)"/></td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <tr class="subtotal-row">
+                                    <td colspan="8" class="subtotal-label text-end">Total</td>
+                                    <td class="col-amount"><t t-esc="pdf_format_amount(total)"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p t-if="not o_last" style="page-break-after: always;"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Wizard detail report — same AGES branding -->
+    <template id="report_civil_material_detail">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-call="ages_custom_reports.ages_report_pdf_styles"/>
+                <t t-foreach="reports" t-as="rep">
+                    <t t-set="data" t-value="rep['data']"/>
+                    <div class="ages-ledger-report ages-report-branded">
+                        <t t-set="report_title" t-value="'Civil Material Detail Report'"/>
+                        <t t-set="report_subtitle" t-value="'%s — %s' % (data['date_from'], data['date_to'])"/>
+                        <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+
+                        <div class="report-meta">
+                            <span class="meta-pair">
+                                <span class="meta-k">Period</span>
+                                <span class="meta-v">
+                                    <t t-esc="data['date_from']"/> — <t t-esc="data['date_to']"/>
+                                </span>
+                            </span>
+                            <span class="meta-pair">
+                                <span class="meta-k">Company</span>
+                                <span class="meta-v"><t t-esc="data['company'].display_name"/></span>
+                            </span>
+                        </div>
+
+                        <t t-if="not data['groups']">
+                            <p style="text-align:center;padding:16px;color:#5c6b7f;">No civil material slips found.</p>
+                        </t>
+
+                        <t t-foreach="data['groups']" t-as="grp">
+                            <table class="ledger-table" style="margin-bottom: 4px;">
+                                <tbody>
+                                    <tr class="group-row">
+                                        <td colspan="11">
+                                            Vendor: <t t-esc="grp['partner_name']"/>
+                                            <t t-if="grp['partner_phone']">
+                                                <span class="ages-ledger-meta"> · <t t-esc="grp['partner_phone']"/></span>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <t t-if="grp['partner_address']">
+                                <div class="report-meta" style="margin-top: -6px;">
+                                    <span class="meta-pair">
+                                        <span class="meta-k">Address</span>
+                                        <span class="meta-v" t-esc="grp['partner_address']"/>
+                                    </span>
+                                </div>
+                            </t>
+
+                            <t t-foreach="grp['po_groups']" t-as="pog">
+                                <div class="report-meta">
+                                    <span class="meta-pair">
+                                        <span class="meta-k">PO</span>
+                                        <span class="meta-v"><t t-esc="pog['purchase'].name"/></span>
+                                    </span>
+                                    <t t-if="pog['project_name']">
+                                        <span class="meta-pair">
+                                            <span class="meta-k">Project</span>
+                                            <span class="meta-v"><t t-esc="pog['project_name']"/></span>
+                                        </span>
+                                    </t>
+                                    <span class="meta-pair">
+                                        <span class="meta-k">Slips</span>
+                                        <span class="meta-v"><t t-esc="pog['slip_count']"/></span>
+                                    </span>
+                                </div>
+
+                                <table class="ledger-table">
+                                    <colgroup>
+                                        <col style="width:3%"/>
+                                        <col style="width:8%"/>
+                                        <col style="width:18%"/>
+                                        <col style="width:9%"/>
+                                        <col style="width:9%"/>
+                                        <col style="width:8%"/>
+                                        <col style="width:9%"/>
+                                        <col style="width:9%"/>
+                                        <col style="width:6%"/>
+                                        <col style="width:9%"/>
+                                        <col style="width:12%"/>
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Date</th>
+                                            <th>Description (Material)</th>
+                                            <th>CM Ref</th>
+                                            <th>Slip No</th>
+                                            <th>Truck #</th>
+                                            <th>L×B×H</th>
+                                            <th class="col-amount text-end">Measurement</th>
+                                            <th>Unit</th>
+                                            <th class="col-amount text-end">Rate</th>
+                                            <th class="col-amount text-end">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="pog['rows']" t-as="row">
+                                            <tr class="data-row">
+                                                <td><t t-esc="row['seq']"/></td>
+                                                <td><t t-esc="row['date']"/></td>
+                                                <td class="col-desc"><t t-esc="row['description']"/></td>
+                                                <td><t t-esc="row['cm_ref']"/></td>
+                                                <td><t t-esc="row['slip_no']"/></td>
+                                                <td><t t-esc="row['truck_no']"/></td>
+                                                <td>
+                                                    <t t-if="row['length'] and row['breadth'] and row['height']">
+                                                        <t t-esc="'%g' % row['length']"/>×<t t-esc="'%g' % row['breadth']"/>×<t t-esc="'%g' % row['height']"/>
+                                                    </t>
+                                                </td>
+                                                <td class="col-amount"><t t-esc="row['measurement_display']"/></td>
+                                                <td><t t-esc="row['uom']"/></td>
+                                                <td class="col-amount"><t t-esc="row['rate_display']"/></td>
+                                                <td class="col-amount"><t t-esc="row['amount_display']"/></td>
+                                            </tr>
+                                        </t>
+                                        <tr class="subtotal-row">
+                                            <td colspan="10" class="subtotal-label text-end">Subtotal</td>
+                                            <td class="col-amount"><t t-esc="pog['subtotal_display']"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+
+                            <table class="ledger-table" style="margin-bottom: 14px;">
+                                <tbody>
+                                    <tr class="subtotal-row">
+                                        <td class="subtotal-label">Vendor total — <t t-esc="grp['partner_name']"/></td>
+                                        <td class="col-amount" style="width: 18%;"><t t-esc="grp['total_display']"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <t t-if="data['groups']">
+                            <table class="ledger-table">
+                                <tbody>
+                                    <tr class="group-row">
+                                        <td>Grand Total</td>
+                                        <td class="col-amount" style="width: 18%;"><t t-esc="data['grand_total_display']"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                    </div>
+                    <p t-if="not rep_last" style="page-break-after: always;"/>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

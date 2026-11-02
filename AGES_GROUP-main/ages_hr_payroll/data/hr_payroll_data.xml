@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="BASIC" model="hr.salary.rule.category">
+            <field name="name">Basic</field>
+            <field name="code">BASIC</field>
+        </record>
+        <record id="ALW" model="hr.salary.rule.category">
+            <field name="name">Allowance</field>
+            <field name="code">ALW</field>
+        </record>
+        <record id="GROSS" model="hr.salary.rule.category">
+            <field name="name">Gross</field>
+            <field name="code">GROSS</field>
+        </record>
+        <record id="DED" model="hr.salary.rule.category">
+            <field name="name">Deduction</field>
+            <field name="code">DED</field>
+        </record>
+        <record id="NET" model="hr.salary.rule.category">
+            <field name="name">Net</field>
+            <field name="code">NET</field>
+        </record>
+        <record id="COMP" model="hr.salary.rule.category">
+            <field name="name">Company Contribution</field>
+            <field name="code">COMP</field>
+        </record>
+
+        <record id="input_deduction" model="hr.payslip.input.type">
+            <field name="name">Deduction</field>
+            <field name="code">DEDUCTION</field>
+            <field name="available_in_attachments" eval="False"/>
+        </record>
+        <record id="input_attachment_salary" model="hr.payslip.input.type">
+            <field name="name">Attachment of Salary</field>
+            <field name="code">ATTACH_SALARY</field>
+            <field name="available_in_attachments" eval="True"/>
+        </record>
+        <record id="input_assignment_salary" model="hr.payslip.input.type">
+            <field name="name">Assignment of Salary</field>
+            <field name="code">ASSIG_SALARY</field>
+            <field name="available_in_attachments" eval="True"/>
+        </record>
+        <record id="input_child_support" model="hr.payslip.input.type">
+            <field name="name">Child Support</field>
+            <field name="code">CHILD_SUPPORT</field>
+            <field name="available_in_attachments" eval="True"/>
+        </record>
+        <record id="input_reimbursement" model="hr.payslip.input.type">
+            <field name="name">Reimbursement</field>
+            <field name="code">REIMBURSEMENT</field>
+        </record>
+
+        <record id="hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+            <field name="name">Out of Contract</field>
+            <field name="code">OUT</field>
+            <field name="color">5</field>
+            <field name="sequence">100</field>
+            <field name="is_leave" eval="True"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="default_structure" model="hr.payroll.structure">
+            <field name="name">Regular Pay</field>
+            <field name="code">REGULAR</field>
+            <field name="type_id" ref="hr_contract.structure_type_employee"/>
+            <field name="country_id" eval="False"/>
+            <field name="use_worked_day_lines" eval="True"/>
+        </record>
+
+        <record id="hr_contract.structure_type_employee" model="hr.payroll.structure.type">
+            <field name="default_struct_id" ref="default_structure"/>
+            <field name="wage_type">monthly</field>
+            <field name="default_schedule_pay">monthly</field>
+        </record>
+
+        <record id="default_basic_salary_rule" model="hr.salary.rule">
+            <field name="category_id" ref="BASIC"/>
+            <field name="name">Basic Salary</field>
+            <field name="sequence">1</field>
+            <field name="code">BASIC</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = payslip.paid_amount</field>
+            <field name="struct_id" ref="default_structure"/>
+        </record>
+        <record id="default_gross_salary_rule" model="hr.salary.rule">
+            <field name="category_id" ref="GROSS"/>
+            <field name="name">Gross</field>
+            <field name="sequence">100</field>
+            <field name="code">GROSS</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories['BASIC'] + categories['ALW']</field>
+            <field name="struct_id" ref="default_structure"/>
+        </record>
+        <record id="default_deduction_salary_rule" model="hr.salary.rule">
+            <field name="category_id" ref="DED"/>
+            <field name="name">Deduction</field>
+            <field name="sequence">198</field>
+            <field name="code">DEDUCTION</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = 'DEDUCTION' in inputs</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -inputs['DEDUCTION'].amount</field>
+            <field name="struct_id" ref="default_structure"/>
+        </record>
+        <record id="default_net_salary" model="hr.salary.rule">
+            <field name="category_id" ref="NET"/>
+            <field name="name">Net Salary</field>
+            <field name="sequence">200</field>
+            <field name="code">NET</field>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories['GROSS'] + categories['DED']</field>
+            <field name="struct_id" ref="default_structure"/>
+            <field name="appears_on_employee_cost_dashboard" eval="True"/>
+        </record>
+    </data>
+</odoo>

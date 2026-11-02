@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_running_bill_list_contract" model="ir.ui.view">
+        <field name="name">ages.running.bill.list.contract</field>
+        <field name="model">ages.running.bill</field>
+        <field name="inherit_id" ref="ages_contracts_menu.view_ages_running_bill_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="contract_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ages_running_bill_form_contract" model="ir.ui.view">
+        <field name="name">ages.running.bill.form.contract</field>
+        <field name="model">ages.running.bill</field>
+        <field name="inherit_id" ref="ages_contracts_menu.view_ages_running_bill_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="contract_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ages_mobilization_advance_form_contract" model="ir.ui.view">
+        <field name="name">ages.mobilization.advance.form.contract</field>
+        <field name="model">ages.mobilization.advance</field>
+        <field name="inherit_id" ref="ages_contracts_menu.view_ages_mobilization_advance_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="contract_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ages_retention_recovery_form_contract" model="ir.ui.view">
+        <field name="name">ages.retention.recovery.form.contract</field>
+        <field name="model">ages.retention.recovery</field>
+        <field name="inherit_id" ref="ages_contracts_menu.view_ages_retention_recovery_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="contract_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_session_timeout" model="ir.ui.view">
+        <field name="name">res.users.form.ages.session.timeout</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='account_security']" position="inside">
+                <group string="Session Security" groups="ages_user_session_timeout.group_session_timeout_manager">
+                    <field name="ages_timeout_policy"/>
+                    <field name="ages_timeout_minutes"
+                           invisible="ages_timeout_policy != 'custom'"/>
+                    <field name="ages_timeout_warning_minutes"
+                           invisible="ages_timeout_policy != 'custom'"/>
+                    <field name="ages_timeout_effective_minutes" invisible="1"/>
+                    <field name="ages_force_session_timeout" invisible="1"/>
+                    <field name="ages_last_activity" readonly="1"/>
+                    <field name="ages_session_started" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

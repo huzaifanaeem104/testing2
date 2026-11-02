@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_sub_company_user,ages.sub.company user,model_ages_sub_company,account.group_account_user,1,1,1,1
+access_ages_sub_company_manager,ages.sub.company manager,model_ages_sub_company,account.group_account_manager,1,1,1,1
+access_ages_sub_company_account_mapping_user,ages.sub.company.account.mapping user,model_ages_sub_company_account_mapping,account.group_account_user,1,1,1,1
+access_ages_sub_company_account_mapping_manager,ages.sub.company.account.mapping manager,model_ages_sub_company_account_mapping,account.group_account_manager,1,1,1,1

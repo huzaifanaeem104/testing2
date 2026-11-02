@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Feed operators perform stock operations (issues, counts) through Inventory. -->
+    <record id="dairy_farm_core.group_dairy_feed_operator" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+    </record>
+</odoo>

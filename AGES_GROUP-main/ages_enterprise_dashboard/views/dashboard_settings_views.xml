@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_ages_enterprise_dashboard" model="ir.ui.view">
+        <field name="name">res.config.settings.ages.enterprise.dashboard</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="AGES Dashboard" string="AGES Dashboard"
+                     name="ages_enterprise_dashboard"
+                     groups="base.group_system">
+                    <block title="Exception thresholds" name="ages_ent_thresholds_block">
+                        <setting id="ages_ent_contract_expiry"
+                                 string="Contract expiry horizon (days)"
+                                 help="Open contracts whose close date falls within this many days appear in the Action Center.">
+                            <field name="ages_ent_contract_expiry_days"/>
+                        </setting>
+                        <setting id="ages_ent_overdue_grace"
+                                 string="Overdue grace (days)"
+                                 help="Invoices and bills are overdue only after this many days past invoice_date_due.">
+                            <field name="ages_ent_overdue_grace_days"/>
+                        </setting>
+                        <setting id="ages_ent_slow_stock"
+                                 string="Slow-moving stock horizon (days)"
+                                 help="Reserved for inventory aging when a stored inbound-age basis exists. Not used as a guessed FIFO age.">
+                            <field name="ages_ent_slow_stock_days"/>
+                        </setting>
+                        <setting id="ages_ent_critical_queue_count"
+                                 string="Critical queue size"
+                                 help="An exception queue is highlighted as critical when it reaches this record count.">
+                            <field name="ages_ent_critical_queue_count"/>
+                        </setting>
+                        <setting id="ages_ent_hr_contract_expiry"
+                                 string="Employee contract expiry horizon (days)"
+                                 help="Open employee contracts ending inside this horizon appear in HR exceptions.">
+                            <field name="ages_ent_hr_contract_expiry_days"/>
+                        </setting>
+                        <setting id="ages_ent_target_warn"
+                                 string="Target warning variance %"
+                                 help="KPI target status becomes a warning when the absolute variance percentage reaches this value.">
+                            <field name="ages_ent_target_warn_pct"/>
+                        </setting>
+                        <setting id="ages_ent_target_critical"
+                                 string="Target critical variance %"
+                                 help="KPI target status becomes critical when the absolute variance percentage reaches this value.">
+                            <field name="ages_ent_target_critical_pct"/>
+                        </setting>
+                        <setting id="ages_ent_stale_quotation"
+                                 string="Stale quotation horizon (days)"
+                                 help="Draft or sent quotations older than this many days appear as stale on the Sales dashboard.">
+                            <field name="ages_ent_stale_quotation_days"/>
+                        </setting>
+                    </block>
+                    <block title="KPI targets" name="ages_ent_targets_block">
+                        <setting id="ages_ent_kpi_targets"
+                                 string="Maintained KPI targets"
+                                 help="Targets are never invented. Add a record only when management maintains an explicit value.">
+                            <button name="%(ages_enterprise_dashboard.action_ages_dashboard_kpi_target)d"
+                                    type="action"
+                                    string="KPI targets"
+                                    class="btn-link"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="opal_vendor_balance_report">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-set="currency" t-value="currency or company.currency_id"/>
+                <t t-call="ages_custom_reports.ages_report_pdf_styles"/>
+                <div class="ages-ledger-report ages-report-branded">
+                    <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+                    <p style="text-align:center;color:#5c6b7f;margin:8px 0 12px;">
+                        Reference only — OPAL static data. Does not post to Odoo ledgers.
+                    </p>
+                    <t t-if="not lines">
+                        <p style="text-align:center;padding:16px;color:#5c6b7f;">No OPAL reference rows for the current filters.</p>
+                    </t>
+                    <t t-if="lines">
+                        <table class="ledger-table">
+                            <thead>
+                                <tr>
+                                    <t t-foreach="columns" t-as="column">
+                                        <th t-att-class="'col-amount text-end' if column.get('type') == 'monetary' else ''">
+                                            <t t-esc="column['label']"/>
+                                        </th>
+                                    </t>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="lines" t-as="line">
+                                    <tr t-att-class="'group-row' if line.get('source') in ('odoo_overall', 'opal_overall', 'opal_vendor_total') else 'data-row'">
+                                        <t t-foreach="columns" t-as="column">
+                                            <t t-set="key" t-value="column['id']"/>
+                                            <t t-set="value" t-value="line.get('source_label') if key == 'source' else line.get(key)"/>
+                                            <td t-if="column.get('type') == 'monetary'" class="col-amount">
+                                                <t t-if="value not in (None, False, '')">
+                                                    <span t-out="value"
+                                                          t-att-class="'ages-ledger-negative' if value and value &lt; 0 else ''"
+                                                          t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                                </t>
+                                            </td>
+                                            <td t-else="">
+                                                <t t-esc="value or ''"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

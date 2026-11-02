@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_vaccination_search" model="ir.ui.view">
+        <field name="name">dairy.vaccination.search</field>
+        <field name="model">dairy.vaccination</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="animal_id"/>
+                <field name="product_id"/>
+                <field name="disease"/>
+                <filter name="filter_planned" string="Planned" domain="[('state', '=', 'planned')]"/>
+                <filter name="filter_overdue" string="Overdue" domain="[('is_overdue', '=', True)]"/>
+                <filter name="filter_due_week" string="Due in 7 Days"
+                        domain="[('state', '=', 'planned'), ('planned_date', '&lt;=', (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]"/>
+                <filter name="filter_date" string="Due Date" date="planned_date"/>
+                <group string="Group By">
+                    <filter name="groupby_product" string="Vaccine" context="{'group_by': 'product_id'}"/>
+                    <filter name="groupby_disease" string="Disease" context="{'group_by': 'disease'}"/>
+                    <filter name="groupby_month" string="Month" context="{'group_by': 'planned_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dairy_vaccination_list" model="ir.ui.view">
+        <field name="name">dairy.vaccination.list</field>
+        <field name="model">dairy.vaccination</field>
+        <field name="arch" type="xml">
+            <list string="Vaccinations" decoration-danger="is_overdue" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="animal_id"/>
+                <field name="product_id"/>
+                <field name="disease"/>
+                <field name="planned_date"/>
+                <field name="date_given"/>
+                <field name="next_due_date" optional="show"/>
+                <field name="lot_id" optional="hide"/>
+                <field name="is_overdue" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'planned'"/>
+                <button name="action_done" type="object" string="Done" icon="fa-check" invisible="state != 'planned'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_vaccination_form" model="ir.ui.view">
+        <field name="name">dairy.vaccination.form</field>
+        <field name="model">dairy.vaccination</field>
+        <field name="arch" type="xml">
+            <form string="Vaccination">
+                <header>
+                    <button name="action_done" type="object" string="Mark as Given" class="btn-primary" invisible="state != 'planned'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state != 'planned'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="animal_id" readonly="state != 'planned'" options="{'no_create': True}"/>
+                            <field name="product_id" readonly="state != 'planned'" options="{'no_create': True}"/>
+                            <field name="disease" readonly="state != 'planned'"/>
+                            <field name="planned_date" readonly="state != 'planned'"/>
+                            <field name="date_given" readonly="state != 'planned'"/>
+                            <field name="next_due_date"/>
+                            <field name="next_vaccination_id" invisible="not next_vaccination_id"/>
+                        </group>
+                        <group>
+                            <label for="dose_qty"/>
+                            <div class="o_row">
+                                <field name="dose_qty" readonly="state != 'planned'"/>
+                                <field name="uom_category_id" invisible="1"/>
+                                <field name="uom_id" readonly="state != 'planned'" options="{'no_create': True}"
+                                       domain="[('category_id', '=', uom_category_id)]"/>
+                            </div>
+                            <field name="tracking" invisible="1"/>
+                            <field name="lot_id" readonly="state != 'planned'" invisible="tracking == 'none'"
+                                   options="{'no_create': True}"/>
+                            <field name="administered_by_id" readonly="state != 'planned'"/>
+                            <field name="veterinarian_id" readonly="state != 'planned'"/>
+                            <field name="cost_amount" invisible="state != 'done'"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="withdrawal_id" invisible="not withdrawal_id"/>
+                        </group>
+                    </group>
+                    <field name="notes" placeholder="Notes"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dairy_vaccination" model="ir.actions.act_window">
+        <field name="name">Vaccinations</field>
+        <field name="res_model">dairy.vaccination</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_planned': 1}</field>
+    </record>
+
+    <record id="view_dairy_vaccination_plan_wizard_form" model="ir.ui.view">
+        <field name="name">dairy.vaccination.plan.wizard.form</field>
+        <field name="model">dairy.vaccination.plan.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Plan Herd Vaccination">
+                <group>
+                    <group>
+                        <field name="product_id" options="{'no_create': True}"/>
+                        <field name="disease"/>
+                        <field name="planned_date"/>
+                        <field name="dose_qty"/>
+                    </group>
+                    <group>
+                        <field name="group_ids" widget="many2many_tags"/>
+                        <field name="animal_ids" widget="many2many_tags"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_plan" type="object" string="Plan" class="btn-primary"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dairy_vaccination_plan_wizard" model="ir.actions.act_window">
+        <field name="name">Plan Herd Vaccination</field>
+        <field name="res_model">dairy.vaccination.plan.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

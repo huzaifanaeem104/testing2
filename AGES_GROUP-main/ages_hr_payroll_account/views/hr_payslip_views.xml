@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_payslip_form_account" model="ir.ui.view">
+        <field name="name">hr.payslip.form.account</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="ages_hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='other_info']//group" position="inside">
+                <field name="date"/>
+                <field name="journal_id"/>
+                <field name="move_id" readonly="1"/>
+                <field name="move_state" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

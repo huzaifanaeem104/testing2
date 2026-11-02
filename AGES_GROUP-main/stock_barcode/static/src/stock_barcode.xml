@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="stock_barcode.Client">
+        <div class="o_stock_barcode h-100 d-flex flex-column">
+            <div class="o_stock_barcode_header d-flex align-items-center justify-content-between px-3 py-2">
+                <div>
+                    <div class="fw-bold">Barcode Operations</div>
+                    <div class="text-muted small" t-esc="state.message"/>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-secondary" t-on-click="openInventory">Inventory</button>
+                    <button class="btn btn-primary" t-if="state.pickingId or state.locationId" t-on-click="validate">Validate</button>
+                </div>
+            </div>
+            <div class="flex-grow-1 overflow-auto p-3">
+                <t t-if="state.mode === 'inventory'">
+                    <div class="alert alert-info">
+                        Scan a location, then scan products to count them.
+                        <t t-if="state.data.location and state.data.location.length">
+                            Current location: <strong t-esc="state.data.location[0].complete_name or state.data.location[0].name"/>
+                        </t>
+                    </div>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Barcode</th>
+                                <th t-if="state.data.show_quantity_count">Expected</th>
+                                <th>Counted</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="lines" t-as="line" t-key="line.id">
+                                <td t-esc="line.product_name"/>
+                                <td t-esc="line.barcode"/>
+                                <td t-if="state.data.show_quantity_count" t-esc="line.qty_expected"/>
+                                <td t-esc="line.qty_counted"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+                <t t-elif="state.pickingId">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Barcode</th>
+                                <th>Demand</th>
+                                <th>Done</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="lines" t-as="line" t-key="line.id">
+                                <td t-esc="line.product_name"/>
+                                <td t-esc="line.barcode"/>
+                                <td t-esc="line.qty_demand"/>
+                                <td t-esc="line.qty_done"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+                <t t-else="">
+                    <div class="alert alert-info">Select a transfer or start an inventory count, then scan barcodes.</div>
+                    <div class="list-group">
+                        <button class="list-group-item list-group-item-action"
+                                t-foreach="pickings" t-as="picking" t-key="picking.id"
+                                t-on-click="() => this.openPicking(picking.id)">
+                            <div class="fw-bold" t-esc="picking.name"/>
+                            <div class="small text-muted" t-esc="picking.state"/>
+                        </button>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

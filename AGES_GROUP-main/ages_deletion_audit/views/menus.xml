@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Central administrator views -->
+    <menuitem id="menu_ages_deletion_audit_settings"
+              name="Deleted Records"
+              parent="base.menu_administration"
+              action="action_ages_deletion_audit_all"
+              groups="ages_deletion_audit.group_deletion_audit_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_ages_deletion_audit_technical"
+              name="Deleted Records"
+              parent="base.menu_custom"
+              action="action_ages_deletion_audit_all"
+              groups="ages_deletion_audit.group_deletion_audit_manager"
+              sequence="85"/>
+
+    <menuitem id="menu_ages_deletion_audit_exceptions"
+              name="Deletion Audit Exceptions"
+              parent="base.menu_custom"
+              action="action_ages_deletion_audit_exception"
+              groups="ages_deletion_audit.group_deletion_audit_manager"
+              sequence="86"/>
+
+    <!-- Per-module Configuration → Deleted Records -->
+    <menuitem id="menu_deleted_records_project"
+              name="Deleted Records"
+              parent="project.menu_project_config"
+              action="action_ages_deletion_audit_project"
+              groups="project.group_project_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_deleted_records_sales"
+              name="Deleted Records"
+              parent="sale.menu_sale_config"
+              action="action_ages_deletion_audit_sales"
+              groups="sales_team.group_sale_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_deleted_records_purchase"
+              name="Deleted Records"
+              parent="purchase.menu_purchase_config"
+              action="action_ages_deletion_audit_purchase"
+              groups="purchase.group_purchase_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_deleted_records_accounting"
+              name="Deleted Records"
+              parent="account.menu_finance_configuration"
+              action="action_ages_deletion_audit_accounting"
+              groups="account.group_account_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_ages_expense_configuration"
+              name="Configuration"
+              parent="ages_expense.menu_ages_expense_root"
+              groups="account.group_account_manager,base.group_system"
+              sequence="90"/>
+    <menuitem id="menu_deleted_records_expense"
+              name="Deleted Records"
+              parent="menu_ages_expense_configuration"
+              action="action_ages_deletion_audit_expense"
+              groups="account.group_account_manager,base.group_system"
+              sequence="10"/>
+
+    <menuitem id="menu_purchase_request_configuration"
+              name="Configuration"
+              parent="purchase_request.parent_menu_purchase_request"
+              groups="purchase_request.group_purchase_request_manager"
+              sequence="90"/>
+    <menuitem id="menu_deleted_records_purchase_request"
+              name="Deleted Records"
+              parent="menu_purchase_request_configuration"
+              action="action_ages_deletion_audit_purchase_request"
+              groups="purchase_request.group_purchase_request_manager"
+              sequence="10"/>
+
+    <menuitem id="menu_deleted_records_inventory"
+              name="Deleted Records"
+              parent="stock.menu_stock_config_settings"
+              action="action_ages_deletion_audit_inventory"
+              groups="stock.group_stock_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_deleted_records_employees"
+              name="Deleted Records"
+              parent="hr.menu_human_resources_configuration"
+              action="action_ages_deletion_audit_employees"
+              groups="hr.group_hr_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_deleted_records_payroll"
+              name="Deleted Records"
+              parent="ages_hr_work_entry_bridge.menu_hr_payroll_configuration"
+              action="action_ages_deletion_audit_payroll"
+              groups="hr.group_hr_manager"
+              sequence="90"/>
+
+    <!-- Attendance Configuration is an action menu (Settings). A child would
+         hide that action, so Deleted Records sits next to it on the root. -->
+    <menuitem id="menu_deleted_records_attendances"
+              name="Deleted Records"
+              parent="hr_attendance.menu_hr_attendance_root"
+              action="action_ages_deletion_audit_attendances"
+              groups="hr_attendance.group_hr_attendance_manager"
+              sequence="98"/>
+</odoo>

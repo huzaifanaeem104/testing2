@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_contract_purchase,ages.contract purchase,ages_contracts_menu.model_ages_contract,purchase.group_purchase_user,1,0,0,0

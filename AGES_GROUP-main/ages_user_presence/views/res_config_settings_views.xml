@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_user_presence" model="ir.ui.view">
+        <field name="name">res.config.settings.ages.user.presence</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="User Presence" string="User Presence"
+                     name="ages_user_presence" groups="base.group_system">
+                    <block title="Tracking" name="ages_presence_tracking_block">
+                        <setting id="ages_presence_enabled"
+                                 string="Track user presence"
+                                 help="Record each browser session separately from ordinary Odoo business requests.">
+                            <field name="ages_presence_enabled"/>
+                        </setting>
+                        <setting id="ages_presence_heartbeat"
+                                 string="Heartbeat interval (seconds)"
+                                 help="How often the browser reports visibility and activity. 30 seconds is a good default.">
+                            <field name="ages_presence_heartbeat_seconds"/>
+                        </setting>
+                        <setting id="ages_presence_idle"
+                                 string="Idle after (minutes)"
+                                 help="A visible Odoo page with no mouse, keyboard, or navigation becomes Idle after this delay.">
+                            <field name="ages_presence_idle_minutes"/>
+                        </setting>
+                        <setting id="ages_presence_inactive"
+                                 string="Inactive after (seconds)"
+                                 help="No heartbeat for this long (closed tab, sleep, disconnect) becomes Inactive. The user stays logged in until the HTTP session ends.">
+                            <field name="ages_presence_inactive_seconds"/>
+                        </setting>
+                    </block>
+                    <block title="Who is tracked" name="ages_presence_who_block">
+                        <setting id="ages_presence_portal"
+                                 string="Track portal users"
+                                 help="Also record portal users when they use the Odoo backend. Internal users are always tracked when presence is enabled. Website-only portal pages do not send heartbeats.">
+                            <field name="ages_presence_track_portal"/>
+                        </setting>
+                        <setting id="ages_presence_retention"
+                                 string="Keep logged-out history (days)"
+                                 help="Logged-out sessions older than this are deleted. Currently logged-in sessions are never deleted by this cleanup.">
+                            <field name="ages_presence_retention_days"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_employee_transfer_wizard_form" model="ir.ui.view">
+        <field name="name">hr.employee.transfer.wizard.form</field>
+        <field name="model">hr.employee.transfer.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Employee Transfer &amp; Wage Change">
+                <sheet>
+                    <group>
+                        <group string="Employee Details">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="employee_id" readonly="1"/>
+                            <field name="job_id"/>
+                        </group>
+                        <group string="Project Transfer">
+                            <field name="old_project_id" readonly="1"/>
+                            <field name="new_project_id"/>
+                        </group>
+                    </group>
+                    <group string="Wage Update">
+                        <group>
+                            <field name="old_wage" readonly="1" force_save="1" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="new_wage" widget="monetary"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_apply_transfer" string="Apply Change" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_employee_bulk_transfer_wizard_form" model="ir.ui.view">
+        <field name="name">hr.employee.bulk.transfer.wizard.form</field>
+        <field name="model">hr.employee.bulk.transfer.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bulk Transfer Project">
+                <sheet>
+                    <group>
+                        <field name="new_project_id" options="{'no_create': True}" required="1"/>
+                        <field name="job_id" options="{'no_create': True}"/>
+                    </group>
+                    <group string="Selected Employees">
+                        <field name="employee_ids" nolabel="1" colspan="2" options="{'no_create': True}">
+                            <list create="false" delete="false">
+                                <field name="name"/>
+                                <field name="job_id"/>
+                                <field name="department_id"/>
+                                <field name="project_id"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_apply_bulk_transfer" string="Apply Transfer" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- List-view Action: Bulk Transfer Project -->
+    <record id="action_hr_employee_bulk_transfer" model="ir.actions.server">
+        <field name="name">Bulk Transfer Project</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+action = records.action_open_bulk_transfer_wizard()
+        </field>
+    </record>
+</odoo>

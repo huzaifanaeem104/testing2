@@ -1,0 +1,435 @@
+.o_ages_apb_report.account_report {
+    height: 100%;
+    background: $o-webclient-background-color;
+
+    .fit-content {
+        width: fit-content;
+    }
+
+    .o_control_panel {
+        border-bottom: 1px solid $o-gray-300;
+        gap: 0.5rem !important;
+        padding-top: 0.35rem !important;
+        padding-bottom: 0.5rem !important;
+        background: $o-view-background-color;
+    }
+
+    .o_content {
+        background: $o-webclient-background-color;
+        padding-top: 0;
+    }
+
+    .o_ages_apb_filters_area {
+        position: relative;
+        max-width: 100%;
+    }
+
+    .o_ages_apb_filters {
+        max-width: 100%;
+
+        > .btn-secondary {
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+    }
+
+    .o_ages_apb_currency_pill {
+        pointer-events: none;
+    }
+
+    .o_ages_apb_gear_btn {
+        min-width: 38px;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .o_ages_apb_dropdown {
+        position: fixed;
+        z-index: 1050;
+        min-width: 280px;
+        padding: 8px 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+
+        .dropdown-item {
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            padding: 6px 16px;
+
+            &.selected {
+                font-weight: 600;
+            }
+        }
+
+        .dropdown-item.date,
+        .dropdown-item.interval,
+        .dropdown-item.record {
+            cursor: default;
+        }
+    }
+
+    .o_ages_apb_partner_dropdown {
+        min-width: 380px;
+        overflow: visible;
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            cursor: default;
+
+            label {
+                display: none;
+            }
+
+            .o_multi_record_selector,
+            .o-autocomplete {
+                flex-grow: 1;
+                min-width: 0;
+            }
+        }
+    }
+
+    .o_ages_apb_date_input,
+    .o_ages_apb_interval_input {
+        width: 86px;
+        margin: 0 8px;
+        border: 0;
+        border-bottom: 1px solid $o-gray-300;
+        background: transparent;
+        text-align: center;
+        font-size: 13px;
+    }
+
+    .o_ages_apb_interval_input {
+        width: 64px;
+    }
+
+    .o_ages_apb_warnings {
+        margin-bottom: 1rem;
+
+        .alert {
+            margin-bottom: 0;
+            border-radius: 0;
+            border-left: 0;
+            border-right: 0;
+        }
+    }
+
+    .o_ages_apb_sheet {
+        width: max-content;
+        max-width: none;
+        min-width: #{"min(100% - 32px, 800px)"};
+        overflow-x: auto;
+        margin: 16px auto 24px;
+        padding: 0;
+    }
+
+    .o_ages_apb_table {
+        width: auto;
+        min-width: 800px;
+        margin: 0 auto 24px;
+        padding: 24px;
+        border: 1px solid $o-gray-300;
+        border-radius: 0.25rem;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: $o-view-background-color;
+        font-size: 0.8rem;
+
+        > :not(caption) > * > * {
+            padding: 0.25rem 0.75rem;
+        }
+
+        thead.sticky {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: $o-view-background-color;
+        }
+
+        thead tr {
+            th:first-child {
+                color: $o-gray-300;
+            }
+
+            th:not(:first-child) {
+                text-align: center;
+                vertical-align: middle;
+                font-weight: 600;
+                color: $o-gray-700;
+                white-space: nowrap;
+            }
+        }
+
+        thead tr:not(:last-child) > th:not(:first-child) {
+            border: 1px solid $o-gray-300;
+        }
+
+        tbody td {
+            vertical-align: middle;
+            white-space: nowrap;
+            overflow: hidden;
+            color: $o-gray-700;
+        }
+
+        tbody tr:not(.empty) > td {
+            border-bottom: 1px solid var(--AccountReport-fine-line-separator-color, #{$o-gray-200});
+        }
+
+        tbody tr.empty > td {
+            border-bottom: 0;
+            height: 12px;
+            padding-top: 0;
+            padding-bottom: 0;
+            background: transparent !important;
+        }
+
+        tbody tr.empty:hover > * {
+            --table-bg: transparent;
+            --table-accent-bg: transparent;
+            background: transparent !important;
+        }
+
+        &.striped {
+            > thead > tr:not(:first-child) > th:nth-child(2n+3) {
+                background: $o-gray-100;
+            }
+
+            > tbody > tr:not(.line_level_0):not(.empty) > td:nth-child(2n+3) {
+                background: $o-gray-100;
+            }
+
+            > tbody > tr.line_level_0 > td:nth-child(2n+3) {
+                background: $o-gray-300;
+            }
+
+            > tbody > tr:not(.line_level_0):not(.empty):hover > td:nth-child(2n+3) {
+                background: $o-gray-100;
+            }
+
+            > tbody > tr.line_level_0:hover > td {
+                background-color: $o-gray-300;
+            }
+        }
+    }
+
+    .line_name {
+        min-width: 280px;
+        max-width: 420px;
+        vertical-align: top;
+        white-space: normal;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+
+        > .wrapper {
+            display: flex;
+            align-items: flex-start;
+
+            > .content {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: flex-start;
+                min-width: 0;
+            }
+        }
+
+        .name {
+            overflow: hidden;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            white-space: normal;
+        }
+
+        &.unfoldable:hover {
+            cursor: pointer;
+        }
+    }
+
+    .partner_trust {
+        font-size: 8px;
+        margin-right: 4px;
+    }
+
+    .line_cell {
+        vertical-align: middle;
+
+        > .wrapper {
+            display: flex;
+            align-items: center;
+
+            > .content {
+                display: flex;
+                align-items: center;
+                font-variant-numeric: tabular-nums;
+            }
+        }
+
+        &.date > .wrapper {
+            justify-content: center;
+        }
+
+        &.numeric {
+            white-space: nowrap;
+        }
+
+        &.numeric > .wrapper {
+            justify-content: flex-end;
+        }
+
+        &.muted {
+            color: var(--AccountReport-muted-data-color, #{$o-gray-300});
+        }
+
+        &.auditable:hover,
+        tr:hover &.auditable {
+            color: $o-enterprise-action-color;
+
+            .o_ages_apb_amount_link {
+                color: inherit;
+            }
+        }
+    }
+
+    tbody tr:hover .muted {
+        color: $o-gray-900;
+    }
+
+    .line_level_0 {
+        color: $o-gray-700;
+        font-weight: 700;
+
+        > td {
+            border-bottom: 0 !important;
+            background-color: $o-gray-300;
+        }
+
+        .muted {
+            color: $o-gray-500 !important;
+        }
+    }
+
+    .o_ages_apb_row-partner {
+        font-weight: 600;
+    }
+
+    .o_ages_apb_row-partner.unfolded {
+        font-weight: 700;
+
+        > td {
+            border-bottom: 1px solid $o-gray-300;
+        }
+
+        .btn_action {
+            opacity: 1;
+        }
+    }
+
+    .o_ages_apb_row-detail {
+        font-weight: 400;
+
+        .line_name .wrapper {
+            padding-left: 4px;
+        }
+    }
+
+    .btn_foldable,
+    .btn_foldable_empty,
+    .btn_sortable,
+    .btn_action {
+        border: none;
+        color: $o-gray-300;
+        font-size: inherit;
+        font-weight: normal;
+        padding: 0;
+        text-align: center;
+        width: 20px;
+        white-space: nowrap;
+        background: transparent;
+
+        &:hover {
+            color: $o-enterprise-action-color !important;
+            cursor: pointer;
+        }
+    }
+
+    .btn_foldable {
+        color: $o-gray-600;
+        flex-shrink: 0;
+    }
+
+    .btn_foldable_empty:hover {
+        cursor: default;
+        color: $o-gray-300 !important;
+    }
+
+    .btn_sortable {
+        margin-right: 2px;
+
+        &.o_sorted > i,
+        &.o_sorted > .fa-long-arrow-up,
+        &.o_sorted > .fa-long-arrow-down {
+            color: $o-enterprise-action-color;
+        }
+    }
+
+    .btn_action {
+        opacity: 0;
+        width: auto;
+        padding: 0 0.25rem;
+        margin: 0 0.25rem;
+        border: 1px solid $o-gray-300;
+        border-radius: 0.25rem;
+        background-color: $o-view-background-color;
+        color: $o-gray-600;
+        font-size: 12px;
+
+        &:hover {
+            color: $o-enterprise-action-color !important;
+            border-color: $o-enterprise-action-color;
+        }
+    }
+
+    tr:hover .btn_action {
+        opacity: 1;
+        color: $o-enterprise-action-color;
+    }
+
+    .o_ages_apb_amount_link {
+        padding: 0;
+        border: 0;
+        color: inherit;
+        background: transparent;
+        font: inherit;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .o_ages_move_name.o_ages_move_link {
+        cursor: pointer;
+
+        &:hover {
+            color: $o-enterprise-action-color;
+        }
+    }
+
+    .o_ages_move_comm {
+        color: inherit;
+        font-weight: 400;
+    }
+
+    .text-danger {
+        color: var(--AgesReport-negative-color, #dc3545) !important;
+    }
+
+    @media (max-width: 1200px) {
+        .o_ages_apb_sheet {
+            max-width: none;
+            min-width: 0;
+        }
+
+        .o_ages_apb_table {
+            min-width: 0;
+            padding: 16px;
+        }
+    }
+}

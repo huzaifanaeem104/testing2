@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_retention_recovery_list" model="ir.ui.view">
+        <field name="name">ages.retention.recovery.list</field>
+        <field name="model">ages.retention.recovery</field>
+        <field name="arch" type="xml">
+            <list string="Retention Recovery">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ages_retention_recovery_form" model="ir.ui.view">
+        <field name="name">ages.retention.recovery.form</field>
+        <field name="model">ages.retention.recovery</field>
+        <field name="arch" type="xml">
+            <form string="Retention Recovery">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ages_retention_recovery" model="ir.actions.act_window">
+        <field name="name">Retention Recovery</field>
+        <field name="res_model">ages.retention.recovery</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

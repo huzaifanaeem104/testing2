@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_form_inherit_coa_custom_fields" model="ir.ui.view">
+        <field name="name">account.account.form.inherit.coa.custom.fields</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <field name="group_id" position="after">
+                <field name="main_account"/>
+                <field name="transactional_level"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_list_inherit_coa_custom_fields" model="ir.ui.view">
+        <field name="name">account.account.list.inherit.coa.custom.fields</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list"/>
+        <field name="arch" type="xml">
+            <field name="account_type" position="after">
+                <field name="main_account" optional="show"/>
+                <field name="transactional_level" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_search_inherit_coa_custom_fields" model="ir.ui.view">
+        <field name="name">account.account.search.inherit.coa.custom.fields</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="main_account"/>
+                <field name="transactional_level"/>
+            </field>
+            <filter name="activeacc" position="after">
+                <separator/>
+                <filter string="Equity (Main)" name="main_equity" domain="[('main_account', '=', 'EQUITY')]"/>
+                <filter string="Liabilities (Main)" name="main_liabilities" domain="[('main_account', '=', 'LIABILITIES')]"/>
+                <filter string="Income (Main)" name="main_income" domain="[('main_account', '=', 'INCOME')]"/>
+                <filter string="Expense (Main)" name="main_expense" domain="[('main_account', '=', 'EXPENSE')]"/>
+                <separator/>
+                <filter string="Posting Accounts (Level 4)" name="transactional_level_4" domain="[('transactional_level', '=', 4)]"/>
+            </filter>
+            <filter name="accounttype" position="after">
+                <filter string="Main Account" name="group_main_account" context="{'group_by': 'main_account'}"/>
+                <filter string="Transactional Level" name="group_transactional_level" context="{'group_by': 'transactional_level'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

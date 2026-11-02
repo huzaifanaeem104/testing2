@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="rule_dairy_animal_company" model="ir.rule">
+            <field name="name">Dairy animal: multi-company</field>
+            <field name="model_id" ref="model_dairy_animal"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_dairy_location_company" model="ir.rule">
+            <field name="name">Dairy location: multi-company</field>
+            <field name="model_id" ref="model_dairy_location"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_dairy_animal_group_company" model="ir.rule">
+            <field name="name">Dairy animal group: multi-company</field>
+            <field name="model_id" ref="model_dairy_animal_group"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_dairy_shift_company" model="ir.rule">
+            <field name="name">Dairy shift: multi-company</field>
+            <field name="model_id" ref="model_dairy_shift"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_dairy_milk_withdrawal_company" model="ir.rule">
+            <field name="name">Milk withdrawal: multi-company</field>
+            <field name="model_id" ref="model_dairy_milk_withdrawal"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+    </data>
+</odoo>

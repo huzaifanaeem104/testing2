@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_form_inherit_client_vendor" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.client.vendor</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_type']" position="after">
+                <field name="client_vendor_type" widget="radio" class="oe_inline ms-3" options="{'horizontal': true}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

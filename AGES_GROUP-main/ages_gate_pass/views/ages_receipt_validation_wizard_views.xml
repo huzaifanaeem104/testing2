@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_receipt_validation_wizard_form" model="ir.ui.view">
+        <field name="name">ages.receipt.validation.wizard.form</field>
+        <field name="model">ages.receipt.validation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirm Destination Location">
+                <div class="alert alert-info" role="alert">
+                    You are validating this receipt with the Destination Location specified below.
+                    If you want to change it, select a new Destination Location, otherwise click <strong>Validate</strong> to proceed.
+                </div>
+                <group>
+                    <field name="picking_id" readonly="1"/>
+                    <field name="location_dest_id" options="{'no_create': True}"/>
+                </group>
+                <footer>
+                    <button string="Validate" name="action_validate" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

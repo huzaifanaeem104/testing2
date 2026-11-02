@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_directory_ledger_wizard_form" model="ir.ui.view">
+        <field name="name">project.directory.ledger.wizard.form</field>
+        <field name="model">project.directory.ledger.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Project Directory Ledger Report">
+                <group>
+                    <group string="Active Company">
+                        <field name="company_id" invisible="1"/>
+                        <field name="sub_company_id" options="{'no_create': True}"/>
+                    </group>
+                    <group string="Period">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Filters">
+                        <field name="analytic_account_id"/>
+                        <field name="account_id"/>
+                        <field name="partner_id"/>
+                        <field name="target_move"/>
+                        <field name="hide_account_payable"/>
+                        <field name="hide_cost_of_revenue"/>
+                        <field name="hide_bank"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Open Interactive Report" name="action_open_interactive_report" type="object" class="btn-primary"/>
+                    <button string="Download PDF" name="action_print_pdf" type="object" class="btn-secondary"/>
+                    <button string="Export Excel" name="action_print_excel" type="object" class="btn-secondary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_project_directory_ledger_interactive" model="ir.actions.client">
+        <field name="name">Project Directory Ledger</field>
+        <field name="tag">project_directory_ledger_report</field>
+        <field name="target">main</field>
+    </record>
+
+    <record id="action_project_directory_ledger_wizard" model="ir.actions.act_window">
+        <field name="name">Project Directory Ledger (Wizard)</field>
+        <field name="res_model">project.directory.ledger.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_ages_reporting_root"
+              name="AGES Reporting"
+              parent="account.menu_finance"
+              sequence="2"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+
+    <menuitem id="menu_ages_reporting_statements"
+              name="Statement Reports"
+              parent="menu_ages_reporting_root"
+              sequence="10"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+    <menuitem id="menu_ages_reporting_ledgers"
+              name="Ledgers"
+              parent="menu_ages_reporting_root"
+              sequence="20"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+    <menuitem id="menu_ages_reporting_partners"
+              name="Partner Reports"
+              parent="menu_ages_reporting_root"
+              sequence="30"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+    <menuitem id="menu_ages_reporting_taxes"
+              name="Taxes &amp; Fiscal"
+              parent="menu_ages_reporting_root"
+              sequence="40"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+    <menuitem id="menu_ages_reporting_management"
+              name="Management"
+              parent="menu_ages_reporting_root"
+              sequence="50"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+
+    <menuitem id="menu_project_directory_ledger_report"
+              name="Project Directory Ledger"
+              parent="menu_ages_reporting_ledgers"
+              action="action_project_directory_ledger_interactive"
+              sequence="40"/>
+</odoo>

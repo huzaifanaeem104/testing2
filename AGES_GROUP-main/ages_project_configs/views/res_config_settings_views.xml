@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_ages_project_configs" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.ages.project.configs</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="project.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='project']" position="inside">
+
+                <block title="Default Accounts" name="ages_default_accounts">
+                    <setting string="Work Done Account" company_dependent="1">
+                        <field name="ages_work_done_account_id"/>
+                    </setting>
+                    <setting string="Mobilization Account" company_dependent="1">
+                        <field name="ages_mobilization_account_id"/>
+                    </setting>
+                    <setting string="Retention Account" company_dependent="1">
+                        <field name="ages_retention_account_id"/>
+                    </setting>
+                    <setting string="Vendor Retention Payable" company_dependent="1">
+                        <field name="ages_vendor_retention_account_id"/>
+                    </setting>
+                </block>
+
+                <block title="Default Parent Location" name="ages_default_parent_location">
+                    <setting string="Location" company_dependent="1">
+                        <field name="ages_default_parent_location_id"/>
+                    </setting>
+                </block>
+
+                <block title="Default Analytic Plans" name="ages_default_analytic_plans">
+                    <setting string="Analytic Plans" company_dependent="1">
+                        <field name="ages_default_analytic_plan_id"/>
+                    </setting>
+                </block>
+
+                <block title="Default Bases" name="ages_default_bases">
+                    <setting string="Mobilization Amount-Base" company_dependent="1">
+                        <field name="ages_mobilization_amount_base"/>
+                    </setting>
+                    <setting string="Retention Amount-Base" company_dependent="1">
+                        <field name="ages_retention_amount_base"/>
+                    </setting>
+                    <setting string="Sales Tax Amount Base" company_dependent="1">
+                        <field name="ages_sales_tax_amount_base"/>
+                    </setting>
+                </block>
+
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

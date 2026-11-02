@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="ages_hr_payroll.PayslipBatch">
+        <div class="o_hr_payroll_dashboard_block o_hr_payroll_dashboard_batches h-100 card m-auto">
+            <div class="card-header border-0 d-flex justify-content-between align-items-center bg-view">
+                <h2 class="card-title">Pay Runs</h2>
+                <a class="btn btn-link" href="#" t-on-click.prevent="onClickTitle">All</a>
+            </div>
+            <ul class="list-group list-group-flush">
+                <a t-foreach="props.batches" t-as="batch" t-key="batch.id"
+                   class="list-group-item list-group-item-action d-flex justify-content-start align-items-center"
+                   href="#"
+                   t-on-click.prevent="() => this.onClickLine(batch.id)">
+                    <div t-att-class="'badge rounded-pill fs-6 ' + this.getColorFromState(batch.state)">
+                        <t t-esc="batch.state"/>
+                    </div>
+                    <div class="o_hr_payroll_dashboard_batch text-end mw-75 ms-auto p-0">
+                        <t t-esc="batch.name"/><br/>
+                        <span class="text-nowrap" t-esc="batch.payslip_count"/>
+                    </div>
+                </a>
+                <li t-if="!props.batches.length" class="list-group-item text-muted">No pay runs yet</li>
+            </ul>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_secondary_uom_user,ages.secondary.uom user,model_ages_secondary_uom,project.group_project_user,1,0,0,0
+access_ages_secondary_uom_manager,ages.secondary.uom manager,model_ages_secondary_uom,project.group_project_manager,1,1,1,1
+access_ages_contract_material_line_user,ages.contract.material.line user,model_ages_contract_material_line,project.group_project_user,1,1,1,1
+access_ages_contract_material_line_manager,ages.contract.material.line manager,model_ages_contract_material_line,project.group_project_manager,1,1,1,1
+access_ages_contract_scope_line_user,ages.contract.scope.line user,model_ages_contract_scope_line,project.group_project_user,1,1,1,1
+access_ages_contract_scope_line_manager,ages.contract.scope.line manager,model_ages_contract_scope_line,project.group_project_manager,1,1,1,1
+

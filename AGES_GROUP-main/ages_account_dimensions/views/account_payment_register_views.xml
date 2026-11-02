@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_register_form_ages_dimensions" model="ir.ui.view">
+        <field name="name">account.payment.register.form.ages.dimensions</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group1']/field[@name='journal_id']" position="before">
+                <field name="ages_sub_company_id"
+                         required="True"
+                         domain="[('company_id', '=', company_id)]"
+                         options="{'no_create': True}"/>
+                <field name="ages_contract_id"
+                         domain="[('company_id', '=', company_id)]"
+                         options="{'no_create': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='journal_id']" position="attributes">
+                <attribute name="required">True</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group2']/label[@for='amount']" position="before">
+                <label for="ages_actual_amount" invisible="not ages_show_actual_amount"/>
+                <div class="o_row" invisible="not ages_show_actual_amount">
+                    <field name="ages_actual_amount"
+                           widget="monetary"
+                           readonly="not can_edit_wizard or (can_group_payments and not group_payment)"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='amount']" position="attributes">
+                <attribute name="readonly">not can_edit_wizard or (can_group_payments and not group_payment) or ages_show_actual_amount</attribute>
+                <attribute name="help">Running Bill: filled from Actual Amount as Actual / (100 − WTH %) × 100 (7.5% → /92.5×100). The withholding base follows this Amount.</attribute>
+            </xpath>
+            <xpath expr="//group[@name='group2']/field[@name='communication']" position="after">
+                <field name="ages_project_wise_contract" readonly="1"
+                         invisible="not ages_contract_id"/>
+                <field name="ages_contract_description" readonly="1" class="fw-bold"
+                         invisible="not ages_contract_id"/>
+                <field name="ages_project_id"
+                         domain="[('company_id', 'in', [company_id, False])]"
+                         options="{'no_create': True}"/>
+                <field name="ages_analytic_account_id"
+                         options="{'no_create': True}"/>
+                <field name="ages_running_bill_id" readonly="1"
+                         invisible="not ages_running_bill_id"/>
+                <field name="ages_mobilization_advance_id" readonly="1"
+                         invisible="not ages_mobilization_advance_id"/>
+                <field name="ages_retention_recovery_id" readonly="1"
+                         invisible="not ages_retention_recovery_id"/>
+                <field name="ages_wht_autofill_done" invisible="1"/>
+                <field name="ages_show_actual_amount" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

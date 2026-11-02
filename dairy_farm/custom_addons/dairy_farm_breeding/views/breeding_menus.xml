@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dairy_breeding" name="Breeding" parent="dairy_farm_core.menu_dairy_root" sequence="40"
+              groups="dairy_farm_core.group_dairy_veterinarian"/>
+    <menuitem id="menu_dairy_heat" name="Heat Detection" parent="menu_dairy_breeding"
+              action="action_dairy_heat_detection" sequence="1"/>
+    <menuitem id="menu_dairy_breeding_event" name="Breeding Events" parent="menu_dairy_breeding"
+              action="action_dairy_breeding_event" sequence="10"/>
+    <menuitem id="menu_dairy_pregnancy_check" name="Pregnancy Checks" parent="menu_dairy_breeding"
+              action="action_dairy_pregnancy_check" sequence="20"/>
+    <menuitem id="menu_dairy_pregnancy_due" name="Checks Due" parent="menu_dairy_breeding"
+              action="action_dairy_pregnancy_check_due" sequence="25"/>
+    <menuitem id="menu_dairy_calving" name="Calving" parent="menu_dairy_breeding"
+              action="action_dairy_calving_event" sequence="30"/>
+    <menuitem id="menu_dairy_expected_calvings" name="Expected Calvings" parent="menu_dairy_breeding"
+              action="action_dairy_expected_calvings" sequence="40"/>
+</odoo>

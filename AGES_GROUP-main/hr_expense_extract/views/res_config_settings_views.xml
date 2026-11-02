@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_expense_extract" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.expense.extract</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr_expense.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <field name="module_hr_expense_extract" position="replace">
+                <field name="module_hr_expense_extract"/>
+            </field>
+            <xpath expr="//setting[@id='expense_extract_settings']" position="inside">
+                <div class="content-group mt8" invisible="not module_hr_expense_extract">
+                    <field name="expense_extract_mode" widget="radio"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

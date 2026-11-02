@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="ages_custom_reports.list">
+      <field name="name">ages_custom_reports list</field>
+      <field name="model">ages_custom_reports.ages_custom_reports</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </list>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="ages_custom_reports.action_window">
+      <field name="name">ages_custom_reports window</field>
+      <field name="res_model">ages_custom_reports.ages_custom_reports</field>
+      <field name="view_mode">list,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="ages_custom_reports.action_server">
+      <field name="name">ages_custom_reports server</field>
+      <field name="model_id" ref="model_ages_custom_reports_ages_custom_reports"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="ages_custom_reports" id="ages_custom_reports.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="ages_custom_reports.menu_1" parent="ages_custom_reports.menu_root"/>
+    <menuitem name="Menu 2" id="ages_custom_reports.menu_2" parent="ages_custom_reports.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="ages_custom_reports.menu_1_list" parent="ages_custom_reports.menu_1"
+              action="ages_custom_reports.action_window"/>
+    <menuitem name="Server to list" id="ages_custom_reports" parent="ages_custom_reports.menu_2"
+              action="ages_custom_reports.action_server"/>
+-->
+  </data>
+</odoo>

@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_civil_material_slip_user,ages.civil.material.slip user,model_ages_civil_material_slip,purchase.group_purchase_user,1,1,1,0
+access_ages_civil_material_slip_manager,ages.civil.material.slip manager,model_ages_civil_material_slip,purchase.group_purchase_manager,1,1,1,1
+access_ages_civil_material_slip_line_user,ages.civil.material.slip.line user,model_ages_civil_material_slip_line,purchase.group_purchase_user,1,1,1,1
+access_ages_civil_material_slip_line_manager,ages.civil.material.slip.line manager,model_ages_civil_material_slip_line,purchase.group_purchase_manager,1,1,1,1
+access_ages_civil_monthly_bill_wizard,ages.civil.monthly.bill.wizard,model_ages_civil_monthly_bill_wizard,purchase.group_purchase_user,1,1,1,1
+access_ages_civil_material_report_wizard,ages.civil.material.report.wizard,model_ages_civil_material_report_wizard,purchase.group_purchase_user,1,1,1,1

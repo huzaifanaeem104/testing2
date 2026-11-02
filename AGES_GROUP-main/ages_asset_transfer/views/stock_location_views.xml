@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_location_form_ages_asset_transfer" model="ir.ui.view">
+        <field name="name">stock.location.form.ages.asset.transfer</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_ages_assets" type="object"
+                        class="oe_stat_button" icon="fa-cubes"
+                        groups="ages_asset_transfer.group_asset_transfer_user,ages_asset_transfer.group_asset_transfer_accountant">
+                    <field name="ages_asset_count" widget="statinfo" string="Assets in Location"/>
+                </button>
+                <button name="action_view_ages_transfers" type="object"
+                        class="oe_stat_button" icon="fa-exchange"
+                        groups="ages_asset_transfer.group_asset_transfer_user,ages_asset_transfer.group_asset_transfer_accountant">
+                    <field name="ages_transfer_count" widget="statinfo" string="Transfer History"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='usage']" position="after">
+                <field name="ages_project_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

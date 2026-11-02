@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_advance_application_user,hr.advance.application.user,model_hr_advance_application,ages_hr_payroll.group_hr_payroll_user,1,1,1,1
+access_hr_advance_application_manager,hr.advance.application.manager,model_hr_advance_application,ages_hr_payroll.group_hr_payroll_manager,1,1,1,1
+access_hr_loan_application_user,hr.loan.application.user,model_hr_loan_application,ages_hr_payroll.group_hr_payroll_user,1,1,1,1
+access_hr_loan_application_manager,hr.loan.application.manager,model_hr_loan_application,ages_hr_payroll.group_hr_payroll_manager,1,1,1,1
+access_hr_loan_installment_user,hr.loan.installment.user,model_hr_loan_installment,ages_hr_payroll.group_hr_payroll_user,1,1,1,0
+access_hr_loan_installment_manager,hr.loan.installment.manager,model_hr_loan_installment,ages_hr_payroll.group_hr_payroll_manager,1,1,1,1

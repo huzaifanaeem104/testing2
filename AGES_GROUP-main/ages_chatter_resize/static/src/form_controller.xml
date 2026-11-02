@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.FormView" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_form_view_container')]" position="after">
+            <button t-if="agesChatter.hidden"
+                    type="button"
+                    class="ages_chatter_show_btn"
+                    title="Show Chatter"
+                    aria-label="Show Chatter"
+                    t-on-click="agesShowChatter">
+                <i class="fa fa-comments-o"/>
+                <span>Chatter</span>
+            </button>
+        </xpath>
+    </t>
+</templates>

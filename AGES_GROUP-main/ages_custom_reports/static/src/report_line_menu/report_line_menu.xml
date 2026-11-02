@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ages_custom_reports.ReportLineMenu">
+        <span class="o_ages_line_menu"
+              t-ref="menu"
+              t-att-class="{ 'o_ages_line_menu--open': state.open }"
+              t-on-click.stop="">
+            <button type="button"
+                    t-ref="menuBtn"
+                    class="o_ages_line_menu_btn"
+                    title="Actions"
+                    tabindex="-1"
+                    t-on-click="toggleMenu">
+                <i class="fa fa-ellipsis-v"/>
+            </button>
+            <div t-if="state.open"
+                 class="o_ages_line_menu_dropdown"
+                 t-att-style="dropdownStyle">
+                <t t-foreach="props.items" t-as="item" t-key="item.label">
+                    <button type="button"
+                            class="dropdown-item"
+                            t-on-click="(ev) => this.onItemClick(ev, item)"
+                            t-esc="item.label"/>
+                </t>
+            </div>
+        </span>
+    </t>
+
+</templates>

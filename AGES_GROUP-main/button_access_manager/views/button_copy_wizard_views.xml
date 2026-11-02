@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_button_access_copy_wizard_form" model="ir.ui.view">
+        <field name="name">button.access.copy.wizard.form</field>
+        <field name="model">button.access.copy.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Copy Hidden Buttons">
+                <group>
+                    <group string="Copy From">
+                        <field name="source_user_id" options="{'no_create': True}"/>
+                        <field name="source_group_id" options="{'no_create': True}"/>
+                    </group>
+                    <group string="Copy To">
+                        <field name="target_user_ids" widget="many2many_tags"
+                               readonly="context.get('lock_target_user')"/>
+                        <field name="target_group_ids" widget="many2many_tags"
+                               readonly="context.get('lock_target_group')"/>
+                    </group>
+                    <group string="What to copy">
+                        <field name="copy_buttons"/>
+                        <field name="copy_menus"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_copy" type="object" string="Copy Rules"
+                            class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_button_access_copy_wizard" model="ir.actions.act_window">
+        <field name="name">Copy Hidden Buttons</field>
+        <field name="res_model">button.access.copy.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

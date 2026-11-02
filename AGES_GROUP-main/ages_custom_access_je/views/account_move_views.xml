@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form_inherit_ages_custom_access_je" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.ages.custom.access.je</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Hide the core Post button for Journal Entries: posting is now
+                 only allowed through the custom Draft/Validation/Posted workflow -->
+            <xpath expr="//button[@name='action_post'][1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Hide the core Reset to Draft button for Journal Entries: use the
+                 custom Revoke buttons instead. Payment/bank-statement-owned moves
+                 (use_je_workflow = False) keep the normal core behaviour untouched. -->
+            <xpath expr="//button[@name='button_draft']" position="attributes">
+                <attribute name="invisible">not show_reset_to_draft_button or use_je_workflow</attribute>
+            </xpath>
+
+            <!-- Hide the core 2-stage statusbar for genuine Journal Entries only -->
+            <xpath expr="//field[@name='state'][@widget='statusbar']" position="attributes">
+                <attribute name="invisible">use_je_workflow</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state'][@widget='account_move_statusbar_secured']" position="attributes">
+                <attribute name="invisible">use_je_workflow</attribute>
+            </xpath>
+
+            <!-- Custom Draft / Validation / Posted workflow buttons and statusbar.
+                 Restricted to plain Miscellaneous Journal Entries: moves that back a
+                 payment or a bank statement line (use_je_workflow = False) must keep
+                 going through their own record's lifecycle, never through this. -->
+            <xpath expr="//field[@name='state'][@widget='account_move_statusbar_secured']" position="after">
+                <button name="action_je_validate" string="Validate" type="object"
+                        class="oe_highlight" data-hotkey="v"
+                        invisible="not use_je_workflow or je_stage != 'draft' or not can_validate_je"/>
+                <button name="action_je_revoke_to_draft" string="Revoke" type="object"
+                        data-hotkey="b"
+                        invisible="not use_je_workflow or je_stage != 'validate' or not can_validate_je"/>
+                <button name="action_je_post" string="Post" type="object"
+                        class="oe_highlight" data-hotkey="q"
+                        invisible="not use_je_workflow or je_stage != 'validate' or not can_post_je"/>
+                <button name="action_je_revoke_to_validate" string="Revoke" type="object"
+                        data-hotkey="b"
+                        invisible="not use_je_workflow or je_stage != 'posted' or not can_post_je"/>
+                <field name="je_stage" widget="statusbar" statusbar_visible="draft,validate,posted"
+                       invisible="not use_je_workflow"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_tree_inherit_ages_custom_access_je" model="ir.ui.view">
+        <field name="name">account.move.list.inherit.ages.custom.access.je</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="je_stage" widget="badge"
+                       decoration-info="je_stage == 'draft'"
+                       decoration-warning="je_stage == 'validate'"
+                       decoration-success="je_stage == 'posted'"
+                       optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_move_filter_inherit_ages_custom_access_je" model="ir.ui.view">
+        <field name="name">account.move.select.inherit.ages.custom.access.je</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter"/>
+        <field name="arch" type="xml">
+            <filter name="posted" position="after">
+                <filter string="To Validate" name="ages_je_to_validate"
+                        domain="[('move_type', '=', 'entry'), ('je_stage', '=', 'draft'),
+                                 ('origin_payment_id', '=', False), ('statement_line_id', '=', False)]"
+                        help="Journal Entries waiting for Validation"/>
+                <filter string="To Post" name="ages_je_to_post"
+                        domain="[('move_type', '=', 'entry'), ('je_stage', '=', 'validate'),
+                                 ('origin_payment_id', '=', False), ('statement_line_id', '=', False)]"
+                        help="Journal Entries waiting to be Posted"/>
+            </filter>
+            <filter name="status" position="after">
+                <filter string="JE Stage" name="ages_je_stage" domain="[]" context="{'group_by': 'je_stage'}"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>

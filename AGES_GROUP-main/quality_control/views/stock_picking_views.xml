@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_quality" model="ir.ui.view">
+        <field name="name">stock.picking.form.quality</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_open_quality_checks" type="object" class="oe_stat_button" icon="fa-check"
+                        invisible="quality_check_count == 0">
+                    <field name="quality_check_count" widget="statinfo" string="Quality"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

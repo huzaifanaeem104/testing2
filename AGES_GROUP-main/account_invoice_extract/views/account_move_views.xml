@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_extract" model="ir.ui.view">
+        <field name="name">account.move.form.extract</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_digitize_document"
+                        type="object"
+                        string="Digitize"
+                        class="btn-secondary"
+                        invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund', 'in_receipt', 'out_invoice', 'out_refund', 'out_receipt')"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Digitization" invisible="extract_state == 'no'">
+                    <field name="extract_state"/>
+                    <field name="extract_text" invisible="not extract_text"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

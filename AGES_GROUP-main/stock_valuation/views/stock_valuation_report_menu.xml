@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Open Branch Transfer Note Wizard -->
+        <record id="action_stock_valuation_report_wizard" model="ir.actions.act_window">
+            <field name="name">Stock Valuation Report</field>
+            <field name="res_model">stock.valuation.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Menu Entry -->
+        <menuitem
+            id="menu_stock_valuation_report"
+            name="Stock Valuation Report"
+            parent="account.menu_finance_reports"
+            action="action_stock_valuation_report_wizard"
+            sequence="50"
+        />
+
+    </data>
+</odoo>

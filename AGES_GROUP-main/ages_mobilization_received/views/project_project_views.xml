@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_project_form_ages_mobilization_received" model="ir.ui.view">
+        <field name="name">project.project.form.ages.mobilization.received</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_mobilization_received" type="object"
+                        class="oe_stat_button" icon="fa-money">
+                    <field name="mobilization_count" widget="statinfo" string="Mobilization Received"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

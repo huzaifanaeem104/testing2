@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="rule_ages_gate_pass_company" model="ir.rule">
+        <field name="name">Gate Pass: multi-company</field>
+        <field name="model_id" ref="ages_gate_pass.model_ages_gate_pass"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_ages_gate_pass_line_company" model="ir.rule">
+        <field name="name">Gate Pass Line: multi-company</field>
+        <field name="model_id" ref="ages_gate_pass.model_ages_gate_pass_line"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <!-- Active Company (Business Unit / Division) visibility.
+         Regular users only see records with no Active Company, or one they
+         have been explicitly granted via their user profile ("Gate Pass
+         Access" tab). Gate Pass Managers bypass this entirely (see rule
+         below) via OR-combination of group-scoped rules. -->
+    <record id="rule_ages_gate_pass_sub_company_user" model="ir.rule">
+        <field name="name">Gate Pass: Active Company restriction (User)</field>
+        <field name="model_id" ref="ages_gate_pass.model_ages_gate_pass"/>
+        <field name="groups" eval="[(4, ref('ages_gate_pass.group_gate_pass_user'))]"/>
+        <field name="domain_force">['|', ('sub_company_id', '=', False), ('sub_company_id', 'in', user.gate_pass_sub_company_ids.ids)]</field>
+    </record>
+
+    <record id="rule_ages_gate_pass_sub_company_manager" model="ir.rule">
+        <field name="name">Gate Pass: Active Company – Manager bypass</field>
+        <field name="model_id" ref="ages_gate_pass.model_ages_gate_pass"/>
+        <field name="groups" eval="[(4, ref('group_gate_pass_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="rule_ages_gate_pass_line_sub_company_user" model="ir.rule">
+        <field name="name">Gate Pass Line: Active Company restriction (User)</field>
+        <field name="model_id" ref="ages_gate_pass.model_ages_gate_pass_line"/>
+        <field name="groups" eval="[(4, ref('ages_gate_pass.group_gate_pass_user'))]"/>
+        <field name="domain_force">['|', ('gate_pass_id.sub_company_id', '=', False), ('gate_pass_id.sub_company_id', 'in', user.gate_pass_sub_company_ids.ids)]</field>
+    </record>
+
+    <record id="rule_ages_gate_pass_line_sub_company_manager" model="ir.rule">
+        <field name="name">Gate Pass Line: Active Company – Manager bypass</field>
+        <field name="model_id" ref="ages_gate_pass.model_ages_gate_pass_line"/>
+        <field name="groups" eval="[(4, ref('group_gate_pass_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+</odoo>

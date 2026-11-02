@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_work_entry_type_view_form_payroll" model="ir.ui.view">
+        <field name="name">hr.work.entry.type.form.payroll</field>
+        <field name="model">hr.work.entry.type</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Payroll Rounding">
+                    <field name="round_days"/>
+                    <field name="round_days_type" invisible="round_days == 'NO'"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_gate_pass_reject_user,ages.gate.pass.reject user,model_ages_gate_pass_reject,ages_gate_pass.group_gate_pass_user,1,1,1,1
+access_ages_gate_pass_reject_security,ages.gate.pass.reject security,model_ages_gate_pass_reject,ages_gate_pass_extended.group_gate_pass_security,1,1,1,1
+access_ages_gate_pass_return_user,ages.gate.pass.return user,model_ages_gate_pass_return,ages_gate_pass.group_gate_pass_user,1,1,1,1
+access_ages_gate_pass_return_line_user,ages.gate.pass.return.line user,model_ages_gate_pass_return_line,ages_gate_pass.group_gate_pass_user,1,1,1,1

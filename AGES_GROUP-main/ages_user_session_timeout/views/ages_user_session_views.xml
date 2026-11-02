@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ages_user_session_list_timeout" model="ir.ui.view">
+        <field name="name">ages.user.session.list.timeout</field>
+        <field name="model">ages.user.session</field>
+        <field name="inherit_id" ref="ages_user_presence.view_ages_user_session_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='last_interaction']" position="after">
+                <field name="timeout_minutes" string="Timeout (min)" optional="show"/>
+                <field name="timeout_at" string="Auto logout at" optional="show"/>
+                <field name="timeout_enabled" column_invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ages_user_session_form_timeout" model="ir.ui.view">
+        <field name="name">ages.user.session.form.timeout</field>
+        <field name="model">ages.user.session</field>
+        <field name="inherit_id" ref="ages_user_presence.view_ages_user_session_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='presence']" position="after">
+                <group string="Inactivity timeout">
+                    <field name="timeout_enabled"/>
+                    <field name="timeout_minutes"/>
+                    <field name="timeout_last_activity"/>
+                    <field name="timeout_at"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

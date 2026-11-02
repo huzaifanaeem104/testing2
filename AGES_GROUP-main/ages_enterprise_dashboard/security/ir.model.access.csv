@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_enterprise_dashboard_user,ages.enterprise.dashboard.user,model_ages_enterprise_dashboard,ages_enterprise_dashboard.group_ages_enterprise_dashboard,1,0,0,0
+access_ages_enterprise_dashboard_system,ages.enterprise.dashboard.system,model_ages_enterprise_dashboard,base.group_system,1,0,0,0
+access_ages_dashboard_kpi_target_user,ages.dashboard.kpi.target.user,model_ages_dashboard_kpi_target,ages_enterprise_dashboard.group_ages_enterprise_dashboard,1,0,0,0
+access_ages_dashboard_kpi_target_manager,ages.dashboard.kpi.target.manager,model_ages_dashboard_kpi_target,base.group_system,1,1,1,1

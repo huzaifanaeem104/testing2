@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_asset_category_optional" model="ir.ui.view">
+        <field name="name">account.move.form.asset.category.optional</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="om_account_asset.view_invoice_asset_category"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']//field[@name='asset_category_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']//field[@name='asset_category_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+                <attribute name="invisible">False</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

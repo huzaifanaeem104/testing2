@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_works_today" model="ir.actions.client">
+        <field name="name">Today</field>
+        <field name="tag">ages_works_desk.today</field>
+    </record>
+    <record id="action_works_contracts" model="ir.actions.client">
+        <field name="name">Contracts</field>
+        <field name="tag">ages_works_desk.contracts</field>
+    </record>
+    <record id="action_works_site" model="ir.actions.client">
+        <field name="name">Site</field>
+        <field name="tag">ages_works_desk.site</field>
+    </record>
+    <record id="action_works_spend" model="ir.actions.client">
+        <field name="name">Spend</field>
+        <field name="tag">ages_works_desk.spend</field>
+    </record>
+    <record id="action_works_books" model="ir.actions.client">
+        <field name="name">Books</field>
+        <field name="tag">ages_works_desk.books</field>
+    </record>
+
+    <menuitem id="menu_works_root"
+              name="AGES Works"
+              sequence="28"
+              web_icon="ages_works_desk,static/description/icon.png"
+              groups="project.group_project_user,account.group_account_readonly"/>
+    <menuitem id="menu_works_today"
+              name="Today"
+              parent="menu_works_root"
+              action="action_works_today"
+              sequence="10"
+              groups="project.group_project_user,account.group_account_readonly"/>
+    <menuitem id="menu_works_contracts"
+              name="Contracts"
+              parent="menu_works_root"
+              action="action_works_contracts"
+              sequence="20"
+              groups="project.group_project_user"/>
+    <menuitem id="menu_works_site"
+              name="Site"
+              parent="menu_works_root"
+              action="action_works_site"
+              sequence="30"
+              groups="project.group_project_user"/>
+    <menuitem id="menu_works_spend"
+              name="Spend"
+              parent="menu_works_root"
+              action="action_works_spend"
+              sequence="40"
+              groups="project.group_project_user,account.group_account_readonly"/>
+    <menuitem id="menu_works_books"
+              name="Books"
+              parent="menu_works_root"
+              action="action_works_books"
+              sequence="50"
+              groups="account.group_account_readonly"/>
+</odoo>

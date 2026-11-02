@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_ages_gate_pass_extended" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.ages.gate.pass.extended</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="ages_gate_pass.res_config_settings_view_form_ages_gate_pass"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='ages_gate_pass_settings']" position="inside">
+                <setting string="Security Desk"
+                         help="Default for new Gate Passes: send to Waiting Security before Posted. This is only the default — it can be overridden per Gate Pass (field 'Requires Security Clearance') before it is posted, and whether a Gate Pass is required at all before validating a transfer is set per Operation Type under Inventory → Configuration → Operation Types.">
+                    <field name="ages_gate_pass_security_required"/>
+                </setting>
+                <setting string="Quantity Control"
+                         help="Block confirm qty that exceeds remaining qty on linked GRN/Delivery.">
+                    <field name="ages_gate_pass_block_qty_overflow"/>
+                </setting>
+                <setting string="RGP Default Return Days"
+                         help="Default expected return date offset for Returnable Gate Passes.">
+                    <field name="ages_gate_pass_rgp_default_days"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

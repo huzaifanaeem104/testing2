@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_mobilization_advance_list" model="ir.ui.view">
+        <field name="name">ages.mobilization.advance.list.full</field>
+        <field name="model">ages.mobilization.advance</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <list string="Mobilization Received">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="contract_id" optional="show"/>
+                <field name="project_wise_contract" optional="show"/>
+                <field name="contract_description" optional="show"/>
+                <field name="mobilization_amount"/>
+                <field name="invoice_payment_state" string="Invoice Status" widget="badge"
+                         decoration-danger="invoice_payment_state == 'not_paid'"
+                         decoration-warning="invoice_payment_state in ('partial', 'in_payment')"
+                         decoration-success="invoice_payment_state == 'paid'"
+                         optional="show"/>
+                <field name="state" widget="badge"
+                         decoration-info="state == 'draft'"
+                         decoration-success="state == 'confirmed'"
+                         decoration-danger="state == 'cancelled'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ages_mobilization_advance_kanban" model="ir.ui.view">
+        <field name="name">ages.mobilization.advance.kanban</field>
+        <field name="model">ages.mobilization.advance</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" sample="1">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="mobilization_amount"/>
+                <field name="state"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column gap-1">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="partner_id"/>
+                            <div class="text-muted">
+                                <field name="date"/>
+                            </div>
+                            <div>
+                                <span class="text-muted">Amount: </span>
+                                <field name="mobilization_amount"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_ages_mobilization_advance_pivot" model="ir.ui.view">
+        <field name="name">ages.mobilization.advance.pivot</field>
+        <field name="model">ages.mobilization.advance</field>
+        <field name="arch" type="xml">
+            <pivot string="Mobilization Received" sample="1">
+                <field name="partner_id" type="row"/>
+                <field name="contract_id" type="row"/>
+                <field name="mobilization_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_ages_mobilization_advance_form" model="ir.ui.view">
+        <field name="name">ages.mobilization.advance.form.full</field>
+        <field name="model">ages.mobilization.advance</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Mobilization Received">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state != 'draft'"/>
+                    <button name="action_reset" type="object" string="Reset"
+                            invisible="state not in ('confirmed', 'cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_contract" type="object"
+                                class="oe_stat_button" icon="fa-book"
+                                invisible="contract_count == 0">
+                            <field name="contract_count" widget="statinfo" string="Contract"/>
+                        </button>
+                        <button name="action_view_invoice" type="object"
+                                class="oe_stat_button" icon="fa-pencil-square-o"
+                                invisible="not invoice_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Invoice</span>
+                                <span class="o_stat_text">
+                                    <field name="invoice_payment_state"/>
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group string="Mobilization Details" col="4">
+                        <field name="partner_id" readonly="state != 'draft'"/>
+                        <field name="date" readonly="state != 'draft'"/>
+                        <field name="contract_id" readonly="state != 'draft'"
+                                 domain="[('state', '=', 'running'), ('partner_id', '=', partner_id)]"/>
+                        <field name="project_wise_contract" readonly="1"/>
+                        <field name="contract_description" readonly="1" class="fw-bold"/>
+                        <field name="project_id" readonly="1" force_save="1"/>
+                        <field name="analytic_account_id" readonly="1"/>
+                        <field name="sub_company_id" readonly="1"/>
+                        <field name="mobilization_amount" readonly="state != 'draft'"/>
+                        <field name="wht_on_mobilization" invisible="1"/>
+                        <field name="wth_tax_id" readonly="state != 'draft'"
+                                 invisible="not wht_on_mobilization"/>
+                        <field name="wth_amount" readonly="1"
+                                 invisible="not wht_on_mobilization"/>
+                        <field name="running_bill_id" invisible="1"/>
+                        <field name="invoice_payment_state" string="Invoice Status" widget="badge"
+                                 decoration-danger="invoice_payment_state == 'not_paid'"
+                                 decoration-warning="invoice_payment_state in ('partial', 'in_payment')"
+                                 decoration-success="invoice_payment_state == 'paid'"
+                                 readonly="1"/>
+                        <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="invoice_id" invisible="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ages_mobilization_advance_search" model="ir.ui.view">
+        <field name="name">ages.mobilization.advance.search</field>
+        <field name="model">ages.mobilization.advance</field>
+        <field name="arch" type="xml">
+            <search string="Mobilization Received">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="contract_id"/>
+                <field name="project_id"/>
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="filter_cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <group>
+                    <filter name="groupby_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="groupby_customer" string="Client" context="{'group_by': 'partner_id'}"/>
+                    <filter name="groupby_contract" string="Contract" context="{'group_by': 'contract_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Disable placeholder / obsolete inherits -->
+    <record id="ages_contracts_menu.view_ages_mobilization_advance_form" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="ages_contracts_menu.view_ages_mobilization_advance_list" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="ages_contracts.view_ages_mobilization_advance_form_contract" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Rename menu to Mobilization Received -->
+    <record id="ages_contracts_menu.menu_ages_mobilization_advance" model="ir.ui.menu">
+        <field name="name">Mobilization Received</field>
+    </record>
+
+    <record id="ages_contracts_menu.action_ages_mobilization_advance" model="ir.actions.act_window">
+        <field name="name">Mobilization Received</field>
+        <field name="res_model">ages.mobilization.advance</field>
+        <field name="view_mode">list,kanban,pivot,form</field>
+        <field name="view_id" ref="view_ages_mobilization_advance_list"/>
+        <field name="search_view_id" ref="view_ages_mobilization_advance_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Mobilization Received
+            </p>
+            <p>
+                Confirm to receive payment for the mobilization advance (no invoice).
+            </p>
+        </field>
+    </record>
+
+    <record id="action_ages_mobilization_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_ages_mobilization_advance_list"/>
+        <field name="act_window_id" ref="ages_contracts_menu.action_ages_mobilization_advance"/>
+    </record>
+    <record id="action_ages_mobilization_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="view_ages_mobilization_advance_kanban"/>
+        <field name="act_window_id" ref="ages_contracts_menu.action_ages_mobilization_advance"/>
+    </record>
+    <record id="action_ages_mobilization_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="view_ages_mobilization_advance_pivot"/>
+        <field name="act_window_id" ref="ages_contracts_menu.action_ages_mobilization_advance"/>
+    </record>
+    <record id="action_ages_mobilization_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_ages_mobilization_advance_form"/>
+        <field name="act_window_id" ref="ages_contracts_menu.action_ages_mobilization_advance"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_sub_company_list" model="ir.ui.view">
+        <field name="name">ages.sub.company.list</field>
+        <field name="model">ages.sub.company</field>
+        <field name="arch" type="xml">
+            <list string="Sub Companies">
+                <field name="name"/>
+                <field name="short_code"/>
+                <field name="company_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ages_sub_company_form" model="ir.ui.view">
+        <field name="name">ages.sub.company.form</field>
+        <field name="model">ages.sub.company</field>
+        <field name="arch" type="xml">
+            <form string="Sub Company">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="short_code"/>
+                            <field name="company_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Account Mapping" name="account_mapping">
+                            <p class="text-muted">
+                                Whenever this Sub Company is selected on an invoice, bill, credit note,
+                                refund or journal entry, the amount that would normally post to
+                                <strong>Old Account</strong> posts to <strong>New Account</strong> instead.
+                                Add as many rows as you need.
+                            </p>
+                            <p class="text-muted">
+                                Tip: to find your current default account, go to
+                                Accounting &gt; Configuration &gt; Chart of Accounts.
+                            </p>
+                            <field name="account_mapping_ids" nolabel="1">
+                                <list editable="bottom">
+                                    <field name="company_id" column_invisible="1"/>
+                                    <field name="old_account_id" domain="[('company_ids', 'in', parent.company_id)]"/>
+                                    <field name="new_account_id" domain="[('company_ids', 'in', parent.company_id)]"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ages_sub_company_search" model="ir.ui.view">
+        <field name="name">ages.sub.company.search</field>
+        <field name="model">ages.sub.company</field>
+        <field name="arch" type="xml">
+            <search string="Sub Companies">
+                <field name="name"/>
+                <field name="short_code"/>
+                <field name="company_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ages_sub_company" model="ir.actions.act_window">
+        <field name="name">Sub Companies</field>
+        <field name="res_model">ages.sub.company</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ages_sub_company_search"/>
+        <field name="context">{'default_company_id': allowed_company_ids[0] if allowed_company_ids else False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Sub Company
+            </p>
+            <p>
+                Define sub companies and map old chart of accounts entries to new ones.
+                Existing and future journal items can use the replacement accounts.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_ages_sub_company"
+              name="Sub Companies"
+              parent="account.menu_finance_configuration"
+              action="action_ages_sub_company"
+              sequence="45"
+              groups="account.group_account_user,account.group_account_manager"/>
+
+</odoo>

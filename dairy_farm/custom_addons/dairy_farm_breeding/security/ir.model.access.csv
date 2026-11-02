@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_breeding_event_user,breeding.event user,model_dairy_breeding_event,dairy_farm_core.group_dairy_user,1,0,0,0
+access_breeding_event_vet,breeding.event vet,model_dairy_breeding_event,dairy_farm_core.group_dairy_veterinarian,1,1,1,1
+access_pregnancy_check_user,pregnancy.check user,model_dairy_pregnancy_check,dairy_farm_core.group_dairy_user,1,0,0,0
+access_pregnancy_check_vet,pregnancy.check vet,model_dairy_pregnancy_check,dairy_farm_core.group_dairy_veterinarian,1,1,1,1
+access_calving_event_user,calving.event user,model_dairy_calving_event,dairy_farm_core.group_dairy_user,1,0,0,0
+access_calving_event_vet,calving.event vet,model_dairy_calving_event,dairy_farm_core.group_dairy_veterinarian,1,1,1,1
+access_calving_calf_user,calving.calf user,model_dairy_calving_calf,dairy_farm_core.group_dairy_user,1,0,0,0
+access_calving_calf_vet,calving.calf vet,model_dairy_calving_calf,dairy_farm_core.group_dairy_veterinarian,1,1,1,1

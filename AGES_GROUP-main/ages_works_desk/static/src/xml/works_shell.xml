@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ages_works_desk.WorksShell">
+        <div class="o_action o_ages_works h-100 d-flex flex-column" t-ref="root" tabindex="0">
+            <div class="aw-nav d-flex align-items-center gap-1 px-2 pt-1">
+                <div class="aw-title me-2">AGES Works</div>
+                <t t-foreach="screens" t-as="screen" t-key="screen.key">
+                    <button type="button" t-att-class="screenClass(screen)" t-on-click="() => switchScreen(screen.key)" t-esc="screen.title"/>
+                </t>
+            </div>
+            <div class="aw-toolbar d-flex flex-wrap align-items-center gap-2 px-2 py-1">
+                <label class="aw-filter">
+                    <span>Company</span>
+                    <select class="form-select form-select-sm" t-att-value="companySelectValue" t-on-change="onCompanyChange">
+                        <option value="">All allowed</option>
+                        <t t-foreach="state.options.companies" t-as="company" t-key="company.id">
+                            <option t-att-value="company.id" t-esc="company.name"/>
+                        </t>
+                    </select>
+                </label>
+                <label class="aw-filter">
+                    <span>Sub company</span>
+                    <select class="form-select form-select-sm" t-att-value="subCompanySelectValue" t-on-change="onSubCompanyChange">
+                        <option value="">All</option>
+                        <t t-foreach="state.options.sub_companies" t-as="sub" t-key="sub.id">
+                            <option t-att-value="sub.id" t-esc="sub.name"/>
+                        </t>
+                    </select>
+                </label>
+                <label class="aw-filter">
+                    <span>Project</span>
+                    <select class="form-select form-select-sm" t-att-value="state.filters.project_id or ''" t-on-change="onProjectChange">
+                        <option value="">All</option>
+                        <t t-foreach="state.options.projects" t-as="project" t-key="project.id">
+                            <option t-att-value="project.id" t-esc="project.name"/>
+                        </t>
+                    </select>
+                </label>
+                <label class="aw-filter">
+                    <span>Contract</span>
+                    <select class="form-select form-select-sm" t-att-value="state.filters.contract_id or ''" t-on-change="onContractChange">
+                        <option value="">All</option>
+                        <t t-foreach="state.options.contracts" t-as="contract" t-key="contract.id">
+                            <option t-att-value="contract.id" t-esc="contract.name"/>
+                        </t>
+                    </select>
+                </label>
+                <label class="aw-filter">
+                    <span>Customer</span>
+                    <select class="form-select form-select-sm" t-att-value="state.filters.partner_id or ''" t-on-change="onPartnerChange">
+                        <option value="">All</option>
+                        <t t-foreach="state.options.partners" t-as="partner" t-key="partner.id">
+                            <option t-att-value="partner.id" t-esc="partner.name"/>
+                        </t>
+                    </select>
+                </label>
+                <label class="aw-filter">
+                    <span>As of</span>
+                    <input type="date" class="form-control form-control-sm"
+                           t-att-value="state.filters.date_to or ''"
+                           t-on-change="onDateChange"/>
+                </label>
+            </div>
+            <div t-if="state.loading" class="aw-status px-2">Loading…</div>
+            <div t-if="state.error" class="aw-status aw-error px-2" t-esc="state.error"/>
+            <div t-if="state.payload.hint" class="aw-status px-2" t-esc="state.payload.hint"/>
+            <div class="aw-body flex-grow-1 d-flex min-h-0">
+                <aside class="aw-queues">
+                    <div class="aw-pane-label">Queues</div>
+                    <t t-if="!state.payload.queues.length">
+                        <div class="aw-empty">No queues for this user or install.</div>
+                    </t>
+                    <t t-foreach="state.payload.queues" t-as="queue" t-key="queue.key">
+                        <button type="button" t-att-class="severityClass(queue)" t-on-click="() => selectQueue(queue)">
+                            <span class="aw-queue-label" t-esc="queue.label"/>
+                            <span class="aw-queue-count" t-on-click="(ev) => openQueue(queue, ev)" t-esc="queue.count"/>
+                        </button>
+                    </t>
+                </aside>
+                <section class="aw-table flex-grow-1 min-w-0">
+                    <div class="aw-pane-label">Working table</div>
+                    <t t-if="!state.payload.rows.length">
+                        <div class="aw-empty">Nothing in this queue.</div>
+                    </t>
+                    <div t-else="" class="aw-table-wrap">
+                        <table class="aw-grid">
+                            <thead>
+                                <tr>
+                                    <t t-foreach="state.payload.columns" t-as="column" t-key="column.key">
+                                        <th t-att-class="column.sort ? 'aw-sortable' : ''"
+                                            t-on-click="() => sortBy(column)">
+                                            <t t-esc="column.label"/>
+                                            <t t-if="column.sort and state.filters.sort_key === column.sort">
+                                                <span t-esc="state.filters.sort_dir === 'desc' ? ' ↓' : ' ↑'"/>
+                                            </t>
+                                        </th>
+                                    </t>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="state.payload.rows" t-as="row" t-key="row.id">
+                                    <tr t-att-class="state.filters.selected_id === row.id ? 'aw-selected' : ''"
+                                        t-on-click="() => selectRow(row)"
+                                        t-on-dblclick="() => openAction(row.action)">
+                                        <t t-foreach="state.payload.columns" t-as="column" t-key="column.key">
+                                            <td t-att-class="column.money ? 'aw-num' : ''">
+                                                <t t-if="column.key === 'name' and row.action">
+                                                    <a href="#" class="aw-link" t-on-click.prevent="() => openAction(row.action)" t-esc="cellValue(row, column)"/>
+                                                </t>
+                                                <t t-else="" t-esc="cellValue(row, column)"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <aside class="aw-inspector">
+                    <div class="aw-pane-label">Inspector</div>
+                    <t t-if="!state.payload.inspector">
+                        <div class="aw-empty">Select a row. Arrow keys move, Enter opens, Escape clears.</div>
+                    </t>
+                    <t t-else="">
+                        <t t-if="state.payload.inspector.kind === 'contract'">
+                            <t t-call="ages_works_desk.InspectorContracts"/>
+                        </t>
+                        <t t-elif="state.payload.inspector.kind === 'site'">
+                            <t t-call="ages_works_desk.InspectorSite"/>
+                        </t>
+                        <t t-elif="state.payload.inspector.kind === 'spend'">
+                            <t t-call="ages_works_desk.InspectorSpend"/>
+                        </t>
+                        <t t-elif="state.payload.inspector.kind === 'books'">
+                            <t t-call="ages_works_desk.InspectorBooks"/>
+                        </t>
+                        <t t-else="">
+                            <t t-call="ages_works_desk.InspectorToday"/>
+                        </t>
+                    </t>
+                </aside>
+            </div>
+        </div>
+    </t>
+</templates>

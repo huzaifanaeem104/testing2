@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="trial_balance_hierarchy_row">
+        <tr t-att-class="line.get('pdf_row_class') or line['line_type']">
+            <td class="fin-label"
+                t-att-style="'padding-left: %spx;' % (line.get('pdf_indent_px') or (8 + line.get('level', 0) * 14))">
+                <t t-esc="line['name']"/>
+            </td>
+            <td class="col-amount">
+                <span t-out="line['initial_balance']"
+                      t-att-class="'ages-fin-negative' if line['initial_balance'] &lt; 0 else ('ages-fin-zero' if line['initial_balance'] == 0 else '')"
+                      t-options='{"widget": "monetary", "display_currency": currency}'/>
+            </td>
+            <td class="col-amount">
+                <span t-out="line['period_debit']"
+                      t-att-class="'ages-fin-zero' if line['period_debit'] == 0 else ''"
+                      t-options='{"widget": "monetary", "display_currency": currency}'/>
+            </td>
+            <td class="col-amount">
+                <span t-out="line['period_credit']"
+                      t-att-class="'ages-fin-zero' if line['period_credit'] == 0 else ''"
+                      t-options='{"widget": "monetary", "display_currency": currency}'/>
+            </td>
+            <td class="col-amount">
+                <span t-out="line['end_balance']"
+                      t-att-class="'ages-fin-negative' if line['end_balance'] &lt; 0 else ('ages-fin-zero' if line['end_balance'] == 0 else '')"
+                      t-options='{"widget": "monetary", "display_currency": currency}'/>
+            </td>
+        </tr>
+    </template>
+
+    <template id="trial_balance_report">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-set="currency" t-value="currency or company.currency_id"/>
+                <t t-call="ages_custom_reports.ages_report_pdf_styles"/>
+
+                <div class="ages-fin-report ages-report-branded">
+                    <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+
+                    <div class="report-meta">
+                        <span class="meta-pair"><span class="meta-k">Period</span><span class="meta-v"><t t-esc="date_label"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Target</span><span class="meta-v"><t t-esc="target_move_label"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Currency</span><span class="meta-v"><t t-esc="currency.name"/></span></span>
+                    </div>
+
+                    <table class="fin-table ages-bs-table ages-tb-table">
+                        <thead>
+                            <tr>
+                                <th class="label-col" rowspan="2"/>
+                                <th class="amount-col text-center">Initial Balance</th>
+                                <th class="amount-col text-center" colspan="2"><t t-esc="period_label"/></th>
+                                <th class="amount-col text-center">End Balance</th>
+                            </tr>
+                            <tr>
+                                <th class="amount-col text-center">Balance</th>
+                                <th class="amount-col text-center">Debit</th>
+                                <th class="amount-col text-center">Credit</th>
+                                <th class="amount-col text-center">Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="lines" t-as="line">
+                                <t t-call="ages_custom_reports.trial_balance_hierarchy_row"/>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

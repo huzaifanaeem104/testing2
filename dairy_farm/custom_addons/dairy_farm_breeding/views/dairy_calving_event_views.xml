@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_calving_event_search" model="ir.ui.view">
+        <field name="name">dairy.calving.event.search</field>
+        <field name="model">dairy.calving.event</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="dam_id"/>
+                <field name="sire_id"/>
+                <filter name="filter_live" string="Live Births" domain="[('outcome', '=', 'live')]"/>
+                <filter name="filter_loss" string="Stillbirth / Abortion" domain="[('outcome', '!=', 'live')]"/>
+                <filter name="filter_difficult" string="Difficult" domain="[('calving_ease', 'in', ('difficult', 'caesarean'))]"/>
+                <filter name="filter_date" string="Date" date="calving_date"/>
+                <group string="Group By">
+                    <filter name="groupby_outcome" string="Outcome" context="{'group_by': 'outcome'}"/>
+                    <filter name="groupby_month" string="Month" context="{'group_by': 'calving_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dairy_calving_event_list" model="ir.ui.view">
+        <field name="name">dairy.calving.event.list</field>
+        <field name="model">dairy.calving.event</field>
+        <field name="arch" type="xml">
+            <list string="Calvings" decoration-info="state == 'draft'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="dam_id"/>
+                <field name="calving_date"/>
+                <field name="sire_id" optional="show"/>
+                <field name="calving_ease" optional="show"/>
+                <field name="outcome" widget="badge" decoration-success="outcome == 'live'" decoration-danger="outcome != 'live'"/>
+                <field name="calf_count"/>
+                <field name="veterinarian_id" optional="hide"/>
+                <field name="state" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_calving_event_form" model="ir.ui.view">
+        <field name="name">dairy.calving.event.form</field>
+        <field name="model">dairy.calving.event</field>
+        <field name="arch" type="xml">
+            <form string="Calving">
+                <header>
+                    <button name="action_done" type="object" string="Confirm Calving" class="btn-primary"
+                            invisible="state != 'draft'"
+                            confirm="Confirm the calving? Calf records are created and the dam's lactation is updated."/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_calves" type="object" class="oe_stat_button" icon="fa-paw" invisible="not calf_count">
+                            <field name="calf_count" widget="statinfo" string="Calves"/>
+                        </button>
+                    </div>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="dam_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="breeding_event_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="sire_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="sire_reference" readonly="state != 'draft'" invisible="sire_id"/>
+                            <field name="calving_date" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="outcome" readonly="state != 'draft'"/>
+                            <field name="calving_ease" readonly="state != 'draft'"/>
+                            <field name="start_lactation" readonly="state != 'draft'"/>
+                            <field name="veterinarian_id" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Calves" name="calves">
+                            <field name="calf_line_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="tag_number" required="status == 'alive'"/>
+                                    <field name="nickname"/>
+                                    <field name="gender"/>
+                                    <field name="birth_weight"/>
+                                    <field name="status"/>
+                                    <field name="calf_id" readonly="1"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Complications &amp; Notes" name="notes">
+                            <group>
+                                <field name="complications" readonly="state != 'draft'"/>
+                                <field name="notes"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dairy_calving_event" model="ir.actions.act_window">
+        <field name="name">Calving</field>
+        <field name="res_model">dairy.calving.event</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_dairy_expected_calvings" model="ir.actions.act_window">
+        <field name="name">Expected Calvings</field>
+        <field name="res_model">dairy.animal</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('reproductive_status', '=', 'pregnant')]</field>
+        <field name="context">{'search_default_filter_status_active': 1}</field>
+    </record>
+</odoo>

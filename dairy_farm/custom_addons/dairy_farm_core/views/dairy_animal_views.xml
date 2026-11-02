@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_animal_search" model="ir.ui.view">
+        <field name="name">dairy.animal.search</field>
+        <field name="model">dairy.animal</field>
+        <field name="arch" type="xml">
+            <search string="Animals">
+                <field name="tag_number" string="Tag / Reference / Name"
+                       filter_domain="['|', '|', ('tag_number', 'ilike', self), ('name', 'ilike', self), ('nickname', 'ilike', self)]"/>
+                <field name="breed_id"/>
+                <field name="location_id" operator="child_of"/>
+                <field name="group_id"/>
+                <field name="dam_id"/>
+                <field name="sire_id"/>
+                <separator/>
+                <filter name="filter_cows" string="Cows" domain="[('animal_type', '=', 'cow')]"/>
+                <filter name="filter_heifers" string="Heifers" domain="[('animal_type', '=', 'heifer')]"/>
+                <filter name="filter_calves" string="Calves" domain="[('animal_type', '=', 'calf')]"/>
+                <filter name="filter_bulls" string="Bulls" domain="[('animal_type', '=', 'bull')]"/>
+                <separator/>
+                <filter name="filter_lactating" string="Lactating" domain="[('production_status', '=', 'lactating')]"/>
+                <filter name="filter_dry" string="Dry" domain="[('production_status', '=', 'dry')]"/>
+                <filter name="filter_growing" string="Growing" domain="[('production_status', '=', 'growing')]"/>
+                <separator/>
+                <filter name="filter_restricted" string="Milk Restricted" domain="[('has_active_withdrawal', '=', True)]"/>
+                <separator/>
+                <filter name="filter_status_active" string="Active Herd" domain="[('active_status', '=', 'active')]"/>
+                <filter name="filter_sold" string="Sold" domain="[('active_status', '=', 'sold')]"/>
+                <filter name="filter_deceased" string="Deceased" domain="[('active_status', '=', 'deceased')]"/>
+                <filter name="filter_archived" string="Archived" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="filter_born" string="Born on Farm" domain="[('acquisition_type', '=', 'born')]"/>
+                <filter name="filter_purchased" string="Purchased" domain="[('acquisition_type', '=', 'purchased')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="groupby_type" string="Type" context="{'group_by': 'animal_type'}"/>
+                    <filter name="groupby_breed" string="Breed" context="{'group_by': 'breed_id'}"/>
+                    <filter name="groupby_location" string="Location" context="{'group_by': 'location_id'}"/>
+                    <filter name="groupby_group" string="Group" context="{'group_by': 'group_id'}"/>
+                    <filter name="groupby_production" string="Production Status" context="{'group_by': 'production_status'}"/>
+                    <filter name="groupby_lifecycle" string="Lifecycle Status" context="{'group_by': 'active_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dairy_animal_list" model="ir.ui.view">
+        <field name="name">dairy.animal.list</field>
+        <field name="model">dairy.animal</field>
+        <field name="arch" type="xml">
+            <list string="Animals" decoration-muted="active_status != 'active'" decoration-danger="has_active_withdrawal">
+                <field name="tag_number"/>
+                <field name="name" optional="show"/>
+                <field name="nickname" optional="show"/>
+                <field name="animal_type"/>
+                <field name="breed_id" optional="show"/>
+                <field name="gender" optional="hide"/>
+                <field name="birth_date" optional="hide"/>
+                <field name="age_display" optional="show"/>
+                <field name="location_id" optional="show"/>
+                <field name="group_id" optional="show"/>
+                <field name="production_status" widget="badge"
+                       decoration-success="production_status == 'lactating'"
+                       decoration-info="production_status == 'dry'"
+                       decoration-warning="production_status == 'growing'"/>
+                <field name="lactation_number" optional="hide"/>
+                <field name="has_active_withdrawal" string="Restricted" optional="show"/>
+                <field name="active_status" widget="badge"
+                       decoration-success="active_status == 'active'"
+                       decoration-danger="active_status == 'deceased'"
+                       decoration-muted="active_status in ('sold', 'inactive')"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_animal_kanban" model="ir.ui.view">
+        <field name="name">dairy.animal.kanban</field>
+        <field name="model">dairy.animal</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="id"/>
+                <field name="image_128"/>
+                <field name="has_active_withdrawal"/>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside class="o_kanban_aside_full">
+                            <t t-if="record.image_128.raw_value">
+                                <field name="image_1024" widget="background_image"
+                                       options="{'zoom': true, 'zoom_delay': 1000, 'preview_image': 'image_128'}"
+                                       class="d-block position-relative"/>
+                            </t>
+                            <div t-else="" class="d-flex align-items-center justify-content-center bg-100 bg-gradient">
+                                <i class="fa fa-paw fa-3x opacity-50" title="No photo"/>
+                            </div>
+                        </aside>
+                        <main class="ms-2">
+                            <div class="d-flex justify-content-between">
+                                <field class="fw-bold fs-5" name="tag_number"/>
+                                <field name="production_status" widget="badge"
+                                       decoration-success="production_status == 'lactating'"
+                                       decoration-info="production_status == 'dry'"
+                                       decoration-warning="production_status == 'growing'"/>
+                            </div>
+                            <field name="nickname"/>
+                            <div class="text-muted">
+                                <field name="animal_type"/> · <field name="breed_id"/>
+                            </div>
+                            <div class="text-muted"><field name="location_id"/></div>
+                            <footer class="mt-auto">
+                                <field name="age_display"/>
+                                <span t-if="record.has_active_withdrawal.raw_value" class="badge text-bg-danger ms-auto">
+                                    <i class="fa fa-ban" title="Milk restricted"/> Milk Restricted
+                                </span>
+                                <field t-else="" name="active_status" widget="badge" class="ms-auto"/>
+                            </footer>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_dairy_animal_form" model="ir.ui.view">
+        <field name="name">dairy.animal.form</field>
+        <field name="model">dairy.animal</field>
+        <field name="arch" type="xml">
+            <form string="Animal">
+                <header>
+                    <button name="action_open_exit_wizard" type="object" string="Record Exit"
+                            invisible="active_status != 'active'" groups="dairy_farm_core.group_dairy_manager"/>
+                    <button name="action_reactivate" type="object" string="Reactivate"
+                            invisible="active_status in ('active', 'deceased')" groups="dairy_farm_core.group_dairy_manager"/>
+                    <button name="action_dry_off" type="object" string="Dry Off"
+                            invisible="production_status != 'lactating'" groups="dairy_farm_core.group_dairy_manager"
+                            confirm="Mark this cow as dry? She will no longer be expected in milking sessions."/>
+                    <button name="action_start_lactation" type="object" string="Start Lactation"
+                            invisible="production_status == 'lactating' or gender != 'female' or active_status != 'active'"
+                            groups="dairy_farm_core.group_dairy_manager"/>
+                    <field name="active_status" widget="statusbar" statusbar_visible="active,sold,deceased"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_offspring" type="object" class="oe_stat_button" icon="fa-sitemap">
+                            <field name="offspring_count" widget="statinfo" string="Offspring"/>
+                        </button>
+                        <button name="action_view_withdrawals" type="object" class="oe_stat_button" icon="fa-ban">
+                            <field name="withdrawal_count" widget="statinfo" string="Withdrawals"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-secondary" invisible="active"/>
+                    <widget name="web_ribbon" title="Milk Restricted" bg_color="text-bg-danger"
+                            invisible="not active or not has_active_withdrawal"/>
+                    <field name="active" invisible="1"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+                        <label for="tag_number"/>
+                        <h1><field name="tag_number" placeholder="e.g. PK-0001"/></h1>
+                        <h3><field name="nickname" placeholder="Animal name (optional)"/></h3>
+                        <div class="text-muted"><field name="name" readonly="1"/></div>
+                    </div>
+                    <group>
+                        <group name="identity">
+                            <field name="animal_type"/>
+                            <field name="gender"/>
+                            <field name="breed_id" options="{'no_create': True}"/>
+                            <field name="birth_date"/>
+                            <field name="age_display"/>
+                            <field name="weight_kg"/>
+                        </group>
+                        <group name="placement">
+                            <field name="location_id" options="{'no_create': True}"/>
+                            <field name="group_id" options="{'no_create': True}"/>
+                            <field name="production_status"/>
+                            <field name="has_active_withdrawal" string="Milk Restricted"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="General" name="general">
+                            <group>
+                                <group string="Origin" name="origin">
+                                    <field name="acquisition_type"/>
+                                    <field name="purchase_date" invisible="acquisition_type != 'purchased'"/>
+                                    <field name="purchase_price" invisible="acquisition_type != 'purchased'"/>
+                                    <field name="vendor_id" invisible="acquisition_type != 'purchased'"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </group>
+                                <group string="Parentage" name="parentage">
+                                    <field name="dam_id" options="{'no_create': True}"/>
+                                    <field name="sire_id" options="{'no_create': True}"/>
+                                    <field name="sire_reference" invisible="sire_id"/>
+                                </group>
+                            </group>
+                            <field name="notes" placeholder="Notes..."/>
+                        </page>
+                        <page string="Production" name="production" invisible="gender != 'female'">
+                            <group>
+                                <group name="lactation">
+                                    <field name="lactation_number"/>
+                                    <field name="last_calving_date"/>
+                                    <field name="days_in_milk"/>
+                                    <field name="dry_off_date"/>
+                                </group>
+                                <group name="production_kpi"/>
+                            </group>
+                        </page>
+                        <page string="Health" name="health">
+                            <field name="withdrawal_ids" readonly="1">
+                                <list decoration-danger="state == 'active'" decoration-muted="state == 'cancelled'">
+                                    <field name="name"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="release_effective_date"/>
+                                    <field name="reason"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Breeding" name="breeding" invisible="animal_type == 'other'"/>
+                        <page string="Feeding" name="feeding"/>
+                        <page string="History" name="history">
+                            <group>
+                                <group string="Exit" name="exit" invisible="active_status == 'active'">
+                                    <field name="exit_date"/>
+                                    <field name="exit_reason"/>
+                                    <field name="buyer_id" invisible="active_status != 'sold'"/>
+                                    <field name="sale_price" invisible="active_status != 'sold'"/>
+                                </group>
+                            </group>
+                            <separator string="Offspring"/>
+                            <field name="offspring_ids" readonly="1" context="{'active_test': False}">
+                                <list>
+                                    <field name="tag_number"/>
+                                    <field name="nickname"/>
+                                    <field name="gender"/>
+                                    <field name="birth_date"/>
+                                    <field name="sire_id"/>
+                                    <field name="active_status"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dairy_animal" model="ir.actions.act_window">
+        <field name="name">Animals</field>
+        <field name="res_model">dairy.animal</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_dairy_animal_search"/>
+        <field name="context">{'search_default_filter_status_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Register your first animal</p>
+            <p>Every cow, heifer, calf and bull is registered here with a unique tag.
+               Milking, feeding, breeding and health records all refer to this registry.</p>
+        </field>
+    </record>
+
+    <!-- Exit wizard -->
+    <record id="view_dairy_animal_exit_wizard_form" model="ir.ui.view">
+        <field name="name">dairy.animal.exit.wizard.form</field>
+        <field name="model">dairy.animal.exit.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Record Exit">
+                <group>
+                    <group>
+                        <field name="animal_id" readonly="1"/>
+                        <field name="exit_type"/>
+                        <field name="exit_date"/>
+                    </group>
+                    <group invisible="exit_type != 'sold'">
+                        <field name="buyer_id"/>
+                        <field name="sale_price"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </group>
+                <field name="exit_reason" placeholder="Reason / circumstances"/>
+                <p class="text-muted">The animal is archived; all historical records are preserved.
+                   Record the sale invoice through Accounting if applicable.</p>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

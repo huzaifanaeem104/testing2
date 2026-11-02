@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_barcode" model="ir.ui.view">
+        <field name="name">stock.picking.form.barcode</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_open_barcode_client" type="object" string="Barcode" class="btn-secondary"
+                        invisible="state in ('done', 'cancel')"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_picking_type_form_barcode" model="ir.ui.view">
+        <field name="name">stock.picking.type.form.barcode</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="action_open_barcode_client" type="object" string="Open Barcode App" class="btn-primary"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+</odoo>

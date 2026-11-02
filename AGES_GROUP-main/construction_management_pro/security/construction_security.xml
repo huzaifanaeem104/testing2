@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_construction" model="ir.module.category">
+        <field name="name">Construction</field>
+        <field name="description">Construction management access rights</field>
+        <field name="sequence">35</field>
+    </record>
+
+    <record id="group_construction_user" model="res.groups">
+        <field name="name">Construction User</field>
+        <field name="category_id" ref="module_category_construction"/>
+    </record>
+
+    <record id="group_construction_site_engineer" model="res.groups">
+        <field name="name">Site Engineer</field>
+        <field name="category_id" ref="module_category_construction"/>
+        <field name="implied_ids" eval="[(4, ref('group_construction_user'))]"/>
+    </record>
+
+    <record id="group_construction_procurement" model="res.groups">
+        <field name="name">Construction Procurement</field>
+        <field name="category_id" ref="module_category_construction"/>
+        <field name="implied_ids" eval="[(4, ref('group_construction_user'))]"/>
+    </record>
+
+    <record id="group_construction_manager" model="res.groups">
+        <field name="name">Construction Manager</field>
+        <field name="category_id" ref="module_category_construction"/>
+        <field name="implied_ids" eval="[(4, ref('group_construction_user')), (4, ref('group_construction_site_engineer')), (4, ref('group_construction_procurement'))]"/>
+    </record>
+</odoo>

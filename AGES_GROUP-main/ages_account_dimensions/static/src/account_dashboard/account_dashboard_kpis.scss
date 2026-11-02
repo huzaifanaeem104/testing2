@@ -1,0 +1,115 @@
+.o_account_dashboard_kanban_view .o_kanban_renderer,
+.o_kanban_view.o_account_kanban .o_kanban_renderer {
+    align-content: flex-start;
+}
+
+.o_ages_account_overview_kpis {
+    order: -1;
+    flex: 0 0 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    padding: 4px 4px 16px;
+    box-sizing: border-box;
+}
+
+.o_ages_kpi_card {
+    background: var(--msu-surface, #fff);
+    border: 1px solid var(--msu-border, #e7e7ee);
+    border-radius: 12px;
+    padding: 14px 16px 16px;
+    min-height: 76px;
+    min-width: 0;
+    overflow: hidden;
+    box-shadow: none;
+    box-sizing: border-box;
+}
+
+.o_ages_kpi_clickable {
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.o_ages_kpi_card.o_ages_kpi_clickable:hover,
+.o_ages_kpi_split > .o_ages_kpi_clickable:hover,
+.o_ages_kpi_label.o_ages_kpi_clickable:hover {
+    background: var(--msu-surface-muted, #f6f7fb);
+}
+
+.o_ages_kpi_card.o_ages_kpi_clickable:hover {
+    border-color: var(--msu-border-strong, #d0d4e0);
+}
+
+.o_ages_kpi_card--split {
+    grid-column: span 2;
+}
+
+.o_ages_kpi_label,
+.o_ages_kpi_sub {
+    color: var(--msu-text-muted, #6b7280);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.o_ages_kpi_sub {
+    font-size: 12px;
+    margin-bottom: 2px;
+}
+
+.o_ages_kpi_value {
+    color: var(--msu-text, #2b2f3a);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.o_ages_kpi_card--split .o_ages_kpi_value {
+    font-size: 1.05rem;
+}
+
+.o_ages_kpi_split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 8px 16px;
+    min-width: 0;
+}
+
+.o_ages_kpi_split > div {
+    min-width: 0;
+    overflow: hidden;
+}
+
+@media (max-width: 1200px) {
+    .o_ages_account_overview_kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .o_ages_kpi_card--split {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .o_ages_account_overview_kpis {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .o_ages_kpi_card--split {
+        grid-column: span 1;
+    }
+
+    .o_ages_kpi_card--split .o_ages_kpi_value {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+        overflow-wrap: break-word;
+    }
+}

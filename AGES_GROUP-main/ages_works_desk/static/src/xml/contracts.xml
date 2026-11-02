@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ages_works_desk.InspectorContracts">
+        <t t-set="insp" t-value="state.payload.inspector"/>
+        <div class="aw-insp-title" t-esc="insp.title"/>
+        <t t-foreach="insp.facts" t-as="fact" t-key="fact.label">
+            <div class="aw-fact">
+                <span t-esc="fact.label"/>
+                <strong t-esc="fact.value"/>
+            </div>
+        </t>
+        <div class="aw-kpi-row">
+            <button type="button" class="aw-kpi" t-on-click="() => openAction(insp.actions and insp.actions[0] and insp.actions[0].action)">
+                <span>Contract value</span>
+                <strong t-esc="insp.amounts.contract_value_compact"/>
+            </button>
+            <button type="button" class="aw-kpi" t-on-click="() => openAction(insp.actions and insp.actions[1] and insp.actions[1].action)">
+                <span>RA work</span>
+                <strong t-esc="insp.amounts.ra_work_compact"/>
+            </button>
+            <div class="aw-kpi">
+                <span>Remaining RA</span>
+                <strong t-esc="insp.amounts.remaining_ra_compact"/>
+            </div>
+        </div>
+        <div class="aw-section-label">RA A–I</div>
+        <t t-foreach="insp.waterfall.steps" t-as="step" t-key="step.letter">
+            <div class="aw-waterfall">
+                <span class="aw-letter" t-esc="step.letter"/>
+                <span t-esc="step.label"/>
+                <strong class="aw-num" t-esc="step.amount_compact"/>
+            </div>
+        </t>
+        <div class="aw-waterfall">
+            <span class="aw-letter">N</span>
+            <span>Net</span>
+            <strong class="aw-num" t-esc="insp.waterfall.net.net_compact"/>
+        </div>
+        <div class="aw-waterfall">
+            <span class="aw-letter">R</span>
+            <span>Receivable</span>
+            <strong class="aw-num" t-esc="insp.waterfall.net.receivable_compact"/>
+        </div>
+        <t t-if="insp.mobilization">
+            <div class="aw-section-label">Mobilization</div>
+            <div class="aw-fact">
+                <span t-esc="insp.mobilization.name"/>
+                <a href="#" class="aw-link" t-on-click.prevent="() => openAction(insp.mobilization.action)" t-esc="insp.mobilization.amount_remaining_compact or insp.mobilization.payment_state or 'Open'"/>
+            </div>
+        </t>
+        <t t-if="insp.retention">
+            <div class="aw-section-label">Retention</div>
+            <div class="aw-fact">
+                <span t-esc="insp.retention.name"/>
+                <a href="#" class="aw-link" t-on-click.prevent="() => openAction(insp.retention.action)" t-esc="insp.retention.amount_remaining_compact or insp.retention.payment_state or 'Open'"/>
+            </div>
+        </t>
+        <t t-if="insp.bills and insp.bills.length">
+            <div class="aw-section-label">Running bills</div>
+            <t t-foreach="insp.bills" t-as="bill" t-key="bill.id">
+                <div class="aw-fact">
+                    <a href="#" class="aw-link" t-on-click.prevent="() => openAction(bill.action)" t-esc="bill.name"/>
+                    <span t-esc="bill.value_of_work_done_compact"/>
+                </div>
+            </t>
+        </t>
+        <t t-if="insp.unpaid_invoices">
+            <div class="aw-section-label">Unpaid invoices</div>
+            <a href="#" class="aw-link" t-on-click.prevent="() => openAction(insp.unpaid_invoices.action)">
+                <t t-esc="insp.unpaid_invoices.count"/> invoices
+            </a>
+        </t>
+        <div class="aw-insp-actions">
+            <t t-foreach="insp.actions" t-as="act" t-key="act.label">
+                <button t-if="act.action" type="button" class="btn btn-sm btn-primary" t-on-click="() => openAction(act.action)" t-esc="act.label"/>
+            </t>
+        </div>
+    </t>
+</templates>

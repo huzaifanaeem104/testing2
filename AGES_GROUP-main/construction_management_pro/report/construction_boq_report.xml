@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_construction_boq" model="ir.actions.report">
+        <field name="name">Bill of Quantities</field>
+        <field name="model">construction.boq</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">construction_management_pro.report_construction_boq_document</field>
+        <field name="report_file">construction_management_pro.report_construction_boq_document</field>
+        <field name="print_report_name">'BOQ - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_construction_boq"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_construction_boq_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Bill of Quantities</h2>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <strong>BOQ:</strong> <span t-field="o.name"/><br/>
+                                <strong>Project:</strong> <span t-field="o.project_id"/><br/>
+                                <strong>Client:</strong> <span t-field="o.partner_id"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Revision:</strong> <span t-field="o.revision"/><br/>
+                                <strong>Date:</strong> <span t-field="o.date"/><br/>
+                                <strong>Status:</strong> <span t-field="o.state"/>
+                            </div>
+                        </div>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Code</th><th>Type</th><th>Description</th><th class="text-end">Qty</th><th>UoM</th><th class="text-end">Unit Cost</th><th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids" t-as="line">
+                                    <td><span t-field="line.code"/></td>
+                                    <td><span t-field="line.line_type"/></td>
+                                    <td><span t-field="line.description"/></td>
+                                    <td class="text-end"><span t-field="line.quantity"/></td>
+                                    <td><span t-field="line.uom_id"/></td>
+                                    <td class="text-end"><span t-field="line.unit_cost" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                    <td class="text-end"><span t-field="line.subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-7"/>
+                            <div class="col-5">
+                                <table class="table table-sm">
+                                    <tr><td>Materials</td><td class="text-end"><span t-field="o.material_amount"/></td></tr>
+                                    <tr><td>Labor</td><td class="text-end"><span t-field="o.labor_amount"/></td></tr>
+                                    <tr><td>Equipment</td><td class="text-end"><span t-field="o.equipment_amount"/></td></tr>
+                                    <tr><td>Subcontracts</td><td class="text-end"><span t-field="o.subcontract_amount"/></td></tr>
+                                    <tr><td>Manufactured</td><td class="text-end"><span t-field="o.manufactured_amount"/></td></tr>
+                                    <tr class="fw-bold"><td>Total</td><td class="text-end"><span t-field="o.total_amount"/></td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_portal_project" model="ir.ui.view">
+        <field name="name">res.users.form.portal.project</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='preferences']/group[1]" position="after">
+                <group string="Attendance Portal" name="ages_portal_project">
+                    <field name="portal_project_id"
+                             options="{'no_create': True}"
+                             placeholder="Project shown on Attendance Portal"/>
+                    <field name="portal_pin_enabled"/>
+                    <field name="portal_pin" password="True"
+                             invisible="not portal_pin_enabled"
+                             placeholder="4–6 digit PIN"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

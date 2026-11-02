@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_user_session_monitor,ages.user.session.monitor,model_ages_user_session,group_presence_monitor,1,0,0,0
+access_ages_user_session_manager,ages.user.session.manager,model_ages_user_session,group_presence_manager,1,1,1,1

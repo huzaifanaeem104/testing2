@@ -1,0 +1,11 @@
+// Cash Flow inherits page layout and table styles from balance_sheet_report.scss.
+// Only CF-specific column tweaks live here.
+.o_ages_cf_report.account_report {
+    .o_ages_bs_label_col {
+        min-width: 480px;
+    }
+
+    .o_ages_bs_amount_col {
+        min-width: 160px;
+    }
+}

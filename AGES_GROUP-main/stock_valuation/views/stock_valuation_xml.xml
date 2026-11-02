@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- XLSX Report Action for Branch Transfer Note -->
+    <record id="action_stock_valuation_report_xlsx" model="ir.actions.report">
+        <field name="name">Stock Valuation Report Wizard</field>
+
+        <!-- Bind to wizard -->
+        <field name="model">stock.valuation.report.wizard</field>
+
+        <field name="report_type">xlsx</field>
+
+        <!-- Must match _name of report class -->
+        <field name="report_name">stock_valuation.report_xlsx</field>
+
+        <!-- Optional but consistent -->
+        <field name="report_file">stock_valuation.report_xlsx</field>
+
+        <!-- Auto filename -->
+        <field name="print_report_name">'stock_valuation_report.xlsx'</field>
+
+        <!-- Bind the report to the wizard -->
+        <field name="binding_model_id" ref="model_stock_valuation_report_wizard"/>
+    </record>
+
+</odoo>

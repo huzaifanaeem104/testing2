@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Expense Form View -->
+    <record id="view_ages_expense_form" model="ir.ui.view">
+        <field name="name">ages.expense.form</field>
+        <field name="model">ages.expense</field>
+        <field name="arch" type="xml">
+            <form string="Expense">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary" invisible="state != 'new'"/>
+                    <button name="action_approve" string="Approve" type="object" class="btn-primary" invisible="state != 'confirmed'"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object" class="btn-secondary" invisible="state not in ('confirmed', 'approved')"/>
+                    <button name="action_cancel" string="Cancel" type="object" class="btn-secondary" invisible="state != 'new'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,confirmed,approved,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_payment" type="object" class="oe_stat_button" icon="fa-money" invisible="not payment_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Payment Entry</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <label for="description" string="Description"/>
+                        <h2>
+                            <field name="description" placeholder="e.g. Site Office Operational Expense" readonly="state in ('approved', 'cancelled')"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="vendor_id" required="0" options="{'no_create': True}" readonly="state in ('approved', 'cancelled')"/>
+                            <field name="date" readonly="state in ('approved', 'cancelled')"/>
+                            <!-- Project moved to expense lines -->
+                            <field name="project_id" invisible="1"/>
+                            <field name="analytic_account_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="sub_company_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="user_id"/>
+                            <field name="journal_id" options="{'no_create': True}" readonly="state in ('approved', 'cancelled')"/>
+                            <field name="apply_100_payment_analytic"
+                                   required="journal_id.type != 'bank'"
+                                   readonly="state in ('approved', 'cancelled') or journal_id.type == 'bank'"/>
+                            <field name="payment_analytic_account_id"
+                                   required="journal_id.type != 'bank' and apply_100_payment_analytic"
+                                   invisible="journal_id.type == 'bank'"
+                                   options="{'no_create': True}"
+                                   readonly="state in ('approved', 'cancelled') or journal_id.type == 'bank'"
+                                   domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]"/>
+                            <field name="payment_id" invisible="not payment_id"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Expenses" name="expenses_notebook">
+                            <field name="line_ids" readonly="state in ('approved', 'cancelled')"
+                                     context="{'default_partner_id': vendor_id}">
+                                <list editable="bottom">
+                                    <field name="sequence" column_invisible="1"/>
+                                    <field name="company_id" column_invisible="1"/>
+                                    <field name="account_id" options="{'no_create': True}"/>
+                                    <field name="is_payable_account" column_invisible="1"/>
+                                    <field name="partner_id" options="{'no_create': True}" required="is_payable_account"/>
+                                    <field name="project_id" options="{'no_create': True}" required="1"/>
+                                    <field name="analytic_account_id" optional="hide" readonly="1"/>
+                                    <field name="name"/>
+                                    <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                    <widget name="ages_expense_duplicate_line" string="Duplicate"/>
+                                    <field name="attachment_ids" widget="many2many_binary" string="Attach Receipt" optional="hide"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_amount" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Expense List View -->
+    <record id="view_ages_expense_tree" model="ir.ui.view">
+        <field name="name">ages.expense.list</field>
+        <field name="model">ages.expense</field>
+        <field name="arch" type="xml">
+            <list string="Expenses" sample="1">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="description"/>
+                <field name="vendor_id"/>
+                <field name="user_id"/>
+                <field name="journal_id"/>
+                <field name="total_amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'new'"
+                       decoration-warning="state == 'confirmed'"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'cancelled'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Expense Search View -->
+    <record id="view_ages_expense_search" model="ir.ui.view">
+        <field name="name">ages.expense.search</field>
+        <field name="model">ages.expense</field>
+        <field name="arch" type="xml">
+            <search string="Search Expenses">
+                <field name="name"/>
+                <field name="description"/>
+                <field name="vendor_id"/>
+                <field name="journal_id"/>
+                <filter string="New" name="state_new" domain="[('state', '=', 'new')]"/>
+                <filter string="Confirmed" name="state_confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Approved" name="state_approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Cancelled" name="state_cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Vendor" name="group_vendor" context="{'group_by': 'vendor_id'}"/>
+                    <filter string="User" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for Expense -->
+    <record id="action_ages_expense" model="ir.actions.act_window">
+        <field name="name">Expense</field>
+        <field name="res_model">ages.expense</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ages_expense_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Expense record!
+            </p>
+        </field>
+    </record>
+</odoo>

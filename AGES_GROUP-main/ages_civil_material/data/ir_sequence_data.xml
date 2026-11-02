@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_ages_civil_material_slip" model="ir.sequence">
+        <field name="name">Civil Material Slip</field>
+        <field name="code">ages.civil.material.slip</field>
+        <field name="prefix">CM/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

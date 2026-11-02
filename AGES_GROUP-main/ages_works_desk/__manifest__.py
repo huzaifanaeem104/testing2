@@ -1,0 +1,46 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'AGES Works',
+    'summary': 'Operational console: Today, Contracts, Site, Spend, Books',
+    'version': '18.0.1.1.0',
+    'category': 'Productivity',
+    'author': 'Muhammad Sana Ullah',
+    'license': 'LGPL-3',
+    'depends': [
+        'web',
+        'account',
+        'project',
+        'ages_company',
+        'ages_contracts',
+        'ages_running_bills',
+        'ages_project',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'views/works_desk_menus.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'ages_works_desk/static/src/scss/works_desk.scss',
+            'ages_works_desk/static/src/xml/works_shell.xml',
+            'ages_works_desk/static/src/xml/today.xml',
+            'ages_works_desk/static/src/xml/contracts.xml',
+            'ages_works_desk/static/src/xml/site.xml',
+            'ages_works_desk/static/src/xml/spend.xml',
+            'ages_works_desk/static/src/xml/books.xml',
+            'ages_works_desk/static/src/js/works_shell.js',
+            'ages_works_desk/static/src/js/today.js',
+            'ages_works_desk/static/src/js/contracts.js',
+            'ages_works_desk/static/src/js/site.js',
+            'ages_works_desk/static/src/js/spend.js',
+            'ages_works_desk/static/src/js/books.js',
+        ],
+        'web.assets_web_dark': [
+            'ages_works_desk/static/src/scss/works_desk.dark.scss',
+        ],
+    },
+    'images': ['static/description/icon.png'],
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+}

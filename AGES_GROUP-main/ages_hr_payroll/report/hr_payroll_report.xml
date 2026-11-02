@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_payslip" model="ir.actions.report">
+        <field name="name">Payslip</field>
+        <field name="model">hr.payslip</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_hr_payroll.report_payslip</field>
+        <field name="report_file">ages_hr_payroll.report_payslip</field>
+        <field name="print_report_name">'Payslip - %s' % (object.number or object.employee_id.name)</field>
+        <field name="binding_model_id" ref="model_hr_payslip"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_payslip_light" model="ir.actions.report">
+        <field name="name">Payslip (Light)</field>
+        <field name="model">hr.payslip</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_hr_payroll.report_payslip_light</field>
+        <field name="report_file">ages_hr_payroll.report_payslip_light</field>
+        <field name="print_report_name">'Payslip Light - %s' % (object.number or object.employee_id.name)</field>
+        <field name="binding_model_id" ref="model_hr_payslip"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

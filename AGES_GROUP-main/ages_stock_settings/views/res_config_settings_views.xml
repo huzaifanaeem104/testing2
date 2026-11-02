@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_unlock" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.ages.stock.unlock</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <field name="module_quality_control" position="replace">
+                <field name="module_quality_control"/>
+            </field>
+            <field name="module_quality_control_worksheet" position="replace">
+                <field name="module_quality_control_worksheet"/>
+            </field>
+            <field name="module_stock_barcode" position="replace">
+                <field name="module_stock_barcode"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Odoo 18 (Update all)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/home/huzaifa/odoo_18/odoo18.0/odoo-bin",
+            "args": [
+                "-c",
+                "/home/huzaifa/odoo_18/config/odoo.conf",
+                "-u",
+                "patient_basic"
+         
+                // "ages_management_dashboard,student_basic,ages_erp_copilot"
+            ],
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "/home/huzaifa/odoo_18/odoo18.0"
+            }
+        }
+    ]
+}

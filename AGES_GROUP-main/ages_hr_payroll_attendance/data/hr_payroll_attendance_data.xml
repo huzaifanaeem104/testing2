@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Optional: create when ages_hr_payroll exposes hr.rule.parameter.
+        Worked-days code falls back to 100% if the parameter is missing.
+    -->
+    <record id="rule_parameter_overtime_pay" model="hr.rule.parameter">
+        <field name="name">Overtime Pay Percentage</field>
+        <field name="code">overtime_pay_percent</field>
+        <field name="country_id" eval="False"/>
+    </record>
+
+    <record id="rule_parameter_overtime_pay_value" model="hr.rule.parameter.value">
+        <field name="rule_parameter_id" ref="rule_parameter_overtime_pay"/>
+        <field name="parameter_value">100</field>
+        <field name="date_from" eval="datetime(2000, 1, 1).date()"/>
+    </record>
+</odoo>

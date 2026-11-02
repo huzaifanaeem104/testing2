@@ -1,0 +1,62 @@
+.account_report {
+    .o_ages_optional_columns {
+        display: inline-flex;
+        align-items: center;
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .o_ages_optional_columns_btn {
+        color: $o-gray-500;
+
+        &:hover,
+        &.o_ages_unfold_active {
+            color: $o-enterprise-action-color;
+        }
+    }
+
+    .o_ages_optional_columns_menu {
+        position: fixed;
+        z-index: 1050;
+        display: block;
+        min-width: 240px;
+        padding: 8px 0;
+        margin: 0;
+        background: $o-view-background-color;
+        border: 1px solid $o-gray-300;
+        border-radius: 0.25rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    .o_ages_optional_columns_title {
+        padding: 4px 14px 8px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: $o-gray-600;
+    }
+
+    .o_ages_optional_columns_item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 0;
+        padding: 6px 14px;
+        font-size: 13px;
+        font-weight: 400;
+        color: $o-main-text-color;
+        cursor: pointer;
+        white-space: nowrap;
+
+        &:hover {
+            background: $o-gray-100;
+        }
+
+        .form-check-input {
+            cursor: pointer;
+            margin-top: 0;
+        }
+    }
+}

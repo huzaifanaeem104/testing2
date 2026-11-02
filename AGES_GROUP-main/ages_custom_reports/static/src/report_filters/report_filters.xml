@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ages_custom_reports.ReportRecordPicker">
+        <div class="dropdown-item record">
+            <MultiRecordSelector
+                resIds="selectedIds"
+                resModel="props.resModel"
+                update.bind="onUpdate"
+                domain="domain"
+                placeholder="props.placeholder"
+                fieldString="props.fieldString"
+            />
+        </div>
+    </t>
+
+</templates>

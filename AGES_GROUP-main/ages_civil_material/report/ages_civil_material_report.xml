@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_ages_civil_material_landscape" model="report.paperformat">
+        <field name="name">AGES Civil Material A4 Landscape</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="action_report_ages_civil_material_statement" model="ir.actions.report">
+        <field name="name">Civil Material Statement</field>
+        <field name="model">purchase.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_civil_material.report_civil_material_statement</field>
+        <field name="report_file">ages_civil_material.report_civil_material_statement</field>
+        <field name="print_report_name">'Civil Material Statement - %s' % (object.name)</field>
+        <field name="paperformat_id" ref="paperformat_ages_civil_material_landscape"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_ages_civil_material_detail" model="ir.actions.report">
+        <field name="name">Civil Material Detail Report</field>
+        <field name="model">ages.civil.material.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_civil_material.report_civil_material_detail</field>
+        <field name="report_file">ages_civil_material.report_civil_material_detail</field>
+        <field name="print_report_name">'Civil Material Detail Report'</field>
+        <field name="paperformat_id" ref="paperformat_ages_civil_material_landscape"/>
+    </record>
+</odoo>

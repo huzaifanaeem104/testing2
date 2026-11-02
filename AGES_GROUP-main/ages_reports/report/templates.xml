@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ages_document_report_styles">
+        <t t-call="ages_custom_reports.ages_report_pdf_styles"/>
+        <style type="text/css">
+            .ages-doc-report {
+                font-family: Helvetica, Arial, sans-serif;
+                color: #1a2332;
+                font-size: 13px;
+                line-height: 1.45;
+                margin: 0;
+                padding: 0;
+            }
+            .ages-doc-report .report-meta {
+                display: block;
+                width: 100%;
+                margin: 0 0 8px 0;
+                padding: 0;
+                border: 0 !important;
+                outline: none !important;
+                box-shadow: none !important;
+                background: transparent !important;
+            }
+            .ages-doc-report .report-meta .meta-pair {
+                display: inline-block;
+                margin: 0 14px 4px 0;
+                border: 0 !important;
+                background: transparent !important;
+            }
+            .ages-doc-report .report-meta .meta-k {
+                display: inline;
+                color: #8b1a1a;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+                margin-right: 6px;
+                font-size: 10px;
+                background: transparent;
+            }
+            .ages-doc-report .report-meta .meta-v {
+                display: inline;
+                color: #1a2332;
+                font-size: 10px;
+            }
+            .ages-doc-report .ledger-table {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;
+                margin: 0 0 10px 0;
+            }
+            .ages-doc-report .ledger-table thead {
+                display: table-header-group;
+            }
+            .ages-doc-report .ledger-table thead th {
+                background: #8B1A1A;
+                color: #ffffff;
+                font-size: 10px;
+                text-transform: uppercase;
+                font-weight: bold;
+                padding: 7px 5px;
+                border: 1px solid #8B1A1A;
+                text-align: left;
+                vertical-align: middle;
+            }
+            .ages-doc-report .ledger-table thead th.text-end,
+            .ages-doc-report .ledger-table td.col-amount {
+                text-align: right;
+                white-space: nowrap;
+            }
+            .ages-doc-report .ledger-table tbody td {
+                padding: 5px;
+                border: 1px solid #eed6da;
+                vertical-align: middle;
+                font-size: 11px;
+                line-height: 1.3;
+                word-wrap: break-word;
+            }
+            .ages-doc-report .ledger-table tbody tr.data-row:nth-child(even) td {
+                background: #fafbfc;
+            }
+            .ages-doc-report .ledger-table .group-row td {
+                background: #faf0f1;
+                color: #8B1A1A;
+                font-weight: bold;
+                font-size: 12px;
+                padding: 6px;
+                border-top: 2px solid #B22234;
+            }
+            .ages-doc-report .ledger-table .subtotal-row td {
+                background: #faf0f1;
+                font-weight: bold;
+                font-size: 11px;
+                border-top: 1px solid #B22234;
+                color: #8B1A1A;
+            }
+            .ages-doc-report .report-footer-note {
+                margin-top: 6px;
+                font-size: 9px;
+                color: #7a8798;
+                text-align: center;
+            }
+            .ages-doc-report .page-break {
+                page-break-after: always;
+            }
+            .ages-bill-report {
+                font-size: 13px;
+                line-height: 1.4;
+            }
+            .ages-bill-report .ages-report-header {
+                margin-bottom: 10px;
+                padding-bottom: 8px;
+                border-bottom: 2px solid #8b1a1a;
+            }
+            .ages-bill-report .ages-report-header-table {
+                margin-bottom: 6px;
+            }
+            .ages-bill-report .ages-report-company-name {
+                font-size: 18px;
+                margin-bottom: 2px;
+            }
+            .ages-bill-report .ages-report-company-address,
+            .ages-bill-report .ages-report-company-email {
+                font-size: 12px;
+                margin: 0;
+                line-height: 1.35;
+            }
+            .ages-bill-report .ages-report-logo {
+                max-height: 64px;
+                max-width: 180px;
+            }
+            .ages-bill-report .ages-report-title-bar {
+                background: transparent;
+                color: #8b1a1a;
+                padding: 4px 0 0 0;
+            }
+            .ages-bill-report .ages-report-title {
+                font-size: 16px;
+                letter-spacing: 0.02em;
+            }
+            .ages-bill-report .ages-report-subtitle {
+                font-size: 13px;
+                color: #1a2332;
+                margin-top: 2px;
+            }
+            .ages-bill-report .bill-focus-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 0 0 12px 0;
+            }
+            .ages-bill-report .bill-focus-table td {
+                padding: 6px 8px !important;
+                border: 1px solid #d9d3d3;
+                font-size: 13px !important;
+                line-height: 1.35;
+                vertical-align: middle;
+            }
+            .ages-bill-report .bill-focus-table .meta-k {
+                width: 1%;
+                background: #f4f4f4;
+                color: #1a2332;
+                font-weight: bold;
+                text-transform: uppercase;
+                font-size: 11px !important;
+                white-space: nowrap;
+            }
+            .ages-bill-report .bill-focus-table .meta-v {
+                font-weight: normal;
+                font-size: 13px !important;
+                color: #1a2332;
+            }
+            .ages-bill-report.ages-report-branded .ledger-table thead th {
+                background: #f4f4f4 !important;
+                color: #1a2332 !important;
+                border: 1px solid #d9d3d3 !important;
+                border-bottom: 2px solid #8b1a1a !important;
+                font-size: 12px !important;
+                padding: 8px 6px !important;
+            }
+            .ages-bill-report.ages-report-branded .ledger-table tbody td {
+                font-size: 12px !important;
+                padding: 7px 6px !important;
+                line-height: 1.35;
+            }
+            .ages-bill-report .ledger-table .subtotal-row td {
+                background: #ffffff;
+                color: #1a2332;
+                font-size: 12px !important;
+                border-top: 1px solid #d9d3d3;
+            }
+        </style>
+    </template>
+
+    <template id="journal_entry">
+        <t t-call="web.html_container">
+            <t t-foreach="entries" t-as="entry">
+                <t t-call="web.basic_layout">
+                    <t t-call="ages_reports.ages_document_report_styles"/>
+                    <div class="ages-doc-report ages-report-branded">
+                        <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+                        <t t-set="move" t-value="entry['record']"/>
+                        <div class="report-meta">
+                        <span class="meta-pair"><span class="meta-k">Number</span><span class="meta-v"><t t-esc="move.name or 'Draft'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Reference</span><span class="meta-v"><t t-esc="move.ref or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Date</span><span class="meta-v"><t t-esc="move.date"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Journal</span><span class="meta-v"><t t-esc="move.journal_id.display_name"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Active Company</span><span class="meta-v"><t t-esc="move.ages_sub_company_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Contract</span><span class="meta-v"><t t-esc="move.ages_contract_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Project</span><span class="meta-v"><t t-esc="entry['project_name'] or move.ages_project_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Status</span><span class="meta-v"><t t-esc="entry['state_label']"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Partner</span><span class="meta-v"><t t-esc="move.partner_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Analytic</span><span class="meta-v"><t t-esc="move.ages_analytic_account_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Company</span><span class="meta-v"><t t-esc="company.name"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Currency</span><span class="meta-v"><t t-esc="currency.name"/></span></span>
+                    </div>
+                        <table class="ledger-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:22%;">Account</th>
+                                    <th style="width:16%;">Partner</th>
+                                    <th style="width:22%;">Label</th>
+                                    <th style="width:18%;">Analytic</th>
+                                    <th class="text-end" style="width:11%;">Debit</th>
+                                    <th class="text-end" style="width:11%;">Credit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="entry['lines']" t-as="line">
+                                    <tr class="data-row">
+                                        <td><t t-esc="line['account'] or '—'"/></td>
+                                        <td><t t-esc="line['partner'] or '—'"/></td>
+                                        <td><t t-esc="line['label'] or '—'"/></td>
+                                        <td><t t-esc="line['analytic'] or '—'"/></td>
+                                        <td class="col-amount">
+                                            <span t-out="line['debit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </td>
+                                        <td class="col-amount">
+                                            <span t-out="line['credit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr class="subtotal-row">
+                                    <td colspan="4" class="text-end">Total</td>
+                                    <td class="col-amount">
+                                        <span t-out="entry['total_debit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                    <td class="col-amount">
+                                        <span t-out="entry['total_credit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="report-footer-note">
+                            Journal Entry · <t t-esc="company.name"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="vendor_bill">
+        <t t-call="web.html_container">
+            <t t-foreach="entries" t-as="entry">
+                <t t-call="web.basic_layout">
+                    <t t-call="ages_reports.ages_document_report_styles"/>
+                    <div class="ages-doc-report ages-report-branded ages-bill-report">
+                        <t t-set="report_title" t-value="entry['title']"/>
+                        <t t-set="report_subtitle" t-value="entry['record'].name or 'Draft'"/>
+                        <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+                        <t t-set="move" t-value="entry['record']"/>
+                        <t t-set="bill_currency" t-value="entry['currency']"/>
+                        <table class="bill-focus-table">
+                            <tr>
+                                <td class="meta-k">Vendor</td>
+                                <td class="meta-v"><t t-esc="entry['vendor_name'] or '—'"/></td>
+                                <td class="meta-k">Bill Date</td>
+                                <td class="meta-v"><t t-esc="move.invoice_date or move.date or '—'"/></td>
+                            </tr>
+                            <tr>
+                                <td class="meta-k">Project</td>
+                                <td class="meta-v" colspan="3"><t t-esc="entry['project_name'] or '—'"/></td>
+                            </tr>
+                            <tr>
+                                <td class="meta-k">Contract Description</td>
+                                <td class="meta-v" colspan="3"><t t-esc="entry['contract_description'] or entry['contract_name'] or '—'"/></td>
+                            </tr>
+                        </table>
+                        <table class="ledger-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:24%;">Product</th>
+                                    <th style="width:22%;">Account</th>
+                                    <th class="text-end" style="width:10%;">Qty</th>
+                                    <th style="width:10%;">UoM</th>
+                                    <th class="text-end" style="width:17%;">Unit Price</th>
+                                    <th class="text-end" style="width:17%;">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="entry['lines']" t-as="line">
+                                    <tr class="data-row">
+                                        <td>
+                                            <t t-esc="line['product'] or '—'"/>
+                                            <t t-if="line['name'] and line['name'] != line['product']">
+                                                <div style="font-size:11px; color:#5c6b7f; font-weight:normal;">
+                                                    <t t-esc="line['name']"/>
+                                                </div>
+                                            </t>
+                                        </td>
+                                        <td><t t-esc="line['account'] or '—'"/></td>
+                                        <td class="col-amount"><t t-esc="line['qty']"/></td>
+                                        <td><t t-esc="line['uom'] or '—'"/></td>
+                                        <td class="col-amount">
+                                            <span t-out="line['price']" t-options='{"widget": "monetary", "display_currency": bill_currency}'/>
+                                        </td>
+                                        <td class="col-amount">
+                                            <span t-out="line['subtotal']" t-options='{"widget": "monetary", "display_currency": bill_currency}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr class="subtotal-row">
+                                    <td colspan="5" class="text-end">Untaxed</td>
+                                    <td class="col-amount">
+                                        <span t-out="move.amount_untaxed" t-options='{"widget": "monetary", "display_currency": bill_currency}'/>
+                                    </td>
+                                </tr>
+                                <tr class="subtotal-row">
+                                    <td colspan="5" class="text-end">Taxes</td>
+                                    <td class="col-amount">
+                                        <span t-out="move.amount_tax" t-options='{"widget": "monetary", "display_currency": bill_currency}'/>
+                                    </td>
+                                </tr>
+                                <tr class="subtotal-row">
+                                    <td colspan="5" class="text-end">Total</td>
+                                    <td class="col-amount">
+                                        <span t-out="move.amount_total" t-options='{"widget": "monetary", "display_currency": bill_currency}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="report-footer-note">
+                            <t t-esc="entry['title']"/> · <t t-esc="company.name"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="journal_item">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-call="ages_reports.ages_document_report_styles"/>
+                <div class="ages-doc-report ages-report-branded">
+                    <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+                    <div class="report-meta">
+                        <span class="meta-pair"><span class="meta-k">Company</span><span class="meta-v"><t t-esc="company.name"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Entries</span><span class="meta-v"><t t-esc="len(groups)"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Printed</span><span class="meta-v"><t t-esc="report_date"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Currency</span><span class="meta-v"><t t-esc="currency.name"/></span></span>
+                    </div>
+                    <table class="ledger-table">
+                        <thead>
+                            <tr>
+                                <th style="width:9%;">Date</th>
+                                <th style="width:12%;">Journal Entry</th>
+                                <th style="width:14%;">Partner</th>
+                                <th style="width:18%;">Label</th>
+                                <th style="width:18%;">Account</th>
+                                <th style="width:13%;">Analytic</th>
+                                <th class="text-end" style="width:8%;">Debit</th>
+                                <th class="text-end" style="width:8%;">Credit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="groups" t-as="group">
+                                <tr class="group-row">
+                                    <td colspan="8">
+                                        <t t-esc="group['move'].name or 'Draft'"/>
+                                        · <t t-esc="group['move'].journal_id.display_name"/>
+                                        · <t t-esc="group['move'].ref or ''"/>
+                                    </td>
+                                </tr>
+                                <t t-foreach="group['lines']" t-as="line">
+                                    <tr class="data-row">
+                                        <td><t t-esc="line['date'] or '—'"/></td>
+                                        <td><t t-esc="line['move_name'] or '—'"/></td>
+                                        <td><t t-esc="line['partner'] or '—'"/></td>
+                                        <td><t t-esc="line['label'] or '—'"/></td>
+                                        <td><t t-esc="line['account'] or '—'"/></td>
+                                        <td><t t-esc="line['analytic'] or '—'"/></td>
+                                        <td class="col-amount">
+                                            <span t-out="line['debit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </td>
+                                        <td class="col-amount">
+                                            <span t-out="line['credit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr class="subtotal-row">
+                                    <td colspan="6" class="text-end">Subtotal</td>
+                                    <td class="col-amount">
+                                        <span t-out="group['total_debit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                    <td class="col-amount">
+                                        <span t-out="group['total_credit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr class="subtotal-row">
+                                <td colspan="6" class="text-end">Total</td>
+                                <td class="col-amount">
+                                    <span t-out="grand_debit" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </td>
+                                <td class="col-amount">
+                                    <span t-out="grand_credit" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="report-footer-note">
+                        Journal Items · <t t-esc="company.name"/>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="expense">
+        <t t-call="web.html_container">
+            <t t-foreach="entries" t-as="entry">
+                <t t-call="web.basic_layout">
+                    <t t-call="ages_reports.ages_document_report_styles"/>
+                    <div class="ages-doc-report ages-report-branded">
+                        <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+                        <t t-set="expense" t-value="entry['record']"/>
+                        <t t-set="exp_currency" t-value="entry['currency']"/>
+                        <div class="report-meta">
+                        <span class="meta-pair"><span class="meta-k">Description</span><span class="meta-v"><t t-esc="expense.description or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Date</span><span class="meta-v"><t t-esc="expense.date"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Status</span><span class="meta-v"><t t-esc="entry['state_label']"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Vendor</span><span class="meta-v"><t t-esc="expense.vendor_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">User</span><span class="meta-v"><t t-esc="expense.user_id.display_name"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Payment Account</span><span class="meta-v"><t t-esc="expense.journal_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Payment Entry</span><span class="meta-v"><t t-esc="expense.payment_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Company</span><span class="meta-v"><t t-esc="company.name"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Active Company</span><span class="meta-v"><t t-esc="expense.sub_company_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Project</span><span class="meta-v"><t t-esc="entry['project_name'] or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Currency</span><span class="meta-v"><t t-esc="exp_currency.name"/></span></span>
+                    </div>
+                        <table class="ledger-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:22%;">Expense Account</th>
+                                    <th style="width:16%;">Partner</th>
+                                    <th style="width:22%;">Project</th>
+                                    <th style="width:26%;">Description</th>
+                                    <th class="text-end" style="width:14%;">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="entry['lines']" t-as="line">
+                                    <tr class="data-row">
+                                        <td><t t-esc="line['account'] or '—'"/></td>
+                                        <td><t t-esc="line['partner'] or '—'"/></td>
+                                        <td><t t-esc="line['project'] or '—'"/></td>
+                                        <td><t t-esc="line['name'] or '—'"/></td>
+                                        <td class="col-amount">
+                                            <span t-out="line['amount']" t-options='{"widget": "monetary", "display_currency": exp_currency}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr class="subtotal-row">
+                                    <td colspan="4" class="text-end">Total</td>
+                                    <td class="col-amount">
+                                        <span t-out="expense.total_amount" t-options='{"widget": "monetary", "display_currency": exp_currency}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="report-footer-note">
+                            Expense · <t t-esc="company.name"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="payment">
+        <t t-call="web.html_container">
+            <t t-foreach="entries" t-as="entry">
+                <t t-call="web.basic_layout">
+                    <t t-call="ages_reports.ages_document_report_styles"/>
+                    <div class="ages-doc-report ages-report-branded">
+                        <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+                        <t t-set="pay" t-value="entry['record']"/>
+                        <div class="report-meta">
+                        <span class="meta-pair"><span class="meta-k">Number</span><span class="meta-v"><t t-esc="pay.name or 'Draft'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Payment Type</span><span class="meta-v"><t t-esc="entry['payment_type_label']"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Date</span><span class="meta-v"><t t-esc="pay.date"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Amount</span><span class="meta-v"><span t-out="pay.amount" t-options='{"widget": "monetary", "display_currency": pay.currency_id or currency}'/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Vendor / Partner</span><span class="meta-v"><t t-esc="pay.partner_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Journal</span><span class="meta-v"><t t-esc="pay.journal_id.display_name"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Memo</span><span class="meta-v"><t t-esc="pay.memo or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Status</span><span class="meta-v"><t t-esc="entry['state_label']"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Active Company</span><span class="meta-v"><t t-esc="pay.ages_sub_company_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Contract</span><span class="meta-v"><t t-esc="pay.ages_contract_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Project</span><span class="meta-v"><t t-esc="entry['project_name'] or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Company</span><span class="meta-v"><t t-esc="company.name"/></span></span>
+                    </div>
+                        <t t-if="entry['details']">
+                            <table class="ledger-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:28%;">Destination Journal</th>
+                                        <th style="width:28%;">Project</th>
+                                        <th style="width:28%;">Description</th>
+                                        <th class="text-end" style="width:16%;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="entry['details']" t-as="line">
+                                        <tr class="data-row">
+                                            <td><t t-esc="line['journal'] or '—'"/></td>
+                                            <td><t t-esc="line['project'] or '—'"/></td>
+                                            <td><t t-esc="line['description'] or '—'"/></td>
+                                            <td class="col-amount">
+                                                <span t-out="line['amount']" t-options='{"widget": "monetary", "display_currency": pay.currency_id or currency}'/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-if="entry['lines']">
+                            <table class="ledger-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:22%;">Account</th>
+                                        <th style="width:16%;">Partner</th>
+                                        <th style="width:22%;">Label</th>
+                                        <th style="width:18%;">Analytic</th>
+                                        <th class="text-end" style="width:11%;">Debit</th>
+                                        <th class="text-end" style="width:11%;">Credit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="entry['lines']" t-as="line">
+                                        <tr class="data-row">
+                                            <td><t t-esc="line['account'] or '—'"/></td>
+                                            <td><t t-esc="line['partner'] or '—'"/></td>
+                                            <td><t t-esc="line['label'] or '—'"/></td>
+                                            <td><t t-esc="line['analytic'] or '—'"/></td>
+                                            <td class="col-amount">
+                                                <span t-out="line['debit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            </td>
+                                            <td class="col-amount">
+                                                <span t-out="line['credit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr class="subtotal-row">
+                                        <td colspan="4" class="text-end">Total</td>
+                                        <td class="col-amount">
+                                            <span t-out="entry['total_debit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </td>
+                                        <td class="col-amount">
+                                            <span t-out="entry['total_credit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                        <div class="report-footer-note">
+                            Payment · <t t-esc="company.name"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="purchase">
+        <t t-call="web.html_container">
+            <t t-foreach="entries" t-as="entry">
+                <t t-call="web.basic_layout">
+                    <t t-call="ages_reports.ages_document_report_styles"/>
+                    <div class="ages-doc-report ages-report-branded">
+                        <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+                        <t t-set="order" t-value="entry['record']"/>
+                        <t t-set="po_currency" t-value="entry['currency']"/>
+                        <div class="report-meta">
+                        <span class="meta-pair"><span class="meta-k">Number</span><span class="meta-v"><t t-esc="order.name or 'Draft'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Vendor</span><span class="meta-v"><t t-esc="order.partner_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Order Date</span><span class="meta-v"><t t-esc="order.date_order"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Status</span><span class="meta-v"><t t-esc="entry['state_label']"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Buyer</span><span class="meta-v"><t t-esc="order.user_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Source</span><span class="meta-v"><t t-esc="order.origin or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Project</span><span class="meta-v"><t t-esc="entry['project_name'] or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Company</span><span class="meta-v"><t t-esc="company.name"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Vendor Reference</span><span class="meta-v"><t t-esc="order.partner_ref or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Expected Arrival</span><span class="meta-v"><t t-esc="order.date_planned or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Untaxed</span><span class="meta-v"><span t-out="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": po_currency}'/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Total</span><span class="meta-v"><span t-out="order.amount_total" t-options='{"widget": "monetary", "display_currency": po_currency}'/></span></span>
+                    </div>
+                        <table class="ledger-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:20%;">Product</th>
+                                    <th style="width:28%;">Description</th>
+                                    <th class="text-end" style="width:10%;">Qty</th>
+                                    <th style="width:10%;">UoM</th>
+                                    <th class="text-end" style="width:16%;">Unit Price</th>
+                                    <th class="text-end" style="width:16%;">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="entry['lines']" t-as="line">
+                                    <tr class="data-row">
+                                        <td><t t-esc="line['product'] or '—'"/></td>
+                                        <td><t t-esc="line['name'] or '—'"/></td>
+                                        <td class="col-amount"><t t-esc="line['qty']"/></td>
+                                        <td><t t-esc="line['uom'] or '—'"/></td>
+                                        <td class="col-amount">
+                                            <span t-out="line['price']" t-options='{"widget": "monetary", "display_currency": po_currency}'/>
+                                        </td>
+                                        <td class="col-amount">
+                                            <span t-out="line['subtotal']" t-options='{"widget": "monetary", "display_currency": po_currency}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr class="subtotal-row">
+                                    <td colspan="5" class="text-end">Untaxed</td>
+                                    <td class="col-amount">
+                                        <span t-out="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": po_currency}'/>
+                                    </td>
+                                </tr>
+                                <tr class="subtotal-row">
+                                    <td colspan="5" class="text-end">Taxes</td>
+                                    <td class="col-amount">
+                                        <span t-out="order.amount_tax" t-options='{"widget": "monetary", "display_currency": po_currency}'/>
+                                    </td>
+                                </tr>
+                                <tr class="subtotal-row">
+                                    <td colspan="5" class="text-end">Total</td>
+                                    <td class="col-amount">
+                                        <span t-out="order.amount_total" t-options='{"widget": "monetary", "display_currency": po_currency}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="report-footer-note">
+                            <t t-esc="report_title"/> · <t t-esc="company.name"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="rfq">
+        <t t-call="ages_reports.purchase"/>
+    </template>
+
+    <template id="purchase_order">
+        <t t-call="ages_reports.purchase"/>
+    </template>
+
+    <template id="receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="entries" t-as="entry">
+                <t t-call="web.basic_layout">
+                    <t t-call="ages_reports.ages_document_report_styles"/>
+                    <div class="ages-doc-report ages-report-branded">
+                        <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+                        <t t-set="picking" t-value="entry['record']"/>
+                        <div class="report-meta">
+                        <span class="meta-pair"><span class="meta-k">Number</span><span class="meta-v"><t t-esc="picking.name or 'Draft'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Vendor / Partner</span><span class="meta-v"><t t-esc="picking.partner_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Scheduled Date</span><span class="meta-v"><t t-esc="picking.scheduled_date or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Status</span><span class="meta-v"><t t-esc="entry['state_label']"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Operation Type</span><span class="meta-v"><t t-esc="picking.picking_type_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Source Document</span><span class="meta-v"><t t-esc="picking.origin or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Project</span><span class="meta-v"><t t-esc="entry['project_name'] or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Company</span><span class="meta-v"><t t-esc="company.name"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">From</span><span class="meta-v"><t t-esc="picking.location_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">To</span><span class="meta-v"><t t-esc="picking.location_dest_id.display_name or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Effective Date</span><span class="meta-v"><t t-esc="picking.date_done or '—'"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Printed</span><span class="meta-v"><t t-esc="report_date"/></span></span>
+                    </div>
+                        <table class="ledger-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:20%;">Product</th>
+                                    <th style="width:22%;">Description</th>
+                                    <th style="width:14%;">From</th>
+                                    <th style="width:14%;">To</th>
+                                    <th class="text-end" style="width:10%;">Demand</th>
+                                    <th class="text-end" style="width:10%;">Done</th>
+                                    <th style="width:10%;">UoM</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="entry['lines']" t-as="line">
+                                    <tr class="data-row">
+                                        <td><t t-esc="line['product'] or '—'"/></td>
+                                        <td><t t-esc="line['name'] or '—'"/></td>
+                                        <td><t t-esc="line['from_location'] or '—'"/></td>
+                                        <td><t t-esc="line['to_location'] or '—'"/></td>
+                                        <td class="col-amount"><t t-esc="line['demand']"/></td>
+                                        <td class="col-amount"><t t-esc="line['done']"/></td>
+                                        <td><t t-esc="line['uom'] or '—'"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="report-footer-note">
+                            Receipt · <t t-esc="company.name"/>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

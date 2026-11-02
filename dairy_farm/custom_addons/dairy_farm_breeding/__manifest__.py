@@ -1,0 +1,21 @@
+{
+    'name': 'Dairy Farm - Breeding',
+    'version': '18.0.1.0.0',
+    'category': 'Agriculture/Dairy Farm',
+    'summary': 'Heat detection, insemination, pregnancy checks, calving and calf registration',
+    'author': 'Dairy Farm ERP',
+    'license': 'LGPL-3',
+    'depends': ['dairy_farm_core', 'mail'],
+    'data': [
+        'security/ir.model.access.csv',
+        'security/breeding_rules.xml',
+        'data/ir_sequence_data.xml',
+        'data/ir_cron_data.xml',
+        'views/dairy_breeding_event_views.xml',
+        'views/dairy_pregnancy_check_views.xml',
+        'views/dairy_calving_event_views.xml',
+        'views/dairy_animal_views.xml',
+        'views/breeding_menus.xml',
+    ],
+    'installable': True,
+}

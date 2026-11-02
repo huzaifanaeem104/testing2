@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_barcode_locations" model="ir.actions.report">
+        <field name="name">Storage Locations</field>
+        <field name="model">stock.location</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">stock_barcode.report_barcode_locations</field>
+        <field name="report_file">stock_barcode.report_barcode_locations</field>
+        <field name="binding_model_id" ref="stock.model_stock_location"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="action_report_barcode_commands" model="ir.actions.report">
+        <field name="name">Barcode Commands and Operation Types</field>
+        <field name="model">stock.picking.type</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">stock_barcode.report_barcode_commands</field>
+        <field name="report_file">stock_barcode.report_barcode_commands</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking_type"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_barcode_locations">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="location">
+                <t t-call="web.external_layout">
+                    <div class="page text-center">
+                        <h2 t-field="location.complete_name"/>
+                        <div t-if="location.barcode" t-field="location.barcode" t-options="{'widget': 'barcode', 'width': 400, 'height': 80, 'img_style': 'max-width:400px'}"/>
+                        <div t-esc="location.barcode"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <template id="report_barcode_commands">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="picking_type">
+                <t t-call="web.external_layout">
+                    <div class="page text-center">
+                        <h2 t-field="picking_type.name"/>
+                        <div t-if="picking_type.barcode" t-field="picking_type.barcode" t-options="{'widget': 'barcode', 'width': 400, 'height': 80, 'img_style': 'max-width:400px'}"/>
+                        <div t-esc="picking_type.barcode or picking_type.sequence_code"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

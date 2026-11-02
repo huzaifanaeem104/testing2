@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_narc_direct_print" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.narc.direct.print</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='general_settings']" position="inside">
+                <block title="Direct Print" name="narc_direct_print">
+                    <setting id="narc_direct_print_enabled_setting"
+                             string="Enable direct print"
+                             help="Reports stay on Download PDF until you open a report and set Default behavior to Print. Only those reports go to the printer.">
+                        <field name="narc_direct_print_enabled"/>
+                    </setting>
+                    <setting id="narc_direct_print_printer_setting"
+                             string="Preferred printer"
+                             help="Exact or partial name from this computer's printer list (for example MP-3054 or HP-LaserJet-MFP-M227-M231-2). Leave empty to use the computer's default printer.">
+                        <field name="narc_direct_print_printer" placeholder="e.g. MP-3054"/>
+                    </setting>
+                    <setting id="narc_direct_print_qz_setting"
+                             string="Automatic PC setup"
+                             help="The first time a user prints on a new computer, Odoo offers one setup file. That file installs QZ Tray and trusts this Odoo so Allow is not asked again. After that, every user on that PC only clicks Print.">
+                        <a href="/narc_direct_print/qz/setup.bat" class="btn btn-link" role="button">
+                            Windows setup
+                        </a>
+                        <a href="/narc_direct_print/qz/setup.ps1" class="btn btn-link" role="button">
+                            Windows PowerShell setup
+                        </a>
+                        <a href="/narc_direct_print/qz/setup.sh" class="btn btn-link" role="button">
+                            Linux setup
+                        </a>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

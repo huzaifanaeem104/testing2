@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_bank_extract" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.bank.extract</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="account_ocr_settings" position="inside">
+                <div class="content-group mt8" invisible="not module_account_extract">
+                    <div class="row mt8">
+                        <label for="extract_bank_statement_digitalization_mode" class="col-lg-3 o_light_label"/>
+                        <field name="extract_bank_statement_digitalization_mode" widget="radio"/>
+                    </div>
+                </div>
+            </setting>
+        </field>
+    </record>
+</odoo>

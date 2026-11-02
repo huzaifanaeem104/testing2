@@ -1,0 +1,33 @@
+@include media-breakpoint-up(md) {
+    .o_payroll_dashboard_panel {
+        max-height: 46vh;
+        min-height: 46vh;
+        .o_hr_payroll_dashboard_block {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+    }
+}
+
+.o_hr_payroll_dashboard_sheet {
+    .o_hr_payroll_todo_value::-webkit-scrollbar,
+    .o_hr_payroll_dashboard_block::-webkit-scrollbar {
+        width: 5px;
+    }
+    .o_hr_payroll_todo_value::-webkit-scrollbar-thumb,
+    .o_hr_payroll_dashboard_block::-webkit-scrollbar-thumb {
+        background: #ccc;
+    }
+}
+
+.o_colorlist_warning_color_1 { color: #F06050; }
+.o_colorlist_warning_color_2 { color: #F4A460; }
+.o_colorlist_warning_color_3 { color: #F7CD1F; }
+.o_colorlist_warning_color_4 { color: #6CC1ED; }
+.o_colorlist_warning_color_5 { color: #814968; }
+.o_colorlist_warning_color_6 { color: #EB7E7F; }
+.o_colorlist_warning_color_7 { color: #2C8397; }
+.o_colorlist_warning_color_8 { color: #475577; }
+.o_colorlist_warning_color_9 { color: #D6145F; }
+.o_colorlist_warning_color_10 { color: #30C381; }
+.o_colorlist_warning_color_11 { color: #9365B8; }

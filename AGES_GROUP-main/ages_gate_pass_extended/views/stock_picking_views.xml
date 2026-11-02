@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_picking_form_ages_gate_pass_extended" model="ir.ui.view">
+        <field name="name">stock.picking.form.ages.gate.pass.extended</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="ages_gate_pass.view_picking_form_ages_gate_pass"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_create_gate_pass" type="object"
+                        class="oe_stat_button" icon="fa-plus-square"
+                        groups="ages_gate_pass.group_gate_pass_user"
+                        invisible="not move_ids or state in ('done', 'cancel') or gate_pass_id or gate_pass_ids">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Create</span>
+                        <span class="o_stat_text">Gate Pass</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_create_gate_pass" type="object"
+                        string="Create Gate Pass"
+                        groups="ages_gate_pass.group_gate_pass_user"
+                        invisible="not move_ids or state in ('done', 'cancel') or gate_pass_id or gate_pass_ids"/>
+                <field name="gate_pass_required" invisible="1"/>
+                <field name="gate_pass_cleared" invisible="1"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="before">
+                <div class="alert alert-warning" role="alert"
+                     invisible="not gate_pass_required or gate_pass_cleared or state in ('done', 'cancel')">
+                    This operation type requires a <strong>cleared Gate Pass</strong>
+                    before it can be validated. Create the Gate Pass now while this
+                    transfer is still Draft/Ready, then post it (and get it cleared
+                    by Security if required) before clicking Validate.
+                </div>
+                <div class="alert alert-success" role="alert"
+                     invisible="not gate_pass_required or not gate_pass_cleared or state in ('done', 'cancel')">
+                    Gate Pass cleared — this transfer can now be validated.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

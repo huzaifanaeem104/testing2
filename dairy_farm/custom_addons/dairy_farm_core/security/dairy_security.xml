@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_dairy_farm" model="ir.module.category">
+        <field name="name">Dairy Farm</field>
+        <field name="description">Access rights for the Dairy Farm ERP.</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="group_dairy_user" model="res.groups">
+        <field name="name">Dairy User (Read Herd)</field>
+        <field name="category_id" ref="module_category_dairy_farm"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Can read the animal registry and farm references.</field>
+    </record>
+
+    <record id="group_dairy_milking_operator" model="res.groups">
+        <field name="name">Milking Operator</field>
+        <field name="category_id" ref="module_category_dairy_farm"/>
+        <field name="implied_ids" eval="[(4, ref('group_dairy_user'))]"/>
+        <field name="comment">Records milking sessions and cow-wise yields.</field>
+    </record>
+
+    <record id="group_dairy_feed_operator" model="res.groups">
+        <field name="name">Feed Operator</field>
+        <field name="category_id" ref="module_category_dairy_farm"/>
+        <field name="implied_ids" eval="[(4, ref('group_dairy_user'))]"/>
+        <field name="comment">Records feed issues and consumption.</field>
+    </record>
+
+    <record id="group_dairy_veterinarian" model="res.groups">
+        <field name="name">Veterinarian</field>
+        <field name="category_id" ref="module_category_dairy_farm"/>
+        <field name="implied_ids" eval="[(4, ref('group_dairy_user'))]"/>
+        <field name="comment">Clinical, treatment, vaccination, breeding and milk-withdrawal records.</field>
+    </record>
+
+    <record id="group_dairy_sales_operator" model="res.groups">
+        <field name="name">Sales Operator</field>
+        <field name="category_id" ref="module_category_dairy_farm"/>
+        <field name="implied_ids" eval="[(4, ref('group_dairy_user'))]"/>
+        <field name="comment">Milk collection batches, customers, milk orders and deliveries.</field>
+    </record>
+
+    <record id="group_dairy_accountant" model="res.groups">
+        <field name="name">Dairy Accountant</field>
+        <field name="category_id" ref="module_category_dairy_farm"/>
+        <field name="implied_ids" eval="[(4, ref('group_dairy_user'))]"/>
+        <field name="comment">Financial reporting on dairy operations; read-only on clinical records.</field>
+    </record>
+
+    <record id="group_dairy_manager" model="res.groups">
+        <field name="name">Dairy Farm Manager</field>
+        <field name="category_id" ref="module_category_dairy_farm"/>
+        <field name="implied_ids" eval="[(4, ref('group_dairy_milking_operator')),
+                                         (4, ref('group_dairy_feed_operator')),
+                                         (4, ref('group_dairy_veterinarian')),
+                                         (4, ref('group_dairy_sales_operator'))]"/>
+        <field name="comment">Animal management, approvals, corrections and dashboards.</field>
+    </record>
+
+    <record id="group_dairy_admin" model="res.groups">
+        <field name="name">Dairy Farm Administrator</field>
+        <field name="category_id" ref="module_category_dairy_farm"/>
+        <field name="implied_ids" eval="[(4, ref('group_dairy_manager')), (4, ref('group_dairy_accountant'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="comment">Full dairy configuration.</field>
+    </record>
+</odoo>

@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_contract_user,ages.contract user,model_ages_contract,project.group_project_user,1,1,1,1
+access_ages_contract_manager,ages.contract manager,model_ages_contract,project.group_project_manager,1,1,1,1
+access_ages_running_bill_user,ages.running.bill user,model_ages_running_bill,project.group_project_user,1,1,1,1
+access_ages_running_bill_manager,ages.running.bill manager,model_ages_running_bill,project.group_project_manager,1,1,1,1
+access_ages_mobilization_advance_user,ages.mobilization.advance user,model_ages_mobilization_advance,project.group_project_user,1,1,1,1
+access_ages_mobilization_advance_manager,ages.mobilization.advance manager,model_ages_mobilization_advance,project.group_project_manager,1,1,1,1
+access_ages_retention_recovery_user,ages.retention.recovery user,model_ages_retention_recovery,project.group_project_user,1,1,1,1
+access_ages_retention_recovery_manager,ages.retention.recovery manager,model_ages_retention_recovery,project.group_project_manager,1,1,1,1

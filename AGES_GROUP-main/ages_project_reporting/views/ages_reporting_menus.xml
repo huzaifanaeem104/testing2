@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- New section under AGES Reporting. Do not edit ages_custom_reports. -->
+    <menuitem id="menu_ages_reporting_projects"
+              name="Project Reports"
+              parent="ages_custom_reports.menu_ages_reporting_root"
+              sequence="45"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+</odoo>

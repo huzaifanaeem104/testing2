@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_contract_list" model="ir.ui.view">
+        <field name="name">ages.contract.list</field>
+        <field name="model">ages.contract</field>
+        <field name="arch" type="xml">
+            <list string="Contracts">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ages_contract_form" model="ir.ui.view">
+        <field name="name">ages.contract.form</field>
+        <field name="model">ages.contract</field>
+        <field name="arch" type="xml">
+            <form string="Contract">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ages_contract" model="ir.actions.act_window">
+        <field name="name">Contracts</field>
+        <field name="res_model">ages.contract</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,26 @@
+{
+    'name': 'AGES Running Bills',
+    'summary': 'RA Bills / Running Bills with invoice generation from contracts',
+    'version': '18.0.1.17.6',
+    'category': 'Project',
+    'author': 'Muhammad Sana Ullah',
+    'depends': [
+        'mail',
+        'account',
+        'project',
+        'ages_contracts',
+        'ages_project_configs',
+        'ages_company',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/ir_sequence_data.xml',
+        'views/ages_running_bill_views.xml',
+        'views/account_move_views.xml',
+        'views/ages_contract_views.xml',
+    ],
+    'license': 'LGPL-3',
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

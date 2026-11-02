@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_asset_transfer_list" model="ir.ui.view">
+        <field name="name">asset.transfer.list</field>
+        <field name="model">asset.transfer</field>
+        <field name="arch" type="xml">
+            <list string="Asset Transfers">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="location_from_id"/>
+                <field name="location_to_id"/>
+                <field name="transfer_type" optional="show"/>
+                <field name="project_id" optional="show"/>
+                <field name="user_id" optional="hide"/>
+                <field name="state" widget="badge"
+                         decoration-info="state == 'draft'"
+                         decoration-warning="state == 'confirmed'"
+                         decoration-success="state == 'done'"
+                         decoration-danger="state == 'cancelled'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_asset_transfer_form" model="ir.ui.view">
+        <field name="name">asset.transfer.form</field>
+        <field name="model">asset.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Asset Transfer">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                            class="btn-primary" invisible="state != 'draft'"
+                            groups="ages_asset_transfer.group_asset_transfer_user"/>
+                    <button name="action_validate" type="object" string="Validate"
+                            class="btn-primary" invisible="state not in ('draft', 'confirmed')"
+                            groups="ages_asset_transfer.group_asset_transfer_manager"
+                            confirm="Validate this transfer? Asset locations will be updated and the document will be locked."/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state not in ('draft', 'confirmed')"
+                            groups="ages_asset_transfer.group_asset_transfer_manager"/>
+                    <button name="action_draft" type="object" string="Reset to Draft"
+                            invisible="state not in ('confirmed', 'cancelled')"
+                            groups="ages_asset_transfer.group_asset_transfer_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_picking" type="object"
+                                class="oe_stat_button" icon="fa-truck"
+                                invisible="not picking_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Stock Picking</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date" readonly="state == 'done'"/>
+                            <field name="location_from_id" readonly="state == 'done'"/>
+                            <field name="location_to_id" readonly="state == 'done'"/>
+                            <field name="transfer_type" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="project_id" readonly="state == 'done'"/>
+                            <field name="analytic_account_id" readonly="state == 'done'"/>
+                            <field name="user_id" readonly="state == 'done'"/>
+                            <field name="create_stock_move" readonly="state == 'done'"/>
+                            <field name="picking_id" readonly="1" invisible="not picking_id"/>
+                            <field name="company_id" groups="base.group_multi_company"
+                                     readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reason" readonly="state == 'done'"
+                               placeholder="Reason / notes for this transfer..."/>
+                    </group>
+                    <notebook>
+                        <page string="Assets" name="assets">
+                            <field name="line_ids" readonly="state == 'done'">
+                                <list editable="bottom">
+                                    <field name="asset_id"
+                                           domain="[('company_id', '=', parent.company_id), ('current_location_id', '=', parent.location_from_id)]"/>
+                                    <field name="current_location_id"/>
+                                    <field name="profile_id"/>
+                                    <field name="book_value"/>
+                                    <field name="quantity"/>
+                                    <field name="company_id" column_invisible="1"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_asset_transfer_search" model="ir.ui.view">
+        <field name="name">asset.transfer.search</field>
+        <field name="model">asset.transfer</field>
+        <field name="arch" type="xml">
+            <search string="Asset Transfers">
+                <field name="name"/>
+                <field name="location_from_id"/>
+                <field name="location_to_id"/>
+                <field name="project_id"/>
+                <field name="user_id"/>
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]"/>
+                <filter name="filter_cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <group>
+                    <filter name="groupby_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="groupby_type" string="Transfer Type" context="{'group_by': 'transfer_type'}"/>
+                    <filter name="groupby_project" string="Project" context="{'group_by': 'project_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_asset_transfer_history_list" model="ir.ui.view">
+        <field name="name">asset.transfer.history.list</field>
+        <field name="model">asset.transfer.history</field>
+        <field name="arch" type="xml">
+            <list string="Asset Transfer History" create="0" delete="0">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="asset_id"/>
+                <field name="location_from_id"/>
+                <field name="location_to_id"/>
+                <field name="project_id" optional="show"/>
+                <field name="user_id"/>
+                <field name="reason" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_asset_transfer_history_form" model="ir.ui.view">
+        <field name="name">asset.transfer.history.form</field>
+        <field name="model">asset.transfer.history</field>
+        <field name="arch" type="xml">
+            <form string="Asset Transfer History" create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="transfer_id"/>
+                            <field name="asset_id"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group>
+                            <field name="location_from_id"/>
+                            <field name="location_to_id"/>
+                            <field name="project_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <field name="reason"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_asset_transfer" model="ir.actions.act_window">
+        <field name="name">Asset Transfers</field>
+        <field name="res_model">asset.transfer</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_asset_transfer_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create an Asset Transfer</p>
+            <p>
+                Move assets Main Warehouse → Site, Site → Site, or Site → Main Warehouse.
+                Validate to update current location and write transfer history.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_asset_transfer_history" model="ir.actions.act_window">
+        <field name="name">Asset Transfer History</field>
+        <field name="res_model">asset.transfer.history</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_asset_transfer"
+              name="Asset Transfers"
+              parent="account_asset_management.menu_finance_assets"
+              action="action_asset_transfer"
+              sequence="20"
+              groups="ages_asset_transfer.group_asset_transfer_user,ages_asset_transfer.group_asset_transfer_accountant"/>
+
+    <menuitem id="menu_asset_transfer_history"
+              name="Transfer History"
+              parent="account_asset_management.menu_finance_assets"
+              action="action_asset_transfer_history"
+              sequence="25"
+              groups="ages_asset_transfer.group_asset_transfer_user,ages_asset_transfer.group_asset_transfer_accountant"/>
+
+</odoo>

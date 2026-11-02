@@ -1,0 +1,27 @@
+// Same pattern as Enterprise account_reports: tokens only.
+// This file is compiled into web.assets_web_dark with inverted $o-gray-*.
+.account_report {
+    --AccountReport-fine-line-separator-color: #{$o-gray-300};
+    --AccountReport-muted-data-color: #{$o-gray-400};
+    --AgesReport-negative-color: #F14C23;
+}
+
+.o_list_renderer {
+    .o_data_row.o_ages_highlight_aml > .o_data_cell,
+    .o_data_row.o_ages_highlight_aml:hover > .o_data_cell,
+    .o_data_row.o_ages_highlight_aml.o_data_row_selected > .o_data_cell,
+    .o_data_row.o_ages_highlight_aml.table-info > .o_data_cell {
+        background-color: #4a3c16 !important;
+        box-shadow: none !important;
+        animation: o-ages-highlight-aml-dark 1.1s ease-out 1;
+    }
+}
+
+@keyframes o-ages-highlight-aml-dark {
+    0% {
+        background-color: #6b5420;
+    }
+    100% {
+        background-color: #4a3c16;
+    }
+}

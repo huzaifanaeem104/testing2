@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_milking_line_search" model="ir.ui.view">
+        <field name="name">dairy.milking.line.search</field>
+        <field name="model">dairy.milking.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="animal_id"/>
+                <field name="session_id"/>
+                <field name="group_id"/>
+                <field name="breed_id"/>
+                <field name="shift_id"/>
+                <filter name="filter_today" string="Today"
+                        domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_last_30" string="Last 30 Days"
+                        domain="[('date', '>=', (context_today() - relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_date" string="Date" date="date"/>
+                <separator/>
+                <filter name="filter_not_cancelled" string="Valid Sessions" domain="[('session_state', '!=', 'cancelled')]"/>
+                <filter name="filter_confirmed" string="Confirmed Sessions" domain="[('session_state', '=', 'confirmed')]"/>
+                <separator/>
+                <filter name="filter_milked" string="Milked" domain="[('entry_status', '=', 'recorded')]"/>
+                <filter name="filter_zero" string="Zero Yield" domain="[('entry_status', '=', 'zero')]"/>
+                <filter name="filter_missed" string="Missed" domain="[('entry_status', '=', 'missed')]"/>
+                <filter name="filter_pending" string="Not Entered" domain="[('entry_status', '=', 'pending')]"/>
+                <separator/>
+                <filter name="filter_withheld" string="Withheld" domain="[('milk_destination', '=', 'withheld')]"/>
+                <filter name="filter_discarded" string="Discarded" domain="[('milk_destination', '=', 'discarded')]"/>
+                <group string="Group By">
+                    <filter name="groupby_animal" string="Animal" context="{'group_by': 'animal_id'}"/>
+                    <filter name="groupby_date" string="Date" context="{'group_by': 'date:day'}"/>
+                    <filter name="groupby_month" string="Month" context="{'group_by': 'date:month'}"/>
+                    <filter name="groupby_shift" string="Shift" context="{'group_by': 'shift_id'}"/>
+                    <filter name="groupby_group" string="Group" context="{'group_by': 'group_id'}"/>
+                    <filter name="groupby_breed" string="Breed" context="{'group_by': 'breed_id'}"/>
+                    <filter name="groupby_destination" string="Destination" context="{'group_by': 'milk_destination'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dairy_milking_line_list" model="ir.ui.view">
+        <field name="name">dairy.milking.line.list</field>
+        <field name="model">dairy.milking.line</field>
+        <field name="arch" type="xml">
+            <list string="Milking Records" create="0" edit="0" delete="0"
+                  decoration-danger="milk_destination == 'withheld'" decoration-warning="entry_status == 'pending'">
+                <field name="date"/>
+                <field name="shift_id"/>
+                <field name="session_id" optional="show"/>
+                <field name="animal_id"/>
+                <field name="group_id" optional="show"/>
+                <field name="entry_status"/>
+                <field name="quantity_liters" sum="Total"/>
+                <field name="quality_status" optional="show"/>
+                <field name="milk_destination" optional="show"/>
+                <field name="restriction_id" optional="hide"/>
+                <field name="session_state" optional="show"/>
+                <field name="remarks" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_milking_line_pivot" model="ir.ui.view">
+        <field name="name">dairy.milking.line.pivot</field>
+        <field name="model">dairy.milking.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Cow-wise Production">
+                <field name="animal_id" type="row"/>
+                <field name="date" interval="week" type="col"/>
+                <field name="quantity_liters" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_dairy_milking_line_graph" model="ir.ui.view">
+        <field name="name">dairy.milking.line.graph</field>
+        <field name="model">dairy.milking.line</field>
+        <field name="arch" type="xml">
+            <graph string="Production Trend" type="line">
+                <field name="date" interval="day"/>
+                <field name="quantity_liters" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_dairy_milking_line_report" model="ir.actions.act_window">
+        <field name="name">Production Analysis</field>
+        <field name="res_model">dairy.milking.line</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="context">{'search_default_filter_not_cancelled': 1, 'search_default_filter_last_30': 1}</field>
+    </record>
+
+    <record id="action_dairy_milking_line_by_animal" model="ir.actions.act_window">
+        <field name="name">Production by Animal</field>
+        <field name="res_model">dairy.milking.line</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{'search_default_filter_not_cancelled': 1, 'search_default_filter_last_30': 1}</field>
+    </record>
+</odoo>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_gate_pass_list_extended" model="ir.ui.view">
+        <field name="name">ages.gate.pass.list.extended</field>
+        <field name="model">ages.gate.pass</field>
+        <field name="inherit_id" ref="ages_gate_pass.view_ages_gate_pass_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='gate_type']" position="after">
+                <field name="warehouse_id" optional="show"/>
+                <field name="project_id" optional="hide"/>
+                <field name="sub_company_id" optional="hide"/>
+                <field name="has_qty_variance" optional="hide" widget="boolean_toggle"/>
+                <field name="return_state" optional="show" widget="badge"
+                         decoration-warning="return_state in ('pending', 'partial')"
+                         decoration-danger="return_state == 'overdue'"
+                         decoration-success="return_state == 'returned'"/>
+                <field name="expected_return_date" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="decoration-warning">state == 'waiting_security'</attribute>
+                <attribute name="decoration-danger">state == 'rejected'</attribute>
+                <attribute name="decoration-info">state == 'draft'</attribute>
+                <attribute name="decoration-success">state == 'posted'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ages_gate_pass_form_extended" model="ir.ui.view">
+        <field name="name">ages.gate.pass.form.extended</field>
+        <field name="model">ages.gate.pass</field>
+        <field name="inherit_id" ref="ages_gate_pass.view_ages_gate_pass_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_security_approve" type="object" string="Security Clear"
+                        class="btn-primary"
+                        invisible="state != 'waiting_security'"
+                        groups="ages_gate_pass_extended.group_gate_pass_security"/>
+                <button name="action_security_reject_wizard" type="object" string="Reject"
+                        invisible="state != 'waiting_security'"
+                        groups="ages_gate_pass_extended.group_gate_pass_security"/>
+                <button name="action_gate_in" type="object" string="Gate In"
+                        invisible="state not in ('waiting_security', 'posted') or gate_in_datetime"/>
+                <button name="action_gate_out" type="object" string="Gate Out"
+                        invisible="not gate_in_datetime or gate_out_datetime"/>
+                <button name="action_open_return_wizard" type="object" string="Return Items"
+                        class="btn-primary"
+                        invisible="gate_type != 'rgp' or state != 'posted' or return_state == 'returned'"/>
+                <button name="action_mark_returned" type="object" string="Force Mark Returned"
+                        invisible="gate_type != 'rgp' or state != 'posted' or return_state == 'returned'"
+                        groups="ages_gate_pass_extended.group_gate_pass_manager"
+                        confirm="This closes the RGP as fully returned WITHOUT creating a Return Gate Pass. Only use this to correct a data-entry mistake. Continue?"/>
+                <button name="action_print_gate_pass" type="object" string="Print"
+                        invisible="state == 'draft'"/>
+            </xpath>
+            <xpath expr="//header/button[@name='action_reset_to_draft']" position="attributes">
+                <attribute name="invisible">state not in ('posted', 'waiting_security', 'rejected')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="statusbar_visible">draft,waiting_security,posted</attribute>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_print_gate_pass" type="object"
+                        class="oe_stat_button" icon="fa-print"
+                        invisible="state == 'draft'">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Print</span>
+                    </div>
+                </button>
+                <button name="action_view_returns" type="object"
+                        class="oe_stat_button" icon="fa-undo"
+                        invisible="return_count == 0">
+                    <field name="return_count" widget="statinfo" string="Returns"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="before">
+                <widget name="web_ribbon" title="Variance"
+                        bg_color="text-bg-danger"
+                        invisible="not has_qty_variance"/>
+            </xpath>
+
+            <xpath expr="//field[@name='picking_id']" position="attributes">
+                <attribute name="string">Primary Transfer</attribute>
+            </xpath>
+            <xpath expr="//field[@name='picking_id']" position="after">
+                <field name="picking_ids" widget="many2many_tags"
+                       readonly="not can_edit_fields"
+                       options="{'no_create': True}"/>
+                <field name="warehouse_id" readonly="not can_edit_fields"/>
+                <field name="project_id" readonly="not can_edit_fields"/>
+                <field name="analytic_account_id" readonly="not can_edit_fields"/>
+                <field name="sub_company_id" readonly="not can_edit_fields"/>
+                <field name="outward_gate_pass_id" readonly="not can_edit_fields"
+                       invisible="gate_type != 'internal_in'"/>
+                <field name="source_rgp_id" readonly="1"
+                       invisible="not source_rgp_id"/>
+                <field name="security_required" readonly="not can_edit_fields or state != 'draft'"/>
+            </xpath>
+
+            <xpath expr="//field[@name='receiver']" position="after">
+                <field name="driver_name" readonly="not can_edit_fields"/>
+                <field name="driver_phone" readonly="not can_edit_fields"/>
+                <field name="vehicle_type" readonly="not can_edit_fields"/>
+                <field name="gate_in_datetime" readonly="1"/>
+                <field name="gate_out_datetime" readonly="1"/>
+                <field name="duration_display" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//page[@name='products']" position="after">
+                <page string="Variance" name="variance" invisible="not outward_gate_pass_id">
+                    <div class="alert alert-danger" role="alert" invisible="not has_qty_variance">
+                        <strong>Quantity mismatch vs. the Outward Gate Pass.</strong>
+                        Review before posting.
+                    </div>
+                    <div class="alert alert-success" role="alert" invisible="has_qty_variance">
+                        No variance vs. the Outward Gate Pass.
+                    </div>
+                    <field name="variance_note" readonly="1" invisible="not variance_note"/>
+                </page>
+                <page string="Returnable" name="rgp" invisible="gate_type != 'rgp'">
+                    <group>
+                        <group>
+                            <field name="expected_return_date" readonly="not can_edit_fields"/>
+                            <field name="actual_return_date" readonly="1"/>
+                            <field name="return_state" widget="badge"/>
+                            <field name="is_overdue" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="return_gate_pass_ids" readonly="1"
+                           invisible="not return_gate_pass_ids">
+                        <list>
+                            <field name="name"/>
+                            <field name="pass_date"/>
+                            <field name="state"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Photos &amp; Attachments" name="attachments">
+                    <group>
+                        <group>
+                            <field name="truck_image" widget="image" class="oe_avatar"
+                                   readonly="not can_edit_fields"/>
+                        </group>
+                        <group>
+                            <field name="document_image" widget="image"
+                                   readonly="not can_edit_fields"/>
+                        </group>
+                    </group>
+                    <field name="attachment_ids" widget="many2many_binary"
+                           readonly="not can_edit_fields"/>
+                </page>
+                <page string="Security" name="security">
+                    <group>
+                        <field name="security_user_id" readonly="1"/>
+                        <field name="security_date" readonly="1"/>
+                        <field name="reject_reason" readonly="1"
+                               invisible="not reject_reason"/>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//field[@name='line_ids']/list/field[@name='confirm_qty']" position="after">
+                <field name="remaining_on_transfer" optional="show"/>
+                <field name="qty_returned" optional="hide"/>
+                <field name="move_id" column_invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ages_gate_pass_search_extended" model="ir.ui.view">
+        <field name="name">ages.gate.pass.search.extended</field>
+        <field name="model">ages.gate.pass</field>
+        <field name="inherit_id" ref="ages_gate_pass.view_ages_gate_pass_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='filter_posted']" position="after">
+                <filter name="filter_waiting_security" string="Waiting Security"
+                        domain="[('state', '=', 'waiting_security')]"/>
+                <filter name="filter_rejected" string="Rejected"
+                        domain="[('state', '=', 'rejected')]"/>
+                <filter name="filter_today" string="Today"
+                        domain="[('pass_date', '&gt;=', (context_today()).strftime('%Y-%m-%d 00:00:00')),
+                                 ('pass_date', '&lt;=', (context_today()).strftime('%Y-%m-%d 23:59:59'))]"/>
+                <filter name="filter_my_edit_requests" string="My Edit Requests"
+                        domain="[('edit_requested_by_id', '=', uid), ('edit_request_state', '=', 'requested')]"/>
+                <filter name="filter_pending_edit_approval" string="Pending Edit Approval"
+                        domain="[('edit_request_state', '=', 'requested')]"/>
+                <filter name="filter_rgp_overdue" string="Overdue RGP"
+                        domain="[('return_state', '=', 'overdue')]"/>
+                <filter name="filter_rgp_pending" string="Pending Return"
+                        domain="[('return_state', 'in', ('pending', 'partial'))]"/>
+                <filter name="filter_variance" string="Has Variance"
+                        domain="[('has_qty_variance', '=', True)]"/>
+                <filter name="filter_inside" string="Vehicle Currently Inside"
+                        domain="[('gate_in_datetime', '!=', False), ('gate_out_datetime', '=', False)]"/>
+            </xpath>
+            <xpath expr="//field[@name='picking_id']" position="after">
+                <field name="warehouse_id"/>
+                <field name="project_id"/>
+                <field name="sub_company_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_partner']" position="after">
+                <filter name="groupby_warehouse" string="Warehouse" context="{'group_by': 'warehouse_id'}"/>
+                <filter name="groupby_project" string="Project" context="{'group_by': 'project_id'}"/>
+                <filter name="groupby_return" string="Return Status" context="{'group_by': 'return_state'}"/>
+                <filter name="groupby_gate_type" string="Gate Pass Type" context="{'group_by': 'gate_type'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ages_gate_pass_kanban" model="ir.ui.view">
+        <field name="name">ages.gate.pass.kanban</field>
+        <field name="model">ages.gate.pass</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_mobile" sample="1">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="gate_type"/>
+                <field name="truck_no"/>
+                <field name="state"/>
+                <field name="return_state"/>
+                <field name="pass_date"/>
+                <field name="has_qty_variance"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column gap-1">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="partner_id"/>
+                            <div>
+                                <field name="gate_type"/>
+                                <span t-if="record.truck_no.raw_value"> — <field name="truck_no"/></span>
+                            </div>
+                            <field name="pass_date"/>
+                            <field name="return_state" widget="badge"
+                                     invisible="return_state == 'not_applicable'"/>
+                            <span class="badge text-bg-danger" t-if="record.has_qty_variance.raw_value">Variance</span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_ages_gate_pass_graph" model="ir.ui.view">
+        <field name="name">ages.gate.pass.graph</field>
+        <field name="model">ages.gate.pass</field>
+        <field name="arch" type="xml">
+            <graph string="Gate Passes" type="bar" sample="1">
+                <field name="gate_type"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_ages_gate_pass_pivot" model="ir.ui.view">
+        <field name="name">ages.gate.pass.pivot</field>
+        <field name="model">ages.gate.pass</field>
+        <field name="arch" type="xml">
+            <pivot string="Gate Passes" sample="1">
+                <field name="warehouse_id" type="row"/>
+                <field name="gate_type" type="row"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="ages_gate_pass.action_ages_gate_pass" model="ir.actions.act_window">
+        <field name="view_mode">list,kanban,form,graph,pivot</field>
+    </record>
+
+</odoo>

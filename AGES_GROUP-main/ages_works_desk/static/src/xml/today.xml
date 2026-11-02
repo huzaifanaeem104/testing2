@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ages_works_desk.InspectorToday">
+        <t t-set="insp" t-value="state.payload.inspector"/>
+        <div class="aw-insp-title" t-esc="insp.title"/>
+        <t t-foreach="insp.facts" t-as="fact" t-key="fact.label">
+            <div class="aw-fact">
+                <span t-esc="fact.label"/>
+                <strong t-esc="fact.value"/>
+            </div>
+        </t>
+        <div class="aw-insp-actions">
+            <t t-foreach="insp.actions" t-as="act" t-key="act.label">
+                <button t-if="act.action" type="button" class="btn btn-sm btn-primary" t-on-click="() => openAction(act.action)" t-esc="act.label"/>
+            </t>
+        </div>
+    </t>
+</templates>

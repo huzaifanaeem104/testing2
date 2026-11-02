@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_analytic_account_form_ages_contract" model="ir.ui.view">
+        <field name="name">account.analytic.account.form.inherit.ages.contract</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="ages_contract_id" readonly="1"/>
+                <field name="ages_project_id" readonly="1"/>
+                <field name="ages_location_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

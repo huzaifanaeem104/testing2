@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="rule_health_case_company" model="ir.rule">
+            <field name="name">Health case: multi-company</field>
+            <field name="model_id" ref="model_dairy_health_case"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_treatment_company" model="ir.rule">
+            <field name="name">Treatment: multi-company</field>
+            <field name="model_id" ref="model_dairy_treatment"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_vaccination_company" model="ir.rule">
+            <field name="name">Vaccination: multi-company</field>
+            <field name="model_id" ref="model_dairy_vaccination"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="rule_followup_company" model="ir.rule">
+            <field name="name">Follow-up: multi-company</field>
+            <field name="model_id" ref="model_dairy_health_followup"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
+    </data>
+</odoo>

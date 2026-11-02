@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_asset_transfer_user,asset.transfer user,model_asset_transfer,group_asset_transfer_user,1,1,1,0
+access_asset_transfer_manager,asset.transfer manager,model_asset_transfer,group_asset_transfer_manager,1,1,1,1
+access_asset_transfer_accountant,asset.transfer accountant,model_asset_transfer,group_asset_transfer_accountant,1,0,0,0
+access_asset_transfer_line_user,asset.transfer.line user,model_asset_transfer_line,group_asset_transfer_user,1,1,1,1
+access_asset_transfer_line_manager,asset.transfer.line manager,model_asset_transfer_line,group_asset_transfer_manager,1,1,1,1
+access_asset_transfer_line_accountant,asset.transfer.line accountant,model_asset_transfer_line,group_asset_transfer_accountant,1,0,0,0
+access_asset_transfer_history_user,asset.transfer.history user,model_asset_transfer_history,group_asset_transfer_user,1,0,0,0
+access_asset_transfer_history_manager,asset.transfer.history manager,model_asset_transfer_history,group_asset_transfer_manager,1,1,1,1
+access_asset_transfer_history_accountant,asset.transfer.history accountant,model_asset_transfer_history,group_asset_transfer_accountant,1,0,0,0

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ages_opal_vendor_balance.PartnerLedgerOpal" t-inherit="ages_custom_reports.AgesPartnerLedgerReport" t-inherit-mode="extension">
+        <xpath expr="//button[contains(@class, 'o_ages_report_gear_btn')]" position="before">
+            <label class="btn btn-secondary mb-0 d-inline-flex align-items-center gap-1">
+                <input type="checkbox"
+                       class="form-check-input m-0"
+                       t-att-checked="state.showOpalBalance"
+                       t-on-change="onShowOpalBalanceChange"/>
+                Show OPAL balances
+            </label>
+        </xpath>
+        <xpath expr="//t[@t-if=&quot;line.line_type === 'initial'&quot;]" position="after">
+            <t t-elif="line.line_type === 'opal'">
+                <span class="o_ages_opal_ledger_label">
+                    <span class="o_ages_report_badge o_ages_opal_badge_opal me-1">OPAL</span>
+                    <t t-esc="line.name"/>
+                </span>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="ages_opal_vendor_balance.GeneralLedgerOpal" t-inherit="ages_custom_reports.AgesGeneralLedgerReport" t-inherit-mode="extension">
+        <xpath expr="//button[contains(@class, 'o_ages_report_gear_btn')]" position="before">
+            <label class="btn btn-secondary mb-0 d-inline-flex align-items-center gap-1">
+                <input type="checkbox"
+                       class="form-check-input m-0"
+                       t-att-checked="state.showOpalBalance"
+                       t-on-change="onShowOpalBalanceChange"/>
+                Show OPAL balances
+            </label>
+        </xpath>
+        <xpath expr="//t[@t-if=&quot;line.line_type === 'initial'&quot;]" position="after">
+            <t t-elif="line.line_type === 'opal'">
+                <span class="o_ages_opal_ledger_label">
+                    <span class="o_ages_report_badge o_ages_opal_badge_opal me-1">OPAL</span>
+                    <t t-esc="line.name"/>
+                </span>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

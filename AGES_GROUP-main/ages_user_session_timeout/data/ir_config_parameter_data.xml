@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="param_enabled" model="ir.config_parameter">
+        <field name="key">ages_user_session_timeout.enabled</field>
+        <field name="value">True</field>
+    </record>
+    <record id="param_idle_minutes" model="ir.config_parameter">
+        <field name="key">ages_user_session_timeout.idle_minutes</field>
+        <field name="value">15</field>
+    </record>
+    <record id="param_warning_seconds" model="ir.config_parameter">
+        <field name="key">ages_user_session_timeout.warning_seconds</field>
+        <field name="value">60</field>
+    </record>
+    <record id="param_max_hours" model="ir.config_parameter">
+        <field name="key">ages_user_session_timeout.max_session_hours</field>
+        <field name="value">0</field>
+    </record>
+    <record id="param_apply_internal" model="ir.config_parameter">
+        <field name="key">ages_user_session_timeout.apply_internal</field>
+        <field name="value">True</field>
+    </record>
+    <record id="param_apply_portal" model="ir.config_parameter">
+        <field name="key">ages_user_session_timeout.apply_portal</field>
+        <field name="value">False</field>
+    </record>
+    <record id="param_exclude_admins" model="ir.config_parameter">
+        <field name="key">ages_user_session_timeout.exclude_admins</field>
+        <field name="value">True</field>
+    </record>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_barcodelookup" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.barcodelookup</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='process_stock_barcodelookup']" position="inside">
+                <div class="content-group mt8" invisible="not module_stock_barcode_barcodelookup">
+                    <label for="barcodelookup_api_key" class="o_light_label"/>
+                    <field name="barcodelookup_api_key" password="True" placeholder="e.g. d7vctmiv2rwgenebha8bxq7irooudn"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

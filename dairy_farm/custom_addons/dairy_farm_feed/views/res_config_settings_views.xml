@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_dairy_feed" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.dairy.feed</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="dairy_farm_core.res_config_settings_view_form_dairy"/>
+        <field name="arch" type="xml">
+            <block name="dairy_milk_collection" position="before">
+                <block title="Feed Inventory" name="dairy_feed">
+                    <setting id="dairy_feed_locations" company_dependent="1"
+                             help="Feed is issued from the store location to the consumption location; wastage goes to the wastage location">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="dairy_feed_location_id" class="col-lg-5 o_light_label"/>
+                                <field name="dairy_feed_location_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="dairy_feed_consumption_location_id" class="col-lg-5 o_light_label"/>
+                                <field name="dairy_feed_consumption_location_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="dairy_feed_wastage_location_id" class="col-lg-5 o_light_label"/>
+                                <field name="dairy_feed_wastage_location_id"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="dairy_feed_accounts" company_dependent="1"
+                             help="With automated (real-time) inventory valuation, posting feed consumption debits this expense account and credits stock valuation">
+                        <div class="content-group">
+                            <div class="row mt8">
+                                <label for="dairy_feed_expense_account_id" class="col-lg-5 o_light_label"/>
+                                <field name="dairy_feed_expense_account_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="dairy_feed_wastage_account_id" class="col-lg-5 o_light_label"/>
+                                <field name="dairy_feed_wastage_account_id"/>
+                            </div>
+                            <div class="row">
+                                <label for="dairy_anglo_saxon_accounting" class="col-lg-5 o_light_label"/>
+                                <field name="dairy_anglo_saxon_accounting"/>
+                            </div>
+                            <div class="text-muted" invisible="dairy_anglo_saxon_accounting">
+                                Automated valuation requires Anglo-Saxon accounting (Accounting settings);
+                                otherwise use periodic valuation on the feed categories.
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </block>
+        </field>
+    </record>
+</odoo>

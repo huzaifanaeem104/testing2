@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_health_case_search" model="ir.ui.view">
+        <field name="name">dairy.health.case.search</field>
+        <field name="model">dairy.health.case</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="animal_id"/>
+                <field name="name"/>
+                <field name="veterinarian_id"/>
+                <field name="diagnosis"/>
+                <filter name="filter_open" string="Open" domain="[('state', 'not in', ('closed', 'cancelled'))]"/>
+                <filter name="filter_treatment" string="Under Treatment" domain="[('state', '=', 'treatment')]"/>
+                <filter name="filter_closed" string="Closed" domain="[('state', '=', 'closed')]"/>
+                <separator/>
+                <filter name="filter_urgent" string="High / Critical" domain="[('severity', 'in', ('high', 'critical'))]"/>
+                <filter name="filter_isolated" string="Isolated" domain="[('isolated', '=', True)]"/>
+                <filter name="filter_date" string="Date" date="date"/>
+                <group string="Group By">
+                    <filter name="groupby_condition" string="Condition" context="{'group_by': 'condition'}"/>
+                    <filter name="groupby_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="groupby_outcome" string="Outcome" context="{'group_by': 'outcome'}"/>
+                    <filter name="groupby_month" string="Month" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dairy_health_case_list" model="ir.ui.view">
+        <field name="name">dairy.health.case.list</field>
+        <field name="model">dairy.health.case</field>
+        <field name="arch" type="xml">
+            <list string="Health Cases" decoration-danger="severity == 'critical' and state not in ('closed', 'cancelled')"
+                  decoration-muted="state in ('closed', 'cancelled')">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="animal_id"/>
+                <field name="condition"/>
+                <field name="severity" widget="badge" decoration-danger="severity in ('high', 'critical')"/>
+                <field name="veterinarian_id" optional="show"/>
+                <field name="responsible_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="has_active_withdrawal" string="Milk Restricted" optional="show"/>
+                <field name="medicine_cost" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="outcome" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'closed'" decoration-warning="state == 'treatment'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_health_case_form" model="ir.ui.view">
+        <field name="name">dairy.health.case.form</field>
+        <field name="model">dairy.health.case</field>
+        <field name="arch" type="xml">
+            <form string="Health Case">
+                <header>
+                    <button name="action_diagnose" type="object" string="Confirm Diagnosis" class="btn-primary"
+                            invisible="state != 'reported'"/>
+                    <button name="action_add_treatment" type="object" string="Add Treatment" class="btn-primary"
+                            invisible="state not in ('diagnosed', 'treatment')"/>
+                    <button name="action_close" type="object" string="Close Case"
+                            invisible="state not in ('diagnosed', 'treatment')"/>
+                    <button name="action_reopen" type="object" string="Reopen" invisible="state != 'closed'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state in ('closed', 'cancelled')"
+                            confirm="Cancel this case? Use only for cases reported in error."/>
+                    <field name="state" widget="statusbar" statusbar_visible="reported,diagnosed,treatment,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_withdrawals" type="object" class="oe_stat_button" icon="fa-ban"
+                                invisible="not has_active_withdrawal">
+                            <span class="o_stat_text text-danger">Milk Restricted</span>
+                        </button>
+                        <button name="action_view_treatments" type="object" class="oe_stat_button" icon="fa-medkit">
+                            <field name="treatment_count" widget="statinfo" string="Treatments"/>
+                        </button>
+                    </div>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="animal_id" readonly="state != 'reported'" options="{'no_create': True}"/>
+                            <field name="date" readonly="state != 'reported'"/>
+                            <field name="condition" readonly="state in ('closed', 'cancelled')"/>
+                            <field name="severity" readonly="state in ('closed', 'cancelled')"/>
+                            <field name="temperature" readonly="state in ('closed', 'cancelled')"/>
+                            <field name="isolated" readonly="state in ('closed', 'cancelled')"/>
+                        </group>
+                        <group>
+                            <field name="veterinarian_id" readonly="state in ('closed', 'cancelled')"/>
+                            <field name="responsible_id" readonly="state in ('closed', 'cancelled')"/>
+                            <field name="reported_by_id" readonly="1"/>
+                            <field name="diagnosis_date" readonly="1"/>
+                            <field name="medicine_cost"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Clinical" name="clinical">
+                            <group>
+                                <field name="symptoms" readonly="state in ('closed', 'cancelled')"/>
+                                <field name="diagnosis" readonly="state in ('closed', 'cancelled')"/>
+                                <field name="treatment_plan" readonly="state in ('closed', 'cancelled')"/>
+                            </group>
+                        </page>
+                        <page string="Treatments" name="treatments">
+                            <field name="treatment_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="product_id"/>
+                                    <field name="description"/>
+                                    <field name="dosage"/>
+                                    <field name="route"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="withdrawal_end_date"/>
+                                    <field name="cost_amount"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Follow-ups" name="followups">
+                            <field name="followup_ids" readonly="state in ('closed', 'cancelled')">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="responsible_id"/>
+                                    <field name="result"/>
+                                    <field name="findings"/>
+                                    <field name="state" readonly="1"/>
+                                    <button name="action_done" type="object" string="Done" icon="fa-check"
+                                            invisible="state != 'planned'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Outcome" name="outcome">
+                            <group>
+                                <field name="outcome" readonly="state in ('closed', 'cancelled')"/>
+                                <field name="closed_date" readonly="1"/>
+                                <field name="outcome_notes" readonly="state in ('closed', 'cancelled')"/>
+                            </group>
+                            <p class="text-muted">Closing a case does not release a milk-withdrawal restriction:
+                               the veterinarian releases it from the restriction record.</p>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dairy_health_case_pivot" model="ir.ui.view">
+        <field name="name">dairy.health.case.pivot</field>
+        <field name="model">dairy.health.case</field>
+        <field name="arch" type="xml">
+            <pivot string="Health Cases">
+                <field name="condition" type="row"/>
+                <field name="date" interval="month" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_dairy_health_case" model="ir.actions.act_window">
+        <field name="name">Health Cases</field>
+        <field name="res_model">dairy.health.case</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="context">{'search_default_filter_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Report a sick animal</p>
+            <p>Record symptoms, diagnosis and treatments. Treatments with a withdrawal period
+               automatically withhold the animal's milk from sale.</p>
+        </field>
+    </record>
+</odoo>

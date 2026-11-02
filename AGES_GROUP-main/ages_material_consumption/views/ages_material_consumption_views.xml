@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_material_consumption_list" model="ir.ui.view">
+        <field name="name">ages.material.consumption.list</field>
+        <field name="model">ages.material.consumption</field>
+        <field name="arch" type="xml">
+            <list string="Material Consumption">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="project_id"/>
+                <field name="contract_id" optional="show"/>
+                <field name="source_location_id" optional="show"/>
+                <field name="reference" optional="hide"/>
+                <field name="quantity_total"/>
+                <field name="qty_returned_total"/>
+                <field name="amount_total"/>
+                <field name="state" widget="badge"
+                         decoration-info="state == 'draft'"
+                         decoration-warning="state == 'confirmed'"
+                         decoration-success="state == 'done'"
+                         decoration-danger="state == 'cancelled'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ages_material_consumption_kanban" model="ir.ui.view">
+        <field name="name">ages.material.consumption.kanban</field>
+        <field name="model">ages.material.consumption</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" sample="1">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="project_id"/>
+                <field name="amount_total"/>
+                <field name="state"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column gap-1">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="project_id"/>
+                            <div class="text-muted">
+                                <field name="date"/>
+                            </div>
+                            <div>
+                                <span class="text-muted">Amount: </span>
+                                <field name="amount_total"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_ages_material_consumption_pivot" model="ir.ui.view">
+        <field name="name">ages.material.consumption.pivot</field>
+        <field name="model">ages.material.consumption</field>
+        <field name="arch" type="xml">
+            <pivot string="Material Consumption" sample="1">
+                <field name="project_id" type="row"/>
+                <field name="contract_id" type="row"/>
+                <field name="amount_total" type="measure"/>
+                <field name="quantity_total" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_ages_material_consumption_form" model="ir.ui.view">
+        <field name="name">ages.material.consumption.form</field>
+        <field name="model">ages.material.consumption</field>
+        <field name="arch" type="xml">
+            <form string="Material Consumption">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state != 'draft'"/>
+                    <button name="action_validate" type="object" string="Validate"
+                            class="btn-primary" invisible="state != 'confirmed'"/>
+                    <button name="action_draft" type="object" string="Set to Draft"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_return" type="object" string="Return"
+                            invisible="not can_return"/>
+                    <button name="action_draft" type="object" string="Draft"
+                            invisible="state != 'cancelled'"/>
+                    <field name="can_return" invisible="1"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_stock_moves" type="object"
+                                class="oe_stat_button" icon="fa-truck"
+                                invisible="stock_move_count == 0">
+                            <field name="stock_move_count" widget="statinfo" string="Stock Moves"/>
+                        </button>
+                        <button name="action_view_journal_entry" type="object"
+                                class="oe_stat_button" icon="fa-book"
+                                invisible="not move_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Journal Entry</span>
+                                <span class="o_stat_text">
+                                    <field name="move_state"/>
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group string="Material Consumption" col="4">
+                        <field name="project_id" readonly="state != 'draft'"/>
+                        <field name="date" readonly="state != 'draft'"/>
+                        <field name="analytic_account_id" readonly="1"/>
+                        <field name="contract_id" readonly="1"/>
+                        <field name="source_location_id" readonly="state != 'draft'"/>
+                        <field name="destination_location_id" readonly="state != 'draft'"/>
+                        <field name="reference" readonly="state != 'draft'"/>
+                        <field name="sub_company_id" readonly="1"/>
+                        <field name="company_id" groups="base.group_multi_company"
+                                  readonly="state != 'draft'"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="move_id" invisible="1"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Lines" name="lines">
+                            <field name="line_ids" readonly="state != 'draft'">
+                                <list editable="bottom" string="Consumption Lines">
+                                    <field name="product_id"/>
+                                    <field name="product_uom_category_id" column_invisible="1"/>
+                                    <field name="uom_id"/>
+                                    <field name="available_qty"/>
+                                    <field name="quantity" sum="Total Quantity"/>
+                                    <field name="qty_returned" optional="show"/>
+                                    <field name="qty_remaining" optional="hide"/>
+                                    <field name="unit_cost"/>
+                                    <field name="amount" sum="Total Amount"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="company_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right" colspan="2">
+                                <field name="quantity_total"/>
+                                <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ages_material_consumption_search" model="ir.ui.view">
+        <field name="name">ages.material.consumption.search</field>
+        <field name="model">ages.material.consumption</field>
+        <field name="arch" type="xml">
+            <search string="Material Consumption">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="contract_id"/>
+                <field name="reference"/>
+                <field name="source_location_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="Date" name="filter_date" date="date"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Project" name="group_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Contract" name="group_contract" context="{'group_by': 'contract_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ages_material_consumption" model="ir.actions.act_window">
+        <field name="name">Material Consumption</field>
+        <field name="res_model">ages.material.consumption</field>
+        <field name="view_mode">list,kanban,pivot,form</field>
+        <field name="search_view_id" ref="view_ages_material_consumption_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Material Consumption
+            </p>
+            <p>
+                Consume materials from a project location and post the Stock Valuation journal entry.
+            </p>
+        </field>
+    </record>
+
+    <!-- Inventory → Operations → Material Consumption -->
+    <menuitem id="menu_ages_material_consumption"
+              name="Material Consumption"
+              parent="stock.menu_stock_warehouse_mgmt"
+              action="action_ages_material_consumption"
+              sequence="25"
+              groups="stock.group_stock_user"/>
+
+</odoo>

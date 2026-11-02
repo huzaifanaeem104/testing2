@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'AGES Project Portal Access & Daily Attendance',
+    'version': '18.0.1.17.0',
+    'category': 'Project/Project',
+    'summary': 'User-linked project attendance portal with draft save, confirm lock, and Odoo attendance sync',
+    'author': 'Muhammad Sana Ullah',
+    'license': 'LGPL-3',
+    'depends': [
+        'base',
+        'project',
+        'hr',
+        'hr_attendance',
+        'web',
+        'portal',
+        'ages_hr_employee_tracking',
+        'ages_hr_work_entry_attendance',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'security/project_portal_security.xml',
+        'views/res_users_views.xml',
+        'views/project_project_views.xml',
+        'views/portal_templates.xml',
+        'views/portal_extra_templates.xml',
+    ],
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_payslip_form_bulk_payment" model="ir.ui.view">
+        <field name="name">hr.payslip.form.bulk.payment</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="ages_hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <!-- Register Payment on form (Done, expense posted, not yet paid) -->
+            <xpath expr="//header/button[@name='action_payslip_paid']" position="before">
+                <button name="action_open_bulk_payment_wizard"
+                        string="Register Payment"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'done' or payment_move_id or not move_id"/>
+            </xpath>
+            <!-- Keep Mark as Paid as secondary option when no payment entry yet -->
+            <xpath expr="//header/button[@name='action_payslip_paid']" position="attributes">
+                <attribute name="string">Mark as Paid</attribute>
+                <attribute name="invisible">state != 'done' or payment_move_id</attribute>
+                <attribute name="class">btn-secondary</attribute>
+            </xpath>
+
+            <!-- Smart Buttons for Expense Entry and Payment Entry -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_expense_move" type="object" class="oe_stat_button" icon="fa-file-text-o" invisible="not move_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Expense Entry</span>
+                    </div>
+                </button>
+                <button name="action_view_payment_move" type="object" class="oe_stat_button" icon="fa-money" invisible="not payment_move_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Payment Entry</span>
+                    </div>
+                </button>
+            </xpath>
+
+            <!-- Add Project and Analytic fields after contract_id -->
+            <xpath expr="//field[@name='contract_id']" position="after">
+                <field name="project_id"/>
+                <field name="analytic_account_id"/>
+            </xpath>
+
+            <!-- Add Payment Entry field to Other Info -->
+            <xpath expr="//page[@name='other_info']//group" position="inside">
+                <field name="payment_move_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,21 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dairy_animal_user,dairy.animal user,model_dairy_animal,group_dairy_user,1,0,0,0
+access_dairy_animal_vet,dairy.animal vet,model_dairy_animal,group_dairy_veterinarian,1,1,1,0
+access_dairy_animal_manager,dairy.animal manager,model_dairy_animal,group_dairy_manager,1,1,1,0
+access_dairy_animal_admin,dairy.animal admin,model_dairy_animal,group_dairy_admin,1,1,1,1
+access_dairy_breed_user,dairy.breed user,model_dairy_breed,group_dairy_user,1,0,0,0
+access_dairy_breed_manager,dairy.breed manager,model_dairy_breed,group_dairy_manager,1,1,1,0
+access_dairy_breed_admin,dairy.breed admin,model_dairy_breed,group_dairy_admin,1,1,1,1
+access_dairy_location_user,dairy.location user,model_dairy_location,group_dairy_user,1,0,0,0
+access_dairy_location_manager,dairy.location manager,model_dairy_location,group_dairy_manager,1,1,1,0
+access_dairy_location_admin,dairy.location admin,model_dairy_location,group_dairy_admin,1,1,1,1
+access_dairy_animal_group_user,dairy.animal.group user,model_dairy_animal_group,group_dairy_user,1,0,0,0
+access_dairy_animal_group_manager,dairy.animal.group manager,model_dairy_animal_group,group_dairy_manager,1,1,1,0
+access_dairy_animal_group_admin,dairy.animal.group admin,model_dairy_animal_group,group_dairy_admin,1,1,1,1
+access_dairy_shift_user,dairy.shift user,model_dairy_shift,group_dairy_user,1,0,0,0
+access_dairy_shift_admin,dairy.shift admin,model_dairy_shift,group_dairy_admin,1,1,1,1
+access_dairy_milk_withdrawal_user,dairy.milk.withdrawal user,model_dairy_milk_withdrawal,group_dairy_user,1,0,0,0
+access_dairy_milk_withdrawal_vet,dairy.milk.withdrawal vet,model_dairy_milk_withdrawal,group_dairy_veterinarian,1,1,1,0
+access_dairy_milk_withdrawal_admin,dairy.milk.withdrawal admin,model_dairy_milk_withdrawal,group_dairy_admin,1,1,1,1
+access_dairy_animal_exit_wizard,dairy.animal.exit.wizard,model_dairy_animal_exit_wizard,group_dairy_manager,1,1,1,1
+access_dairy_withdrawal_release_wizard,dairy.milk.withdrawal.release.wizard,model_dairy_milk_withdrawal_release_wizard,group_dairy_veterinarian,1,1,1,1

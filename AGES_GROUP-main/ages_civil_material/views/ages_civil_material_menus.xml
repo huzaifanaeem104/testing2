@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_ages_civil_material_root"
+              name="Civil Material"
+              parent="purchase.menu_purchase_root"
+              sequence="35"
+              groups="purchase.group_purchase_user"/>
+
+    <menuitem id="menu_ages_civil_material_slips"
+              name="Civil Material Slips"
+              parent="menu_ages_civil_material_root"
+              action="action_ages_civil_material_slip"
+              sequence="10"/>
+
+    <!-- Purchase → Reporting → Civil Material Detail Report -->
+    <menuitem id="menu_ages_civil_material_detail_report"
+              name="Civil Material Detail Report"
+              parent="purchase.purchase_report_main"
+              action="action_ages_civil_material_report_wizard"
+              sequence="20"
+              groups="purchase.group_purchase_user"/>
+
+    <!-- Also under Civil Material menu for convenience -->
+    <menuitem id="menu_ages_civil_material_detail_report_cm"
+              name="Detail Report"
+              parent="menu_ages_civil_material_root"
+              action="action_ages_civil_material_report_wizard"
+              sequence="20"
+              groups="purchase.group_purchase_user"/>
+</odoo>

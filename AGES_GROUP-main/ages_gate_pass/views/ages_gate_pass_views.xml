@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_gate_pass_list" model="ir.ui.view">
+        <field name="name">ages.gate.pass.list</field>
+        <field name="model">ages.gate.pass</field>
+        <field name="arch" type="xml">
+            <list string="Gate Pass">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="truck_no"/>
+                <field name="receiver"/>
+                <field name="gate_type"/>
+                <field name="picking_id" optional="show"/>
+                <field name="pass_date" optional="hide"/>
+                <field name="edit_request_state" optional="hide" widget="badge"
+                         decoration-warning="edit_request_state == 'requested'"
+                         decoration-success="edit_request_state == 'approved'"/>
+                <field name="state" widget="badge"
+                         decoration-info="state == 'draft'"
+                         decoration-success="state == 'posted'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ages_gate_pass_form" model="ir.ui.view">
+        <field name="name">ages.gate.pass.form</field>
+        <field name="model">ages.gate.pass</field>
+        <field name="arch" type="xml">
+            <form string="Gate Pass">
+                <header>
+                    <button name="action_post" type="object" string="Post"
+                            class="btn-primary" invisible="state != 'draft'"
+                            groups="ages_gate_pass.group_gate_pass_user"/>
+                    <button name="action_reset_to_draft" type="object" string="Reset To Draft"
+                            invisible="state != 'posted'"
+                            groups="ages_gate_pass.group_gate_pass_edit_approval"
+                            confirm="Reset this Gate Pass to Draft?"/>
+                    <button name="action_request_edit_access" type="object"
+                            string="Request Edit Access"
+                            invisible="state != 'posted' or edit_request_state != 'none'"
+                            groups="ages_gate_pass.group_gate_pass_edit"/>
+                    <button name="action_approve_edit_access" type="object"
+                            string="Approve Edit"
+                            class="btn-primary"
+                            invisible="edit_request_state != 'requested'"
+                            groups="ages_gate_pass.group_gate_pass_edit_approval"/>
+                    <button name="action_refuse_edit_access" type="object"
+                            string="Refuse Edit"
+                            invisible="edit_request_state != 'requested'"
+                            groups="ages_gate_pass.group_gate_pass_edit_approval"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_grn" type="object"
+                                class="oe_stat_button" icon="fa-truck"
+                                invisible="not picking_id">
+                            <field name="grn_count" widget="statinfo" string="GRN Count"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Edit Requested" bg_color="text-bg-warning"
+                            invisible="edit_request_state != 'requested'"/>
+                    <widget name="web_ribbon" title="Edit Approved" bg_color="text-bg-success"
+                            invisible="edit_request_state != 'approved'"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="gate_type" readonly="not can_edit_fields"/>
+                            <field name="partner_id" readonly="not can_edit_fields"/>
+                            <field name="truck_no" readonly="not can_edit_fields"/>
+                            <field name="receiver" readonly="not can_edit_fields"/>
+                        </group>
+                        <group>
+                            <field name="picking_id" readonly="not can_edit_fields"/>
+                            <field name="create_date" string="Creation date" readonly="1"/>
+                            <field name="pass_date" readonly="not can_edit_fields"/>
+                            <field name="company_id" groups="base.group_multi_company"
+                                     readonly="not can_edit_fields"/>
+                            <field name="edit_request_state" readonly="1"
+                                     groups="ages_gate_pass.group_gate_pass_edit"/>
+                            <field name="edit_requested_by_id" readonly="1"
+                                     invisible="not edit_requested_by_id"/>
+                            <field name="edit_approved_by_id" readonly="1"
+                                     invisible="not edit_approved_by_id"/>
+                            <field name="can_edit_fields" invisible="1"/>
+                            <field name="is_locked" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products" name="products">
+                            <field name="line_ids" readonly="not can_edit_fields">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="other_item"/>
+                                    <field name="name"/>
+                                    <field name="uom_id"/>
+                                    <field name="quantity"/>
+                                    <field name="confirm_qty"/>
+                                    <field name="remarks"/>
+                                    <field name="company_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" readonly="not can_edit_fields"
+                                     placeholder="Internal notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ages_gate_pass_search" model="ir.ui.view">
+        <field name="name">ages.gate.pass.search</field>
+        <field name="model">ages.gate.pass</field>
+        <field name="arch" type="xml">
+            <search string="Gate Pass">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="truck_no"/>
+                <field name="receiver"/>
+                <field name="picking_id"/>
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_posted" string="Posted" domain="[('state', '=', 'posted')]"/>
+                <filter name="filter_edit_requested" string="Edit Requested"
+                        domain="[('edit_request_state', '=', 'requested')]"/>
+                <filter name="filter_gate_in" string="Gate IN" domain="[('gate_type', '=', 'in')]"/>
+                <filter name="filter_gate_out" string="Gate OUT" domain="[('gate_type', '=', 'out')]"/>
+                <filter name="filter_rgp" string="RGP" domain="[('gate_type', '=', 'rgp')]"/>
+                <group>
+                    <filter name="groupby_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="groupby_gate_type" string="Gate Type" context="{'group_by': 'gate_type'}"/>
+                    <filter name="groupby_partner" string="Vendor" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ages_gate_pass" model="ir.actions.act_window">
+        <field name="name">Gate Pass</field>
+        <field name="res_model">ages.gate.pass</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ages_gate_pass_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Gate Pass
+            </p>
+            <p>
+                Track Gate IN, Gate OUT and Returnable Gate Passes linked to GRN documents.
+                Posted passes are locked; Edit users can request one-time edit access from
+                Edit Approval users.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_ages_gate_pass_root"
+              name="Gate Pass"
+              parent="stock.menu_stock_root"
+              sequence="45"
+              groups="ages_gate_pass.group_gate_pass_user"/>
+
+    <menuitem id="menu_ages_gate_pass"
+              name="Gate Pass"
+              parent="menu_ages_gate_pass_root"
+              action="action_ages_gate_pass"
+              sequence="10"
+              groups="ages_gate_pass.group_gate_pass_user"/>
+
+</odoo>

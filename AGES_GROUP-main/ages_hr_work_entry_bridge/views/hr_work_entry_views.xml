@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Prefer calendar first for conflict review (Enterprise uses Gantt) -->
+    <record id="hr_work_entry.hr_work_entry_action" model="ir.actions.act_window">
+        <field name="view_mode">calendar,list,form,pivot</field>
+    </record>
+    <record id="hr_work_entry.hr_work_entry_action_conflict" model="ir.actions.act_window">
+        <field name="view_mode">calendar,list,form,pivot</field>
+    </record>
+</odoo>

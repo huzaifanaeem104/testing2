@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Without these rules, expenses from every company appear in every company. -->
+    <record id="ages_expense_company_rule" model="ir.rule">
+        <field name="name">Expense: multi-company</field>
+        <field name="model_id" ref="model_ages_expense"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ages_expense_line_company_rule" model="ir.rule">
+        <field name="name">Expense Line: multi-company</field>
+        <field name="model_id" ref="model_ages_expense_line"/>
+        <field name="domain_force">[('expense_id.company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

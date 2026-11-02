@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_opal_import_wizard_form" model="ir.ui.view">
+        <field name="name">opal.import.wizard.form</field>
+        <field name="model">opal.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import OPAL Vendor and Client Balance">
+                <group>
+                    <div class="alert alert-warning" role="alert">
+                        Upload <b>OPAL Vendor Balance by Project.xlsx</b> (combined vendors + clients).
+                        This replaces OPAL vendor and client reference rows. Maps are kept.
+                        Nothing is posted to Odoo ledgers.
+                    </div>
+                    <field name="data_file" filename="filename"/>
+                    <field name="filename" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_import" type="object" string="Import and replace" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_opal_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import OPAL Excel</field>
+        <field name="res_model">opal.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

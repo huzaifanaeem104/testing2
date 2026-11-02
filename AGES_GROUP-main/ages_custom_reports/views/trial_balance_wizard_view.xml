@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_trial_balance" model="report.paperformat">
+        <field name="name">Trial Balance A4 Landscape</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="action_report_trial_balance_pdf" model="ir.actions.report">
+        <field name="name">Trial Balance</field>
+        <field name="model">trial.balance.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_custom_reports.trial_balance_report</field>
+        <field name="report_file">ages_custom_reports.trial_balance_report</field>
+        <field name="paperformat_id" ref="paperformat_trial_balance"/>
+    </record>
+
+    <record id="action_report_trial_balance_xlsx" model="ir.actions.report">
+        <field name="name">Trial Balance Excel</field>
+        <field name="model">trial.balance.wizard</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">ages_custom_reports.trial_balance_xlsx</field>
+        <field name="report_file">ages_custom_reports.trial_balance_xlsx</field>
+    </record>
+
+    <record id="action_trial_balance_interactive" model="ir.actions.client">
+        <field name="name">Trial Balance</field>
+        <field name="tag">ages_trial_balance_report</field>
+        <field name="target">main</field>
+    </record>
+
+    <menuitem id="menu_trial_balance_report"
+              name="Trial Balance"
+              parent="menu_ages_reporting_ledgers"
+              action="action_trial_balance_interactive"
+              sequence="10"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+</odoo>

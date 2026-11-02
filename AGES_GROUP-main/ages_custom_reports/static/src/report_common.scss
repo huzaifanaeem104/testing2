@@ -1,0 +1,203 @@
+// Shared Enterprise account_reports sheet look for all AGES interactive reports.
+.account_report {
+    --AccountReport-fine-line-separator-color: #{$o-gray-200};
+    --AccountReport-muted-data-color: #{$o-gray-400};
+    --AgesReport-negative-color: #c0392b;
+
+    .o_content {
+        background: $o-webclient-background-color;
+        overflow-x: auto;
+        padding-left: 28px;
+        padding-right: 28px;
+    }
+
+    .o_ages_bs_report.account_report .o_ages_bs_content,
+    .o_ages_apb_report.account_report .o_content {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .o_ages_bs_warnings,
+    .o_ages_apb_warnings {
+        margin: 12px 8px 0;
+
+        .alert {
+            border-radius: 0.25rem;
+        }
+    }
+
+    .o_ages_line_label,
+    .o_ages_move_line_inline,
+    .o_ages_move_name,
+    .o_ages_move_comm,
+    .o_ages_bs_account_name,
+    .o_ages_gl_account_name,
+    .o_ages_pl_partner_name {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .o_ages_report_search {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 180px;
+        height: 31px;
+        padding: 0 10px;
+        border: 1px solid $o-gray-300;
+        border-radius: 999px;
+        background: $o-view-background-color;
+
+        i {
+            color: $o-gray-600;
+            font-size: 12px;
+        }
+
+        input {
+            border: 0;
+            outline: none;
+            background: transparent;
+            font-size: 13px;
+            width: 140px;
+            min-width: 0;
+        }
+    }
+
+    .o_ages_report_unfold_btn {
+        border: 0;
+        background: transparent;
+        color: $o-gray-500;
+        padding: 0 2px;
+        line-height: 1;
+        box-shadow: none !important;
+        transform: none !important;
+
+        &:hover,
+        &.o_ages_unfold_active {
+            color: $o-enterprise-action-color;
+        }
+    }
+
+    .o_ages_report_col_period {
+        font-size: 11px;
+        color: $o-gray-600;
+        font-weight: 400;
+        text-transform: none;
+        letter-spacing: normal;
+        line-height: 1.2;
+    }
+
+    .o_ages_report_col_measure {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: $o-gray-700;
+        text-transform: uppercase;
+    }
+
+    .o_ages_bs_caret {
+        cursor: pointer;
+        color: $o-enterprise-action-color;
+        width: 16px;
+        display: inline-block;
+        text-align: center;
+        margin-right: 2px;
+
+        &:hover {
+            color: $o-enterprise-action-color;
+        }
+    }
+
+    .o_ages_bs_caret-spacer {
+        display: inline-block;
+        width: 16px;
+        margin-right: 2px;
+    }
+
+    .o_ages_bs_account_name,
+    .o_ages_gl_account_name,
+    .o_ages_pl_partner_name {
+        cursor: pointer;
+        color: $o-enterprise-action-color;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .o_ages_report_row .o_ages_report_badge {
+        opacity: 0;
+    }
+
+    .o_ages_report_row:hover .o_ages_report_badge,
+    .o_ages_report_row .o_ages_report_badge.o_ages_report_badge_note {
+        opacity: 1;
+    }
+}
+
+.o_ages_bs_report.account_report,
+.o_ages_gl_report.account_report,
+.o_ages_pl_report.account_report,
+.o_ages_ja_report.account_report,
+.o_ages_es_report.account_report,
+.o_ages_cf_report.account_report,
+.o_ages_pdl_report.account_report,
+.o_ages_tb_report.account_report,
+.o_ages_tr_report.account_report {
+    .o_ages_bs_table thead th,
+    .o_ages_gl_table thead th,
+    .o_ages_pl_table thead th,
+    .o_ages_ja_table thead th,
+    .o_ages_pdl_table thead th,
+    .o_ages_tb_table thead th,
+    .o_ages_tr_table thead th {
+        border-bottom: 1px solid $o-gray-300;
+        font-size: 11px;
+        text-transform: none;
+        letter-spacing: normal;
+        color: $o-gray-600;
+        font-weight: 500;
+        padding: 6px 12px;
+        vertical-align: bottom;
+        white-space: nowrap;
+        background: $o-view-background-color;
+    }
+
+    .o_ages_bs_amount_col,
+    .o_ages_gl_col-amount,
+    .o_ages_pl_col-amount,
+    .o_ages_ja_col-amount,
+    .o_ages_pdl_col-amount,
+    .o_ages_tb_amount_col,
+    .o_ages_tr_amount_col {
+        white-space: nowrap;
+    }
+
+    .o_ages_bs_col_date,
+    .o_ages_report_col_period {
+        font-size: 11px;
+        color: $o-gray-600;
+        font-weight: 400;
+        text-transform: none;
+        letter-spacing: normal;
+        margin-bottom: 2px;
+    }
+
+    .o_ages_row-unfolded {
+        font-weight: 700;
+
+        td {
+            border-bottom: 1px solid $o-gray-300 !important;
+        }
+    }
+
+    .o_ages_ledger_pad td {
+        padding: 0 !important;
+        border: 0 !important;
+        line-height: 0;
+    }
+}

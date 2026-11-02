@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_project_list" model="ir.ui.view">
+        <field name="name">construction.project.list</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <list string="Construction Projects" decoration-success="construction_state == 'closed'">
+                <field name="name"/>
+                <field name="construction_code"/>
+                <field name="partner_id"/>
+                <field name="construction_state"/>
+                <field name="contract_value" widget="monetary"/>
+                <field name="approved_boq_amount" widget="monetary"/>
+                <field name="variation_amount" widget="monetary"/>
+                <field name="purchase_commitment" widget="monetary"/>
+                <field name="construction_progress" widget="progressbar"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_construction_project_form" model="ir.ui.view">
+        <field name="name">construction.project.form</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <form string="Construction Project">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_boqs" class="oe_stat_button" icon="fa-list-alt">
+                            <field name="boq_count" widget="statinfo" string="BOQs"/>
+                        </button>
+                        <button type="object" name="action_view_material_requests" class="oe_stat_button" icon="fa-cubes">
+                            <field name="material_request_count" widget="statinfo" string="Material Requests"/>
+                        </button>
+                        <button type="object" name="action_view_manufacturing" class="oe_stat_button" icon="fa-cogs">
+                            <field name="manufacturing_count" widget="statinfo" string="Manufacturing"/>
+                        </button>
+                        <button type="object" name="action_view_daily_logs" class="oe_stat_button" icon="fa-calendar-check-o">
+                            <field name="daily_log_count" widget="statinfo" string="Daily Logs"/>
+                        </button>
+                        <button type="object" name="action_view_change_orders" class="oe_stat_button" icon="fa-exchange">
+                            <field name="change_order_count" widget="statinfo" string="Changes"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Closed" bg_color="text-bg-success" invisible="construction_state != 'closed'"/>
+                    <h1><field name="name" placeholder="Project Name"/></h1>
+                    <group>
+                        <group>
+                            <field name="is_construction" invisible="1"/>
+                            <field name="construction_code"/>
+                            <field name="partner_id"/>
+                            <field name="contract_number"/>
+                            <field name="contract_value"/>
+                        </group>
+                        <group>
+                            <field name="construction_state"/>
+                            <field name="site_location_id"/>
+                            <field name="source_location_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Commercial &amp; Progress KPIs">
+                        <group>
+                            <field name="approved_boq_amount" readonly="1"/>
+                            <field name="variation_amount" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="purchase_commitment" readonly="1"/>
+                            <field name="construction_progress" widget="progressbar" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Site Address">
+                        <field name="site_address" nolabel="1" placeholder="Construction site address / directions"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_construction_project_search" model="ir.ui.view">
+        <field name="name">construction.project.search</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="construction_code"/>
+                <field name="partner_id"/>
+                <filter name="execution" string="In Execution" domain="[('construction_state','=','execution')]"/>
+                <filter name="closed" string="Closed" domain="[('construction_state','=','closed')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_state" string="Stage" context="{'group_by':'construction_state'}"/>
+                    <filter name="group_client" string="Client" context="{'group_by':'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_construction_projects" model="ir.actions.act_window">
+        <field name="name">Construction Projects</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_construction','=',True)]</field>
+        <field name="context">{'default_is_construction': True}</field>
+        <field name="search_view_id" ref="view_construction_project_search"/>
+    </record>
+
+    <record id="view_construction_task_list" model="ir.ui.view">
+        <field name="name">construction.task.list</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <list string="Construction Tasks">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="work_category"/>
+                <field name="planned_qty"/>
+                <field name="executed_qty"/>
+                <field name="construction_uom_id"/>
+                <field name="construction_progress" widget="progressbar"/>
+                <field name="boq_line_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_construction_task_form" model="ir.ui.view">
+        <field name="name">construction.task.form</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <form string="Construction Task">
+                <sheet>
+                    <h1><field name="name"/></h1>
+                    <group>
+                        <group>
+                            <field name="project_id" domain="[('is_construction','=',True)]"/>
+                            <field name="is_construction_task" invisible="1"/>
+                            <field name="work_category"/>
+                            <field name="boq_line_id"/>
+                        </group>
+                        <group>
+                            <field name="planned_qty"/>
+                            <field name="executed_qty"/>
+                            <field name="construction_uom_id"/>
+                            <field name="construction_progress" widget="progressbar" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Task Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_tasks" model="ir.actions.act_window">
+        <field name="name">Construction Tasks</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_construction_task','=',True)]</field>
+        <field name="context">{'default_is_construction_task': True}</field>
+    </record>
+</odoo>

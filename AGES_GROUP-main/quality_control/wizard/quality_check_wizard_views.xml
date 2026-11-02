@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="quality_check_wizard_view_form" model="ir.ui.view">
+        <field name="name">quality.check.wizard.form</field>
+        <field name="model">quality.check.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Quality Check">
+                <group>
+                    <field name="picking_id" readonly="1"/>
+                    <field name="product_id" readonly="1"/>
+                    <field name="title" readonly="1"/>
+                    <field name="remaining" readonly="1"/>
+                    <field name="note" readonly="1"/>
+                    <field name="measure" invisible="test_type != 'measure'"/>
+                    <field name="additional_note"/>
+                    <field name="current_check_id" invisible="1"/>
+                    <field name="test_type" invisible="1"/>
+                    <field name="check_ids" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_pass" type="object" string="Pass" class="btn-primary"/>
+                    <button name="action_fail" type="object" string="Fail" class="btn-secondary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_list" model="ir.ui.view">
+        <field name="name">hr.salary.rule.list</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category_id"/>
+                <field name="struct_id"/>
+                <field name="amount_select"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="hr_salary_rule_form" model="ir.ui.view">
+        <field name="name">hr.salary.rule.form</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="arch" type="xml">
+            <form string="Salary Rule">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                            <field name="struct_id"/>
+                            <field name="category_id"/>
+                        </group>
+                        <group>
+                            <field name="appears_on_payslip"/>
+                            <field name="appears_on_employee_cost_dashboard"/>
+                            <field name="partner_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="General" name="general">
+                            <group string="Conditions">
+                                <field name="condition_select"/>
+                                <field name="condition_range" invisible="condition_select != 'range'"/>
+                                <field name="condition_range_min" invisible="condition_select != 'range'"/>
+                                <field name="condition_range_max" invisible="condition_select != 'range'"/>
+                                <field name="condition_other_input_id" invisible="condition_select != 'input'"/>
+                                <field name="condition_python" invisible="condition_select != 'python'" widget="code" options="{'mode': 'python'}"/>
+                            </group>
+                            <group string="Computation">
+                                <field name="amount_select"/>
+                                <field name="amount_fix" invisible="amount_select != 'fix'"/>
+                                <field name="amount_percentage" invisible="amount_select != 'percentage'"/>
+                                <field name="amount_percentage_base" invisible="amount_select != 'percentage'"/>
+                                <field name="amount_other_input_id" invisible="amount_select != 'input'"/>
+                                <field name="quantity" invisible="amount_select not in ('fix', 'percentage')"/>
+                                <field name="amount_python_compute" invisible="amount_select != 'code'" widget="code" options="{'mode': 'python'}"/>
+                            </group>
+                        </page>
+                        <page string="Description" name="note">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_hr_salary_rule" model="ir.actions.act_window">
+        <field name="name">Salary Rules</field>
+        <field name="res_model">hr.salary.rule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

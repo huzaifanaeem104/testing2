@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_project_directory_ledger" model="report.paperformat">
+        <field name="name">Project Directory Ledger A4 Portrait</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">8</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="action_report_project_directory_ledger_pdf" model="ir.actions.report">
+        <field name="name">Project Directory Ledger Report</field>
+        <field name="model">project.directory.ledger.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_custom_reports.project_dir_ledger</field>
+        <field name="report_file">ages_custom_reports.project_dir_ledger</field>
+        <field name="paperformat_id" ref="paperformat_project_directory_ledger"/>
+        <field name="binding_model_id" ref="model_project_directory_ledger_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_project_directory_ledger_xlsx" model="ir.actions.report">
+        <field name="name">Project Directory Ledger Excel Report</field>
+        <field name="model">project.directory.ledger.wizard</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">ages_custom_reports.project_dir_ledger_xlsx</field>
+        <field name="report_file">ages_custom_reports.project_dir_ledger_xlsx</field>
+        <field name="binding_model_id" ref="model_project_directory_ledger_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

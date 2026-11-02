@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.ListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set-slot='content']" position="inside">
+            <div t-if="hasPersistedColumnWidths" role="separator" class="dropdown-divider"/>
+            <DropdownItem t-if="hasPersistedColumnWidths"
+                          closingMode="'none'"
+                          onSelected="() => this.onResetColumnWidths()">
+                <span class="d-flex align-items-center">
+                    <span class="text-truncate" t-esc="resetColumnWidthsLabel"/>
+                </span>
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

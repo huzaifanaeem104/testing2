@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ages_civil_material_report_wizard_form" model="ir.ui.view">
+        <field name="name">ages.civil.material.report.wizard.form</field>
+        <field name="model">ages.civil.material.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Civil Material Detail Report">
+                <group>
+                    <group string="Period">
+                        <field name="report_mode" widget="radio"/>
+                        <field name="year" invisible="report_mode != 'month'"/>
+                        <field name="month" invisible="report_mode != 'month'"/>
+                        <field name="date_from" invisible="report_mode != 'date_range'" required="report_mode == 'date_range'"/>
+                        <field name="date_to" invisible="report_mode != 'date_range'" required="report_mode == 'date_range'"/>
+                    </group>
+                    <group string="Filters">
+                        <field name="partner_id"/>
+                        <field name="purchase_id"/>
+                        <field name="project_id"/>
+                        <field name="state_filter"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print_pdf" type="object"
+                            string="Print PDF" class="btn-primary"/>
+                    <button name="action_view_slips" type="object"
+                            string="View Slips" class="btn-secondary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ages_civil_material_report_wizard" model="ir.actions.act_window">
+        <field name="name">Civil Material Detail Report</field>
+        <field name="res_model">ages.civil.material.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ir_actions_report_form_direct_print" model="ir.ui.view">
+        <field name="name">ir.actions.report.form.direct.print</field>
+        <field name="model">ir.actions.report</field>
+        <field name="inherit_id" ref="base.act_report_xml_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="print_behavior" string="Print">
+                    <group>
+                        <field name="report_print_behavior" widget="radio"/>
+                    </group>
+                    <div class="text-muted">
+                        <p class="mb-1">
+                            <strong>Download PDF</strong> is the default. The file
+                            is saved as usual and is not sent to the printer.
+                        </p>
+                        <p class="mb-0">
+                            Choose <strong>Print</strong> only for reports that
+                            should go straight to this computer's printer.
+                        </p>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ir_actions_report_tree_direct_print" model="ir.ui.view">
+        <field name="name">ir.actions.report.list.direct.print</field>
+        <field name="model">ir.actions.report</field>
+        <field name="inherit_id" ref="base.act_report_xml_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='report_name']" position="after">
+                <field name="report_print_behavior" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_ir_actions_report_search_direct_print" model="ir.ui.view">
+        <field name="name">ir.actions.report.search.direct.print</field>
+        <field name="model">ir.actions.report</field>
+        <field name="inherit_id" ref="base.act_report_xml_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='model']" position="after">
+                <filter string="Direct Print" name="narc_direct_print"
+                        domain="[('report_print_behavior', '=', 'direct_print')]"/>
+                <filter string="Download PDF" name="narc_download_pdf"
+                        domain="[('report_print_behavior', '=', 'download')]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

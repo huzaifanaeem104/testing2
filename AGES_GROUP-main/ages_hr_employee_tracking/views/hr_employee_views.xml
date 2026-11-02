@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form_inherit_tracking" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.tracking</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <!-- Add header button for transfer wizard -->
+            <xpath expr="//header" position="inside">
+                <button name="action_open_transfer_wizard" type="object" string="Transfer Employee" class="oe_highlight"/>
+            </xpath>
+
+            <!-- Place Category and Project fields directly on main form view -->
+            <xpath expr="//field[@name='coach_id']" position="after">
+                <field name="ages_employee_category" required="1"/>
+                <field name="project_id"/>
+            </xpath>
+
+            <!-- Add Notebook Tabs for Project Tracking and Wage History -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Project Tracking" name="project_tracking">
+                    <field name="project_tracking_ids" readonly="1">
+                        <list create="false" edit="false" delete="false">
+                            <field name="date"/>
+                            <field name="old_project_id"/>
+                            <field name="new_project_id"/>
+                            <field name="user_id"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Wage History" name="wage_history">
+                    <field name="wage_history_ids" readonly="1">
+                        <list create="false" edit="false" delete="false">
+                            <field name="date"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="old_wage" widget="monetary"/>
+                            <field name="new_wage" widget="monetary"/>
+                            <field name="difference" widget="monetary"/>
+                            <field name="user_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,122 @@
+.o_ages_opal_report {
+    .o_control_panel_main {
+        align-items: center !important;
+        flex-wrap: nowrap;
+    }
+
+    .o_control_panel_main_buttons {
+        flex-shrink: 0;
+        position: relative;
+        z-index: 2;
+    }
+
+    .o_control_panel_actions {
+        min-width: 0 !important;
+        flex: 1 1 auto;
+        justify-content: flex-end;
+        margin-left: 2.5rem;
+        overflow-x: auto;
+    }
+
+    .o_ages_report_filters {
+        justify-content: flex-end;
+        flex-wrap: nowrap !important;
+        margin-left: auto;
+    }
+
+    .o_ages_bs_content {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .o_ages_opal_scroll {
+        flex: 1 1 auto;
+        max-height: calc(100vh - 220px);
+        overflow: auto;
+    }
+
+    .o_ages_opal_pad,
+    .o_ages_opal_pad td {
+        padding: 0 !important;
+        border: 0 !important;
+        line-height: 0;
+        background: transparent;
+    }
+
+    .o_ages_opal_table tbody tr {
+        height: 34px;
+        contain: layout style;
+    }
+
+    .o_ages_opal_tabs {
+        display: flex;
+        gap: 4px;
+        margin: 12px 8px 8px;
+        border-bottom: 1px solid var(--border-color, #dee2e6);
+    }
+
+    .o_ages_opal_tab {
+        border: 0;
+        background: transparent;
+        padding: 8px 14px;
+        color: #5c6b7f;
+        font-weight: 600;
+        border-bottom: 2px solid transparent;
+    }
+
+    .o_ages_opal_tab.is-active {
+        color: #1f2a37;
+        border-bottom-color: #8b1a1a;
+    }
+
+    .o_ages_opal_table thead th {
+        white-space: nowrap;
+    }
+
+    .o_ages_opal_row-odoo_overall {
+        font-weight: 700;
+        background: #f8f1f2;
+    }
+
+    .o_ages_opal_row-opal_overall,
+    .o_ages_opal_row-opal_vendor_total {
+        font-style: italic;
+        color: #4b5563;
+    }
+
+    .o_ages_opal_badge_odoo {
+        background: #1f4e79;
+        color: #fff;
+    }
+
+    .o_ages_opal_badge_opal {
+        background: #8b1a1a;
+        color: #fff;
+    }
+
+    .o_ages_opal_badge_project {
+        background: #e8edf3;
+        color: #334155;
+    }
+
+    .o_ages_opal_total {
+        font-weight: 700;
+        background: #faf0f1;
+    }
+
+    .o_ages_opal_columns_active {
+        box-shadow: inset 0 0 0 1px #8b1a1a;
+    }
+
+    .o_ages_opal_empty {
+        color: #5c6b7f;
+    }
+
+    .o_ages_report_dropdown {
+        max-height: 320px;
+        overflow: auto;
+        min-width: 280px;
+        padding: 8px;
+    }
+}

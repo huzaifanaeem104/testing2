@@ -1,0 +1,295 @@
+.o_ages_pdl_report.account_report {
+    height: 100%;
+    background: $o-webclient-background-color;
+
+    .o_control_panel {
+        border-bottom: 1px solid $o-gray-300;
+        gap: 0.5rem !important;
+        padding-top: 0.35rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+
+    .o_control_panel_main {
+        min-height: unset;
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+
+    .o_control_panel_actions {
+        min-height: unset;
+    }
+
+    .o_ages_bs_content {
+        padding: 0;
+    }
+
+    .o_ages_bs_filters {
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    .o_ages_pdl_filters_area {
+        position: relative;
+        max-width: 100%;
+    }
+
+    .o_ages_pdl_filter_hide_accounts {
+        .o_ages_pdl_hide_accounts_btn {
+            font-size: 12px;
+            color: $o-gray-700;
+            text-decoration: none;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+    }
+
+    .o_ages_pdl_hide_accounts_dropdown {
+        position: fixed;
+        z-index: 1050;
+        display: block;
+        min-width: 240px;
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 0;
+        padding: 6px 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            cursor: pointer;
+            white-space: nowrap;
+
+            &:hover {
+                background: $o-gray-100;
+            }
+        }
+    }
+
+    .o_ages_bs_filter_item {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        height: 30px;
+        padding: 0 10px;
+        border: 1px solid $o-gray-300;
+        border-radius: var(--border-radius, 4px);
+        background: $o-view-background-color;
+        font-size: 12px;
+        color: $o-gray-700;
+        white-space: nowrap;
+        flex-shrink: 0;
+
+        i {
+            color: $o-gray-600;
+            font-size: 11px;
+        }
+    }
+
+    .o_ages_bs_filter_text {
+        color: $o-gray-600;
+        font-weight: 500;
+    }
+
+    .o_ages_bs_filter_input,
+    .o_ages_bs_filter_select {
+        border: none;
+        background: transparent;
+        font-size: 12px;
+        padding: 0;
+        height: auto;
+        box-shadow: none;
+        color: $o-main-text-color;
+        min-width: 0;
+    }
+
+    .o_ages_bs_filter_input {
+        width: 118px;
+    }
+
+    .o_ages_bs_filter_select {
+        cursor: pointer;
+        max-width: 90px;
+    }
+
+    .o_ages_bs_filter_analytic {
+        min-width: 120px;
+        max-width: 160px;
+
+        .o_input {
+            border: none !important;
+            font-size: 12px;
+            min-width: 70px;
+            padding: 0;
+        }
+    }
+
+    .o_ages_bs_filter_check {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .o_ages_pdl_unfold_row {
+        th {
+            border-bottom: none;
+            padding: 4px 12px 0;
+            background: $o-view-background-color;
+            font-weight: normal;
+        }
+    }
+
+    .o_ages_pdl_unfold_cell {
+        vertical-align: bottom;
+        padding-bottom: 2px !important;
+    }
+
+    .o_ages_pdl_unfold_check {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+        cursor: pointer;
+        user-select: none;
+        font-size: 11px;
+        color: $o-gray-600;
+        white-space: nowrap;
+        width: 100%;
+
+        .form-check-input {
+            width: 0.85rem;
+            height: 0.85rem;
+            margin-top: 0;
+        }
+    }
+
+    .o_ages_pdl_meta {
+        padding: 0 24px;
+    }
+
+    .o_ages_pdl_sheet {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        margin: 0;
+        padding: 0 24px 32px;
+        background: transparent;
+    }
+
+    .o_ages_pdl_table {
+        width: max-content;
+        min-width: 100%;
+        table-layout: auto;
+        font-size: 0.875rem;
+        background: $o-view-background-color;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: 1px solid $o-gray-300;
+        border-radius: 4px;
+        padding: 8px 0;
+
+        thead.sticky {
+            background: $o-view-background-color;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        tbody td {
+            padding: 6px 12px;
+            border-bottom: 1px solid var(--AccountReport-fine-line-separator-color, #{$o-gray-200});
+            font-size: 14px;
+            vertical-align: middle;
+            line-height: 1.35;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+    }
+
+    .o_ages_pdl_col-date { min-width: 90px; white-space: nowrap; }
+    .o_ages_pdl_col-entry {
+        min-width: 180px;
+        max-width: 360px;
+        white-space: normal;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        vertical-align: top;
+    }
+    .o_ages_pdl_col-partner { min-width: 200px; white-space: nowrap; }
+    .o_ages_pdl_col-label { min-width: 200px; white-space: nowrap; }
+    .o_ages_pdl_col-account { min-width: 180px; white-space: nowrap; }
+    .o_ages_pdl_col-analytic { min-width: 140px; white-space: nowrap; }
+    .o_ages_pdl_col-amount {
+        width: 10%;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .o_ages_pdl_group_cell {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .o_ages_pdl_group_name {
+        font-weight: 600;
+        color: $o-main-text-color;
+    }
+
+    .o_ages_pdl_partner_name {
+        cursor: pointer;
+        font-weight: 500;
+        color: $o-main-text-color;
+
+        &:hover {
+            color: $o-enterprise-action-color;
+        }
+    }
+
+    .o_ages_pdl_row-group td {
+        font-weight: 600;
+        background: $o-gray-100;
+        color: $o-gray-900;
+    }
+
+    .o_ages_pdl_row-group.o_ages_row-unfolded td {
+        font-weight: 700;
+        background: $o-gray-200;
+        border-bottom: 1px solid $o-gray-300 !important;
+    }
+
+    .o_ages_pdl_row-subtotal td {
+        background: mix($o-danger, $o-view-background-color, 12%);
+        font-weight: 600;
+        color: $o-danger;
+        border-top: 1px solid mix($o-danger, $o-view-background-color, 28%);
+    }
+
+    .o_ages_pdl_row-detail td {
+        font-weight: 400;
+        color: $o-gray-700;
+    }
+
+    .o_ages_bs_row-total td {
+        background: mix($o-danger, $o-view-background-color, 12%);
+        font-weight: 700;
+        border-top: 2px solid $o-danger !important;
+        color: $o-danger;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    @media (max-width: 1200px) {
+        .o_ages_pdl_sheet {
+            padding: 0 12px 24px;
+        }
+
+        .o_ages_pdl_table {
+            table-layout: auto;
+        }
+    }
+}

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ages_custom_reports.AgesProfitLossReport">
+        <div class="o_action o_ages_bs_report account_report" t-ref="root">
+            <Layout display="display">
+                <t t-set-slot="control-panel-create-button">
+                    <button class="btn btn-primary me-1" t-on-click="onPrintPdf">
+                        PDF
+                    </button>
+                    <button class="btn btn-secondary" t-on-click="onPrintExcel">
+                        XLSX
+                    </button>
+                </t>
+
+                <t t-set-slot="layout-actions">
+                    <div class="o_ages_report_filters_area">
+                        <div class="d-flex gap-1 flex-wrap align-items-center o_ages_report_filters">
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-on-click="(ev) => this.toggleFilterMenu('date', ev)">
+                                <i class="fa fa-calendar me-1"/>
+                                <t t-esc="dateRangeFilterLabel"/>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-on-click="(ev) => this.toggleFilterMenu('entries', ev)">
+                                <i class="fa fa-sliders me-1"/>
+                                <t t-esc="targetMoveFilterLabel"/>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-on-click="(ev) => this.toggleFilterMenu('analytic', ev)">
+                                <i class="fa fa-graduation-cap me-1"/>
+                                <t t-esc="analyticFilterLabel"/>
+                            </button>
+                            <button t-if="currencyFilterLabel"
+                                    type="button"
+                                    class="btn btn-secondary o_ages_report_currency_pill">
+                                <t t-esc="currencyFilterLabel"/>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-secondary o_ages_report_gear_btn"
+                                    title="Report options"
+                                    t-on-click="(ev) => this.toggleFilterMenu('options', ev)">
+                                <i class="fa fa-fw fa-cog"/>
+                            </button>
+                            <button type="button" class="btn btn-secondary" t-on-click="clearFilters">
+                                Clear
+                            </button>
+                            <span t-if="state.loading" class="text-muted small ms-1">
+                                <i class="fa fa-spinner fa-spin"/>
+                            </span>
+                        </div>
+                        <div t-if="state.openMenu === 'date'"
+                             class="o_ages_report_dropdown"
+                             t-att-style="filterMenuStyle()">
+                            <div class="dropdown-item date d-flex justify-content-between align-items-center">
+                                <label class="mb-0">From</label>
+                                <input type="date"
+                                       class="o_ages_report_date_input"
+                                       t-att-value="state.dateFrom"
+                                       t-on-change="onDateFromChange"/>
+                            </div>
+                            <div class="dropdown-item date d-flex justify-content-between align-items-center">
+                                <label class="mb-0">To</label>
+                                <input type="date"
+                                       class="o_ages_report_date_input"
+                                       t-att-value="state.dateTo"
+                                       t-on-change="onDateToChange"/>
+                            </div>
+                        </div>
+                        <div t-if="state.openMenu === 'entries'"
+                             class="o_ages_report_dropdown"
+                             t-att-style="filterMenuStyle()">
+                            <button type="button" class="dropdown-item" t-att-class="{ selected: state.targetMove === 'posted' }" t-on-click="() => this.setTargetMove('posted')">Posted Entries</button>
+                            <button type="button" class="dropdown-item" t-att-class="{ selected: state.targetMove === 'all' }" t-on-click="() => this.setTargetMove('all')">All Entries</button>
+                        </div>
+                        <div t-if="state.openMenu === 'analytic'"
+                             class="o_ages_report_dropdown"
+                             t-att-style="filterMenuStyle()">
+                            <ReportRecordPicker
+                                resIds="analyticResIds"
+                                resModel="'account.analytic.account'"
+                                update.bind="onAnalyticUpdate"
+                                placeholder="'Search analytic...'"
+                                fieldString="'Analytic'"
+                                single="true"
+                            />
+                        </div>
+                        <div t-if="state.openMenu === 'options'"
+                             class="o_ages_report_dropdown"
+                             t-att-style="filterMenuStyle()">
+                            <button type="button" class="dropdown-item" t-att-class="{ selected: state.unfoldAll }" t-on-click="() => this.toggleUnfoldAllOption()">Unfold All</button>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="o_ages_bs_content">
+                    <t t-if="state.warnings.length">
+                        <div class="o_ages_bs_warnings">
+                            <t t-foreach="state.warnings" t-as="warning" t-key="warning">
+                                <div class="alert alert-info text-center mb-0">
+                                    <t t-esc="warning"/>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+
+                    <div class="o_ages_bs_sheet mx-auto fit-content">
+                        <table class="table table-borderless table-hover o_ages_bs_table mb-0">
+                            <thead class="sticky">
+                                <tr>
+                                    <th class="o_ages_bs_label_col"/>
+                                    <th class="o_ages_bs_amount_col text-end">
+                                        <div class="o_ages_report_col_period"><t t-esc="state.dateLabel"/></div>
+                                        <div class="o_ages_report_col_measure">
+                                            <span>Balance</span>
+                                            <button type="button"
+                                                    class="btn o_ages_report_unfold_btn"
+                                                    title="Unfold All"
+                                                    t-att-class="{ 'o_ages_unfold_active': state.unfoldAll }"
+                                                    t-on-click="() => this.toggleUnfoldAllOption()">
+                                                <i class="fa fa-home"/>
+                                            </button>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="visibleLines" t-as="line" t-key="line.id">
+                                    <tr t-att-class="rowClass(line) + (line.line_type === 'account' ? ' o_ages_report_row' : '')">
+                                        <td class="o_ages_bs_label_col"
+                                            t-att-style="'padding-left: ' + (8 + line.level * 16) + 'px'">
+                                            <span t-if="line.foldable"
+                                                  class="o_ages_bs_caret"
+                                                  t-on-click="() => this.toggleFold(line)">
+                                                <i t-att-class="isExpanded(line) ? 'fa fa-caret-down' : 'fa fa-caret-right'"/>
+                                            </span>
+                                            <span t-else="" class="o_ages_bs_caret-spacer"/>
+                                            <span class="o_ages_line_label">
+                                                <span t-if="line.line_type === 'account'"
+                                                      class="o_ages_bs_account_name"
+                                                      t-esc="line.name"/>
+                                                <span t-else="" t-esc="line.name"/>
+                                                <ReportLineMenu t-if="getAccountMenuItems(line).length"
+                                                                items="getAccountMenuItems(line)"/>
+                                            </span>
+                                        </td>
+                                        <td class="o_ages_bs_amount_col text-end"
+                                            t-att-class="amountClass(line.balance)">
+                                            <t t-esc="formatAmount(line.balance)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </Layout>
+        </div>
+    </t>
+
+</templates>

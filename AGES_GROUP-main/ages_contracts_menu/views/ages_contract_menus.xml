@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_ages_contract_root"
+              name="Contract"
+              parent="project.menu_main_pm"
+              sequence="2"
+              groups="project.group_project_user,project.group_project_manager">
+
+        <menuitem id="menu_ages_contracts"
+                  name="Contracts"
+                  action="action_ages_contract"
+                  sequence="1"/>
+
+        <menuitem id="menu_ages_running_bills"
+                  name="Running Bills"
+                  action="action_ages_running_bill"
+                  sequence="2"/>
+
+        <menuitem id="menu_ages_mobilization_advance"
+                  name="Mobilization Received"
+                  action="action_ages_mobilization_advance"
+                  sequence="3"/>
+
+        <menuitem id="menu_ages_retention_recovery"
+                  name="Retention Recovery"
+                  action="action_ages_retention_recovery"
+                  sequence="4"/>
+
+    </menuitem>
+
+</odoo>

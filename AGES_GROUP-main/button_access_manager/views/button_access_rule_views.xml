@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_button_access_rule_list" model="ir.ui.view">
+        <field name="name">button.access.rule.list</field>
+        <field name="model">button.access.rule</field>
+        <field name="arch" type="xml">
+            <list string="Button Access Rules">
+                <field name="is_global" string="All Models?" widget="boolean_toggle"/>
+                <field name="model_name" string="Model"/>
+                <field name="button_type"/>
+                <field name="button_string"/>
+                <field name="technical_name"/>
+                <field name="user_ids" widget="many2many_tags"/>
+                <field name="group_ids" widget="many2many_tags"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_button_access_rule_form" model="ir.ui.view">
+        <field name="name">button.access.rule.form</field>
+        <field name="model">button.access.rule</field>
+        <field name="arch" type="xml">
+            <form string="Button Access Rule">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="model_id" placeholder="Leave empty for ALL models"/>
+                            <field name="is_global" readonly="1"/>
+                            <field name="button_type"/>
+                            <field name="technical_name"
+                                   invisible="button_type not in ('object', 'action', 'report')"/>
+                            <field name="button_string"/>
+                        </group>
+                        <group>
+                            <field name="user_ids" widget="many2many_tags"/>
+                            <field name="group_ids" widget="many2many_tags"/>
+                            <field name="active"/>
+                            <field name="view_types"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="note" placeholder="Optional notes for other admins..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_button_access_rule_search" model="ir.ui.view">
+        <field name="name">button.access.rule.search</field>
+        <field name="model">button.access.rule</field>
+        <field name="arch" type="xml">
+            <search string="Button Access Rules">
+                <field name="model_name"/>
+                <field name="button_string"/>
+                <field name="user_ids"/>
+                <field name="group_ids"/>
+                <filter string="Global (all models)" name="filter_global" domain="[('model_id', '=', False)]"/>
+                <filter string="Per-model" name="filter_per_model" domain="[('model_id', '!=', False)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Model" name="group_model" context="{'group_by': 'model_name'}"/>
+                    <filter string="Button Type" name="group_type" context="{'group_by': 'button_type'}"/>
+                    <filter string="User" name="group_user" context="{'group_by': 'user_ids'}"/>
+                    <filter string="Group" name="group_group" context="{'group_by': 'group_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_button_access_rule" model="ir.actions.act_window">
+        <field name="name">Button Access Rules</field>
+        <field name="res_model">button.access.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_button_access_rule_search"/>
+    </record>
+
+    <menuitem id="menu_button_access_rule"
+              name="Button Access Rules"
+              parent="base.next_id_2"
+              action="action_button_access_rule"
+              groups="base.group_system"
+              sequence="50"/>
+
+</odoo>

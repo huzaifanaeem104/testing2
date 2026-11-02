@@ -1,0 +1,15 @@
+.mk_apps_menu_top_spacer {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 3rem;
+}
+
+.o-dropdown--menu.mk_app_menu.dropdown-menu {
+    padding-top: 3rem !important;
+    align-content: flex-start;
+
+    .o_app {
+        margin-top: 0 !important;
+        margin-bottom: 1rem;
+    }
+}

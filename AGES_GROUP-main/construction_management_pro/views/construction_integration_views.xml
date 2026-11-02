@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_order_construction_form" model="ir.ui.view">
+        <field name="name">purchase.order.construction.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id' and not(ancestor::field)]" position="after">
+                <field name="construction_project_id"/>
+                <field name="construction_material_request_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_picking_construction_form" model="ir.ui.view">
+        <field name="name">stock.picking.construction.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin' and not(ancestor::field)]" position="after">
+                <field name="construction_project_id"/>
+                <field name="construction_material_request_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mrp_production_construction_form" model="ir.ui.view">
+        <field name="name">mrp.production.construction.form</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin' and not(ancestor::field)]" position="after">
+                <field name="construction_project_id"/>
+                <field name="construction_boq_id" readonly="1"/>
+                <field name="construction_boq_line_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_construction_purchase_orders" model="ir.actions.act_window">
+        <field name="name">Construction Purchase Orders</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('construction_project_id','!=',False)]</field>
+    </record>
+
+    <record id="action_construction_transfers" model="ir.actions.act_window">
+        <field name="name">Construction Transfers</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('construction_project_id','!=',False)]</field>
+    </record>
+
+    <record id="action_construction_manufacturing" model="ir.actions.act_window">
+        <field name="name">Construction Manufacturing</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('construction_project_id','!=',False)]</field>
+    </record>
+</odoo>

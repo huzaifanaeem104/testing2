@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ages_deletion_audit_list" model="ir.ui.view">
+        <field name="name">ages.deletion.audit.list</field>
+        <field name="model">ages.deletion.audit</field>
+        <field name="arch" type="xml">
+            <list create="false" delete="false" edit="false"
+                  default_order="deletion_date desc, id desc">
+                <field name="deletion_date"/>
+                <field name="deleted_by_name"/>
+                <field name="business_module"/>
+                <field name="model_description"/>
+                <field name="model_name" optional="hide"/>
+                <field name="record_id"/>
+                <field name="record_name"/>
+                <field name="deletion_type"/>
+                <field name="deletion_source" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="snapshot_summary" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ages_deletion_audit_form" model="ir.ui.view">
+        <field name="name">ages.deletion.audit.form</field>
+        <field name="model">ages.deletion.audit</field>
+        <field name="arch" type="xml">
+            <form create="false" delete="false" edit="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_label"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="What was deleted">
+                            <field name="business_module"/>
+                            <field name="model_description"/>
+                            <field name="model_name"/>
+                            <field name="record_id"/>
+                            <field name="record_name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_name"/>
+                        </group>
+                        <group string="Who / when / how">
+                            <field name="deleted_by_id"/>
+                            <field name="deleted_by_name"/>
+                            <field name="deleted_by_uid"/>
+                            <field name="deletion_date"/>
+                            <field name="deletion_source"/>
+                            <field name="deletion_type"/>
+                            <field name="parent_model" invisible="deletion_type != 'cascade'"/>
+                            <field name="parent_record_ids" invisible="deletion_type != 'cascade'"/>
+                        </group>
+                    </group>
+                    <group string="Original record">
+                        <field name="original_create_name"/>
+                        <field name="original_create_uid"/>
+                        <field name="original_create_date"/>
+                    </group>
+                    <notebook>
+                        <page string="Pre-Deletion Snapshot" name="snapshot">
+                            <field name="snapshot_summary" nolabel="1" class="oe_inline"/>
+                            <field name="snapshot" nolabel="1" widget="text"
+                                   placeholder="No snapshot captured."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ages_deletion_audit_search" model="ir.ui.view">
+        <field name="name">ages.deletion.audit.search</field>
+        <field name="model">ages.deletion.audit</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="record_name"/>
+                <field name="record_id"/>
+                <field name="model_name"/>
+                <field name="model_description"/>
+                <field name="deleted_by_name"/>
+                <field name="deleted_by_id"/>
+                <field name="deleted_by_uid"/>
+                <field name="business_module"/>
+                <field name="company_id"/>
+                <filter string="User-Initiated" name="filter_user"
+                        domain="[('deletion_type', '=', 'user_initiated')]"/>
+                <filter string="Cascade / Related" name="filter_cascade"
+                        domain="[('deletion_type', '=', 'cascade')]"/>
+                <separator/>
+                <filter string="User Interface" name="filter_ui"
+                        domain="[('deletion_source', '=', 'ui')]"/>
+                <filter string="API" name="filter_api"
+                        domain="[('deletion_source', '=', 'api')]"/>
+                <filter string="Scheduled" name="filter_scheduled"
+                        domain="[('deletion_source', '=', 'scheduled')]"/>
+                <filter string="Unknown / System" name="filter_unknown"
+                        domain="[('deletion_source', '=', 'unknown')]"/>
+                <separator/>
+                <filter string="Project" name="filter_project"
+                        domain="[('business_module', '=', 'project')]"/>
+                <filter string="Sales" name="filter_sales"
+                        domain="[('business_module', '=', 'sales')]"/>
+                <filter string="Purchase" name="filter_purchase"
+                        domain="[('business_module', '=', 'purchase')]"/>
+                <filter string="Accounting" name="filter_accounting"
+                        domain="[('business_module', '=', 'accounting')]"/>
+                <filter string="Expense" name="filter_expense"
+                        domain="[('business_module', '=', 'expense')]"/>
+                <filter string="Purchase Request" name="filter_purchase_request"
+                        domain="[('business_module', '=', 'purchase_request')]"/>
+                <filter string="Inventory" name="filter_inventory"
+                        domain="[('business_module', '=', 'inventory')]"/>
+                <filter string="Employees" name="filter_employees"
+                        domain="[('business_module', '=', 'employees')]"/>
+                <filter string="Payroll" name="filter_payroll"
+                        domain="[('business_module', '=', 'payroll')]"/>
+                <filter string="Attendances" name="filter_attendances"
+                        domain="[('business_module', '=', 'attendances')]"/>
+                <separator/>
+                <filter string="Deleted On" name="filter_deletion_date" date="deletion_date"/>
+                <group expand="0" string="Group By">
+                    <filter string="Deleted By" name="group_deleted_by"
+                            context="{'group_by': 'deleted_by_id'}"/>
+                    <filter string="Business Module" name="group_module"
+                            context="{'group_by': 'business_module'}"/>
+                    <filter string="Model" name="group_model"
+                            context="{'group_by': 'model_name'}"/>
+                    <filter string="Company" name="group_company"
+                            context="{'group_by': 'company_id'}"/>
+                    <filter string="Deletion Source" name="group_source"
+                            context="{'group_by': 'deletion_source'}"/>
+                    <filter string="Deletion Type" name="group_type"
+                            context="{'group_by': 'deletion_type'}"/>
+                    <filter string="Deleted On" name="group_date"
+                            context="{'group_by': 'deletion_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ages_deletion_audit_all" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">ages.deletion.audit</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_user': 0}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No deleted records have been logged yet.
+            </p>
+            <p>
+                When a business record is deleted, this log keeps who deleted it,
+                which record it was, and a snapshot from immediately before deletion.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_ages_deletion_audit_project" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">ages.deletion.audit</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('business_module', '=', 'project')]</field>
+        <field name="context">{'default_business_module': 'project', 'search_default_filter_project': 1}</field>
+    </record>
+    <record id="action_ages_deletion_audit_sales" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">ages.deletion.audit</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('business_module', '=', 'sales')]</field>
+        <field name="context">{'default_business_module': 'sales', 'search_default_filter_sales': 1}</field>
+    </record>
+    <record id="action_ages_deletion_audit_purchase" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">ages.deletion.audit</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('business_module', '=', 'purchase')]</field>
+        <field name="context">{'default_business_module': 'purchase', 'search_default_filter_purchase': 1}</field>
+    </record>
+    <record id="action_ages_deletion_audit_accounting" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">ages.deletion.audit</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('business_module', '=', 'accounting')]</field>
+        <field name="context">{'default_business_module': 'accounting', 'search_default_filter_accounting': 1}</field>
+    </record>
+    <record id="action_ages_deletion_audit_expense" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">ages.deletion.audit</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('business_module', '=', 'expense')]</field>
+        <field name="context">{'default_business_module': 'expense', 'search_default_filter_expense': 1}</field>
+    </record>
+    <record id="action_ages_deletion_audit_purchase_request" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">ages.deletion.audit</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('business_module', '=', 'purchase_request')]</field>
+        <field name="context">{'default_business_module': 'purchase_request', 'search_default_filter_purchase_request': 1}</field>
+    </record>
+    <record id="action_ages_deletion_audit_inventory" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">ages.deletion.audit</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('business_module', '=', 'inventory')]</field>
+        <field name="context">{'default_business_module': 'inventory', 'search_default_filter_inventory': 1}</field>
+    </record>
+    <record id="action_ages_deletion_audit_employees" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">ages.deletion.audit</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('business_module', '=', 'employees')]</field>
+        <field name="context">{'default_business_module': 'employees', 'search_default_filter_employees': 1}</field>
+    </record>
+    <record id="action_ages_deletion_audit_payroll" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">ages.deletion.audit</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('business_module', '=', 'payroll')]</field>
+        <field name="context">{'default_business_module': 'payroll', 'search_default_filter_payroll': 1}</field>
+    </record>
+    <record id="action_ages_deletion_audit_attendances" model="ir.actions.act_window">
+        <field name="name">Deleted Records</field>
+        <field name="res_model">ages.deletion.audit</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('business_module', '=', 'attendances')]</field>
+        <field name="context">{'default_business_module': 'attendances', 'search_default_filter_attendances': 1}</field>
+    </record>
+</odoo>

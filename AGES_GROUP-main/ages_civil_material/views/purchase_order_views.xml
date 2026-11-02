@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_order_form_civil_material" model="ir.ui.view">
+        <field name="name">purchase.order.form.civil.material</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_civil_slips"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        invisible="not is_civil_material">
+                    <field name="civil_slip_count" widget="statinfo" string="Slips"/>
+                </button>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <div class="oe_inline" invisible="state not in ('draft', 'sent', 'to approve') and not is_civil_material">
+                    <field name="is_civil_material"/>
+                    <label for="is_civil_material"/>
+                </div>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_create_civil_slip"
+                        type="object"
+                        string="New Civil Slip"
+                        class="btn-secondary"
+                        invisible="not is_civil_material or state not in ('purchase', 'done')"/>
+                <button name="action_open_civil_monthly_bill_wizard"
+                        type="object"
+                        string="Create Monthly Bill"
+                        class="btn-primary"
+                        invisible="not is_civil_material or state not in ('purchase', 'done')"/>
+            </xpath>
+            <!-- Civil Material: Products tab unused — slips hold materials -->
+            <xpath expr="//page[@name='products']" position="attributes">
+                <attribute name="invisible">is_civil_material</attribute>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Civil Material"
+                      name="civil_material"
+                      invisible="not is_civil_material">
+                    <div class="alert alert-info" role="alert">
+                        Do not enter products on the PO. Configure materials on each
+                        <strong>Civil Material Slip</strong> (product, L×B×H, rate).
+                        On Confirm, those slip products become the PO lines used for
+                        GRN / stock move and the monthly vendor bill.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="civil_slip_qty_total"/>
+                            <field name="civil_slip_qty_unbilled"/>
+                        </group>
+                    </group>
+                    <field name="civil_slip_ids" mode="list" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="truck_no"/>
+                            <field name="first_measurement_slip"/>
+                            <field name="qty_total"/>
+                            <field name="state"/>
+                            <field name="picking_id"/>
+                            <field name="bill_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_tree_civil_material" model="ir.ui.view">
+        <field name="name">purchase.order.list.civil.material</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="is_civil_material" optional="show" string="Civil Mat."/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

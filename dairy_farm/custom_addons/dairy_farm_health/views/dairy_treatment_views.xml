@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_treatment_search" model="ir.ui.view">
+        <field name="name">dairy.treatment.search</field>
+        <field name="model">dairy.treatment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="animal_id"/>
+                <field name="case_id"/>
+                <field name="product_id"/>
+                <filter name="filter_prescribed" string="Prescribed" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_administered" string="Administered" domain="[('state', '=', 'administered')]"/>
+                <filter name="filter_withdrawal" string="With Withdrawal" domain="[('milk_withdrawal_days', '&gt;', 0)]"/>
+                <filter name="filter_date" string="Date" date="start_date"/>
+                <group string="Group By">
+                    <filter name="groupby_product" string="Medicine" context="{'group_by': 'product_id'}"/>
+                    <filter name="groupby_animal" string="Animal" context="{'group_by': 'animal_id'}"/>
+                    <filter name="groupby_month" string="Month" context="{'group_by': 'start_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dairy_treatment_list" model="ir.ui.view">
+        <field name="name">dairy.treatment.list</field>
+        <field name="model">dairy.treatment</field>
+        <field name="arch" type="xml">
+            <list string="Treatments" decoration-info="state == 'draft'" decoration-muted="state in ('reversed', 'cancelled')">
+                <field name="name"/>
+                <field name="animal_id"/>
+                <field name="case_id"/>
+                <field name="product_id"/>
+                <field name="dosage" optional="show"/>
+                <field name="route" optional="show"/>
+                <field name="start_date"/>
+                <field name="end_date" optional="show"/>
+                <field name="quantity" optional="hide"/>
+                <field name="uom_id" optional="hide"/>
+                <field name="withdrawal_end_date"/>
+                <field name="cost_amount" sum="Total"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-success="state == 'administered'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_treatment_form" model="ir.ui.view">
+        <field name="name">dairy.treatment.form</field>
+        <field name="model">dairy.treatment</field>
+        <field name="arch" type="xml">
+            <form string="Treatment">
+                <header>
+                    <button name="action_administer" type="object" string="Administer" class="btn-primary"
+                            invisible="state != 'draft'"
+                            confirm="Issue the medicine from stock and apply the milk withdrawal restriction?"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state != 'draft'"/>
+                    <button name="action_reverse" type="object" string="Reverse" invisible="state != 'administered'"
+                            confirm="Return the medicine to stock and cancel the restriction? Enter the reason first."/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,administered"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group string="Prescription">
+                            <field name="case_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="animal_id"/>
+                            <field name="product_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="description" readonly="state != 'draft'"/>
+                            <field name="dosage" readonly="state != 'draft'"/>
+                            <field name="route" readonly="state != 'draft'"/>
+                            <field name="veterinarian_id"/>
+                        </group>
+                        <group string="Course">
+                            <field name="start_date" readonly="state != 'draft'"/>
+                            <field name="duration_days" readonly="state != 'draft'"/>
+                            <field name="end_date" readonly="state != 'draft'"/>
+                            <field name="administered_by_id" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Stock Issue" invisible="not product_id">
+                            <label for="quantity"/>
+                            <div class="o_row">
+                                <field name="quantity" readonly="state != 'draft'"/>
+                                <field name="uom_category_id" invisible="1"/>
+                                <field name="uom_id" readonly="state != 'draft'" options="{'no_create': True}"
+                                       domain="[('category_id', '=', uom_category_id)]"/>
+                            </div>
+                            <field name="tracking" invisible="1"/>
+                            <field name="lot_id" readonly="state != 'draft'" invisible="tracking == 'none'"
+                                   options="{'no_create': True}"/>
+                            <field name="move_id" invisible="not move_id"/>
+                            <field name="cost_amount" invisible="state == 'draft'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Milk Withdrawal">
+                            <field name="milk_withdrawal_days" readonly="state != 'draft'"/>
+                            <field name="withdrawal_end_date"/>
+                            <field name="withdrawal_id" invisible="not withdrawal_id"/>
+                            <field name="withdrawal_instructions"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reversal_reason" invisible="state not in ('administered', 'reversed')"
+                               readonly="state == 'reversed'"/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dairy_treatment" model="ir.actions.act_window">
+        <field name="name">Treatments</field>
+        <field name="res_model">dairy.treatment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_dairy_vet_expense_report" model="ir.actions.act_window">
+        <field name="name">Medicine Cost Analysis</field>
+        <field name="res_model">dairy.treatment</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="domain">[('state', '=', 'administered')]</field>
+    </record>
+
+    <record id="view_dairy_treatment_pivot" model="ir.ui.view">
+        <field name="name">dairy.treatment.pivot</field>
+        <field name="model">dairy.treatment</field>
+        <field name="arch" type="xml">
+            <pivot string="Medicine Cost">
+                <field name="product_id" type="row"/>
+                <field name="start_date" interval="month" type="col"/>
+                <field name="cost_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+</odoo>

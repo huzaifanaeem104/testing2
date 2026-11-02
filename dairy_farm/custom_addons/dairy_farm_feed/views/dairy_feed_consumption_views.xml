@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_feed_consumption_search" model="ir.ui.view">
+        <field name="name">dairy.feed.consumption.search</field>
+        <field name="model">dairy.feed.consumption</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="group_id"/>
+                <field name="animal_id"/>
+                <field name="plan_id"/>
+                <filter name="filter_today" string="Today"
+                        domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_date" string="Date" date="date"/>
+                <separator/>
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_done" string="Posted" domain="[('state', '=', 'done')]"/>
+                <filter name="filter_reversed" string="Reversed" domain="[('state', '=', 'reversed')]"/>
+                <separator/>
+                <filter name="filter_feeding" string="Feeding" domain="[('consumption_type', '=', 'feeding')]"/>
+                <filter name="filter_wastage" string="Wastage" domain="[('consumption_type', '=', 'wastage')]"/>
+                <group string="Group By">
+                    <filter name="groupby_product" string="Feed" context="{'group_by': 'product_id'}"/>
+                    <filter name="groupby_group" string="Group" context="{'group_by': 'group_id'}"/>
+                    <filter name="groupby_date" string="Date" context="{'group_by': 'date:day'}"/>
+                    <filter name="groupby_month" string="Month" context="{'group_by': 'date:month'}"/>
+                    <filter name="groupby_type" string="Type" context="{'group_by': 'consumption_type'}"/>
+                    <filter name="groupby_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dairy_feed_consumption_list" model="ir.ui.view">
+        <field name="name">dairy.feed.consumption.list</field>
+        <field name="model">dairy.feed.consumption</field>
+        <field name="arch" type="xml">
+            <list string="Feed Consumption" decoration-info="state == 'draft'" decoration-muted="state in ('reversed', 'cancelled')"
+                  decoration-warning="consumption_type == 'wastage'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="shift_id" optional="show"/>
+                <field name="consumption_type" optional="show"/>
+                <field name="group_id"/>
+                <field name="animal_id" optional="show"/>
+                <field name="product_id"/>
+                <field name="planned_qty" optional="show"/>
+                <field name="actual_qty"/>
+                <field name="uom_id"/>
+                <field name="cost_amount" sum="Total Cost"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_feed_consumption_form" model="ir.ui.view">
+        <field name="name">dairy.feed.consumption.form</field>
+        <field name="model">dairy.feed.consumption</field>
+        <field name="arch" type="xml">
+            <form string="Feed Consumption">
+                <header>
+                    <button name="action_validate" type="object" string="Post to Inventory" class="btn-primary"
+                            invisible="state != 'draft'" groups="dairy_farm_core.group_dairy_feed_operator"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state != 'draft'"
+                            groups="dairy_farm_core.group_dairy_feed_operator"/>
+                    <button name="action_reverse" type="object" string="Reverse"
+                            invisible="state != 'done'" groups="dairy_farm_core.group_dairy_manager"
+                            confirm="Return the issued quantity to stock? Enter the correction reason first."/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_move" type="object" class="oe_stat_button" icon="fa-exchange"
+                                invisible="not move_id" groups="stock.group_stock_user">
+                            <span class="o_stat_text">Stock Moves</span>
+                        </button>
+                    </div>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group string="Feeding">
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="shift_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="consumption_type" readonly="state != 'draft'"/>
+                            <field name="allocation_type" readonly="state != 'draft'" invisible="consumption_type == 'wastage'"/>
+                            <field name="group_id" readonly="state != 'draft'" options="{'no_create': True}"
+                                   invisible="allocation_type != 'group' and consumption_type != 'wastage'"/>
+                            <field name="animal_id" readonly="state != 'draft'" options="{'no_create': True}"
+                                   invisible="allocation_type != 'animal' or consumption_type == 'wastage'"/>
+                            <field name="plan_id" readonly="1" invisible="not plan_id"/>
+                            <field name="responsible_id" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Feed">
+                            <field name="product_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="tracking" invisible="1"/>
+                            <field name="lot_id" readonly="state != 'draft'" invisible="tracking == 'none'"
+                                   required="tracking != 'none'" options="{'no_create': True}"/>
+                            <field name="planned_qty" readonly="state != 'draft'"/>
+                            <label for="actual_qty"/>
+                            <div class="o_row">
+                                <field name="actual_qty" readonly="state != 'draft'"/>
+                                <field name="uom_category_id" invisible="1"/>
+                                <field name="uom_id" readonly="state != 'draft'" options="{'no_create': True}"
+                                       domain="[('category_id', '=', uom_category_id)]"/>
+                            </div>
+                            <field name="variance_qty" invisible="not planned_qty"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Inventory">
+                            <field name="location_id" readonly="state != 'draft'" options="{'no_create': True}"
+                                   groups="stock.group_stock_multi_locations"/>
+                            <field name="location_dest_id" readonly="state != 'draft'" options="{'no_create': True}"
+                                   groups="stock.group_stock_multi_locations"/>
+                            <field name="move_id" invisible="not move_id"/>
+                            <field name="reversal_move_id" invisible="not reversal_move_id"/>
+                            <field name="product_qty" invisible="state == 'draft'"/>
+                        </group>
+                        <group string="Cost" invisible="state == 'draft'">
+                            <field name="cost_amount"/>
+                            <field name="head_count"/>
+                            <field name="cost_per_head"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Allocated Animals" name="allocation" invisible="state == 'draft'">
+                            <field name="allocated_animal_ids">
+                                <list>
+                                    <field name="tag_number"/>
+                                    <field name="nickname"/>
+                                    <field name="production_status"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes &amp; Corrections" name="notes">
+                            <group>
+                                <field name="correction_reason" readonly="state in ('reversed', 'cancelled')"
+                                       placeholder="Required before reversing a posted record"/>
+                                <field name="notes"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dairy_feed_consumption_pivot" model="ir.ui.view">
+        <field name="name">dairy.feed.consumption.pivot</field>
+        <field name="model">dairy.feed.consumption</field>
+        <field name="arch" type="xml">
+            <pivot string="Feed Consumption">
+                <field name="product_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="product_qty" type="measure"/>
+                <field name="cost_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_dairy_feed_consumption_graph" model="ir.ui.view">
+        <field name="name">dairy.feed.consumption.graph</field>
+        <field name="model">dairy.feed.consumption</field>
+        <field name="arch" type="xml">
+            <graph string="Feed Cost" type="bar" stacked="1">
+                <field name="date" interval="week"/>
+                <field name="product_id"/>
+                <field name="cost_amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_dairy_feed_consumption" model="ir.actions.act_window">
+        <field name="name">Feed Consumption</field>
+        <field name="res_model">dairy.feed.consumption</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Record feed issued to the herd</p>
+            <p>Each posted record creates one stock move from the feed store to the consumption location.</p>
+        </field>
+    </record>
+
+    <record id="action_dairy_feed_cost_report" model="ir.actions.act_window">
+        <field name="name">Feed Cost Analysis</field>
+        <field name="res_model">dairy.feed.consumption</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{'search_default_filter_done': 1}</field>
+    </record>
+</odoo>

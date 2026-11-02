@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="executive_summary_report">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-set="currency" t-value="currency or company.currency_id"/>
+                <t t-call="ages_custom_reports.ages_report_pdf_styles"/>
+                <style type="text/css">
+                    .ages-es-report { font-family: Helvetica, Arial, sans-serif; color: #1a2332; }
+                    .ages-es-warning { background: #e8f4fd; border: 1px solid #b8daff; color: #004085; padding: 8px 12px; margin-bottom: 10px; font-size: 11px; }
+                    .ages-es-table { width: 100%; border-collapse: collapse; }
+                    .ages-es-table td { padding: 6px 10px; border-bottom: 1px solid #eed6da; }
+                    .ages-es-table td.amount { text-align: right; white-space: nowrap; }
+                    .ages-es-table tr.section td { background: #faf0f1; font-weight: bold; color: #8B1A1A; border-top: 2px solid #B22234; }
+                    .ages-es-table tr.metric td { color: #1a2332; }
+                    .ages-es-negative { color: #c0392b !important; }
+                </style>
+                <div class="ages-es-report ages-report-branded">
+                    <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+                    <div class="ages-es-meta">
+                        Target: <t t-esc="target_move_label"/> · Currency: <t t-esc="currency.name"/>
+                    </div>
+                    <t t-foreach="warnings" t-as="warning">
+                        <div class="ages-es-warning"><t t-esc="warning"/></div>
+                    </t>
+                    <table class="ages-es-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;width:75%;"/>
+                                <th style="text-align:right;">Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="lines" t-as="line">
+                                <tr t-att-class="'section' if line['line_type'] == 'section' else 'metric'">
+                                    <td t-att-style="'padding-left: %spx;' % (14 + line['level'] * 18)">
+                                        <t t-esc="line['name']"/>
+                                    </td>
+                                    <td class="amount">
+                                        <t t-if="line['line_type'] == 'section'"/>
+                                        <t t-elif="line.get('figure_type') == 'percentage'">
+                                            <span t-att-class="'ages-es-negative' if line['balance'] &lt; 0 else ''">
+                                                <t t-esc="'%.1f' % line['balance']"/>%
+                                            </span>
+                                        </t>
+                                        <t t-elif="line.get('figure_type') == 'float'">
+                                            <span t-esc="line['balance']"
+                                                  t-att-class="'ages-es-negative' if line['balance'] &lt; 0 else ''"
+                                                  t-options='{"widget": "float", "precision": 1}'/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-out="line['balance']"
+                                                  t-att-class="'ages-es-negative' if line['balance'] &lt; 0 else ''"
+                                                  t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

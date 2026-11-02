@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_milking_correction_list" model="ir.ui.view">
+        <field name="name">dairy.milking.correction.list</field>
+        <field name="model">dairy.milking.correction</field>
+        <field name="arch" type="xml">
+            <list string="Milking Corrections" decoration-info="state == 'draft'" decoration-muted="state == 'rejected'">
+                <field name="name"/>
+                <field name="session_id"/>
+                <field name="animal_id"/>
+                <field name="old_quantity"/>
+                <field name="new_quantity"/>
+                <field name="new_entry_status"/>
+                <field name="requested_by_id"/>
+                <field name="approved_by_id"/>
+                <field name="state" widget="badge" decoration-success="state == 'applied'" decoration-info="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_milking_correction_form" model="ir.ui.view">
+        <field name="name">dairy.milking.correction.form</field>
+        <field name="model">dairy.milking.correction</field>
+        <field name="arch" type="xml">
+            <form string="Milking Correction">
+                <header>
+                    <button name="action_apply" type="object" string="Apply" class="btn-primary"
+                            invisible="state != 'draft' or not id" groups="dairy_farm_core.group_dairy_manager"/>
+                    <button name="action_reject" type="object" string="Reject"
+                            invisible="state != 'draft' or not id" groups="dairy_farm_core.group_dairy_manager"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group string="Record">
+                            <field name="session_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="line_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="animal_id"/>
+                        </group>
+                        <group string="Change">
+                            <field name="old_entry_status"/>
+                            <field name="old_quantity"/>
+                            <field name="new_entry_status" readonly="state != 'draft'"/>
+                            <field name="new_quantity" readonly="state != 'draft'" invisible="new_entry_status != 'recorded'"/>
+                        </group>
+                    </group>
+                    <field name="reason" readonly="state != 'draft'" placeholder="Reason for the correction (required)"/>
+                    <group>
+                        <group>
+                            <field name="requested_by_id"/>
+                            <field name="approved_by_id"/>
+                            <field name="applied_on"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dairy_milking_correction" model="ir.actions.act_window">
+        <field name="name">Milking Corrections</field>
+        <field name="res_model">dairy.milking.correction</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_journal_entry" model="ir.actions.report">
+        <field name="name">Print JEs</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_reports.journal_entry</field>
+        <field name="report_file">ages_reports.journal_entry</field>
+        <field name="paperformat_id" ref="paperformat_ages_reports_landscape"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'JE - %s' % (object.name or object.id)</field>
+    </record>
+
+    <record id="action_report_vendor_bill" model="ir.actions.report">
+        <field name="name">Print Bill</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_reports.vendor_bill</field>
+        <field name="report_file">ages_reports.vendor_bill</field>
+        <field name="paperformat_id" ref="paperformat_ages_reports_portrait"/>
+        <field name="print_report_name">'Bill - %s' % (object.name or object.id)</field>
+    </record>
+
+    <record id="action_report_journal_item" model="ir.actions.report">
+        <field name="name">Print Journal Items</field>
+        <field name="model">account.move.line</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_reports.journal_item</field>
+        <field name="report_file">ages_reports.journal_item</field>
+        <field name="paperformat_id" ref="paperformat_ages_reports_landscape"/>
+        <field name="binding_model_id" ref="account.model_account_move_line"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Journal Items'</field>
+    </record>
+
+    <record id="action_report_expense" model="ir.actions.report">
+        <field name="name">Print Expense</field>
+        <field name="model">ages.expense</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_reports.expense</field>
+        <field name="report_file">ages_reports.expense</field>
+        <field name="paperformat_id" ref="paperformat_ages_reports_landscape"/>
+        <field name="binding_model_id" ref="ages_expense.model_ages_expense"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Expense - %s' % (object.description or object.id)</field>
+    </record>
+
+    <record id="action_report_payment" model="ir.actions.report">
+        <field name="name">Print Payment</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_reports.payment</field>
+        <field name="report_file">ages_reports.payment</field>
+        <field name="paperformat_id" ref="paperformat_ages_reports_landscape"/>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Payment - %s' % (object.name or object.id)</field>
+    </record>
+
+    <record id="action_report_rfq" model="ir.actions.report">
+        <field name="name">Print RFQ</field>
+        <field name="model">purchase.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_reports.rfq</field>
+        <field name="report_file">ages_reports.rfq</field>
+        <field name="paperformat_id" ref="paperformat_ages_reports_landscape"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'RFQ - %s' % (object.name or object.id)</field>
+    </record>
+
+    <record id="action_report_po" model="ir.actions.report">
+        <field name="name">Print PO</field>
+        <field name="model">purchase.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_reports.purchase_order</field>
+        <field name="report_file">ages_reports.purchase_order</field>
+        <field name="paperformat_id" ref="paperformat_ages_reports_landscape"/>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'PO - %s' % (object.name or object.id)</field>
+    </record>
+
+    <record id="action_report_receipt" model="ir.actions.report">
+        <field name="name">Print Receipt</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_reports.receipt</field>
+        <field name="report_file">ages_reports.receipt</field>
+        <field name="paperformat_id" ref="paperformat_ages_reports_landscape"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Receipt - %s' % (object.name or object.id)</field>
+    </record>
+</odoo>

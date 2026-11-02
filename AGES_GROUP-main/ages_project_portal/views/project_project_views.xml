@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="edit_project_portal_access_form" model="ir.ui.view">
+        <field name="name">project.project.form.portal.access</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Portal Access" name="portal_access" groups="base.group_system">
+                    <group>
+                        <group string="Portal Credentials">
+                            <label for="portal_link"/>
+                            <div class="o_row">
+                                <field name="portal_link" widget="CopyClipboardChar" readonly="1"/>
+                            </div>
+                            <field name="portal_user_id" required="0" placeholder="e.g. PRJ-1001-USER"/>
+                            <label for="portal_password"/>
+                            <div class="o_row">
+                                <field name="portal_password" password="0"/>
+                                <button name="action_generate_portal_password"
+                                        type="object"
+                                        string="Generate Password"
+                                        class="btn btn-secondary btn-sm ms-2"
+                                        icon="fa-key"/>
+                            </div>
+                        </group>
+                        <group string="Default Shift Times">
+                            <field name="portal_default_check_in" placeholder="08:00"/>
+                            <field name="portal_default_check_out" placeholder="17:00"/>
+                        </group>
+                        <group string="Login Tracking">
+                            <field name="portal_last_login" readonly="1"/>
+                            <field name="portal_last_device" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_dashboard_warning_view_tree" model="ir.ui.view">
+        <field name="name">hr.payroll.dashboard.warning.list</field>
+        <field name="model">hr.payroll.dashboard.warning</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+                <field name="country_id"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_payroll_dashboard_warning_view_form" model="ir.ui.view">
+        <field name="name">hr.payroll.dashboard.warning.form</field>
+        <field name="model">hr.payroll.dashboard.warning</field>
+        <field name="arch" type="xml">
+            <form string="Payroll Dashboard Warning">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="sequence"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="country_id"/>
+                        <field name="active"/>
+                    </group>
+                    <group string="Python Code">
+                        <field name="evaluation_code" widget="code" options="{'mode': 'python'}" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_payroll_dashboard_warning" model="ir.actions.act_window">
+        <field name="name">Dashboard Warnings</field>
+        <field name="res_model">hr.payroll.dashboard.warning</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hr_payroll_dashboard_open" model="ir.actions.client">
+        <field name="name">Payroll Dashboard</field>
+        <field name="path">payroll</field>
+        <field name="tag">ages_hr_payroll_dashboard</field>
+        <field name="target">main</field>
+    </record>
+</odoo>

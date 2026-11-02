@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form_ages_vendor_bill_type" model="ir.ui.view">
+        <field name="name">account.move.form.ages.vendor.bill.type</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="ages_account_dimensions.view_move_form_ages_account_dimensions"/>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ages_contract_id']" position="after">
+                <field name="ages_bill_type"
+                       readonly="state != 'draft'"
+                       invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')"/>
+                <field name="ages_retention_percent"
+                       readonly="state != 'draft'"
+                       invisible="move_type not in ('in_invoice', 'in_refund') or ages_bill_type != 'subcontract' or ages_is_retention_release"/>
+                <field name="ages_is_retention_release" invisible="1"/>
+                <field name="ages_retention_source_move_id" readonly="1"
+                       invisible="not ages_is_retention_release"/>
+                <field name="ages_show_rent_hours" invisible="1"/>
+                <field name="ages_show_rent_days" invisible="1"/>
+                <field name="ages_retention_held_amount" readonly="1"
+                       invisible="move_type not in ('in_invoice', 'in_refund') or ages_is_retention_release or not ages_retention_held_amount"/>
+                <field name="ages_retention_released_amount" readonly="1"
+                       invisible="move_type not in ('in_invoice', 'in_refund') or ages_is_retention_release or not ages_retention_held_amount"/>
+                <field name="ages_retention_remaining_amount" readonly="1"
+                       invisible="move_type not in ('in_invoice', 'in_refund') or ages_is_retention_release or not ages_retention_held_amount"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_form_ages_vendor_retention_buttons" model="ir.ui.view">
+        <field name="name">account.move.form.ages.vendor.retention.buttons</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="priority">45</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_register_payment'][@id='account_invoice_payment_btn']" position="before">
+                <button name="action_ages_open_retention_release_wizard"
+                        type="object"
+                        string="Release Retention"
+                        class="oe_highlight"
+                        invisible="state != 'posted'
+                                   or move_type != 'in_invoice'
+                                   or ages_is_retention_release
+                                   or ages_bill_type != 'subcontract'
+                                   or ages_retention_remaining_amount &lt;= 0"/>
+            </xpath>
+            <xpath expr="//header/button[@name='action_register_payment'][@id='account_invoice_payment_btn']" position="after">
+                <button name="action_ages_open_journal_entry"
+                        type="object"
+                        string="Journal Entry"
+                        groups="account.group_account_readonly"
+                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt') or not id"/>
+            </xpath>
+            <xpath expr="//button[@name='button_draft']" position="after">
+                <button name="action_ages_reset_vendor_bill_draft"
+                        type="object"
+                        string="Reset to Draft"
+                        groups="account.group_account_invoice"
+                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')
+                                   or state != 'posted'
+                                   or show_reset_to_draft_button
+                                   or inalterable_hash
+                                   or need_cancel_request"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_ages_open_journal_entry"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-book"
+                        groups="account.group_account_readonly"
+                        invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt') or not id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Journal Entry</span>
+                    </div>
+                </button>
+                <button name="action_view_ages_retention_releases"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-unlock-alt"
+                        invisible="ages_retention_release_count == 0">
+                    <field name="ages_retention_release_count" widget="statinfo" string="Retention Releases"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='product_id']" position="attributes">
+                <attribute name="domain">(
+                    parent.move_type in ('out_invoice', 'out_refund', 'out_receipt')
+                    and [('sale_ok', '=', True)]
+                    or parent.ages_bill_type in ('subcontract', 'rental')
+                    and [('purchase_ok', '=', True), ('type', '=', 'service')]
+                    or [('purchase_ok', '=', True)]
+                )</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='quantity']" position="before">
+                <field name="ages_is_vendor_retention_line" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='quantity']" position="attributes">
+                <attribute name="column_invisible">parent.ages_bill_type == 'rental'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='quantity']" position="after">
+                <field name="ages_rent_type"
+                       optional="show"
+                       column_invisible="parent.ages_bill_type != 'rental'"
+                       required="parent.ages_bill_type == 'rental' and display_type == 'product' and not ages_is_vendor_retention_line"
+                       readonly="ages_is_vendor_retention_line"/>
+                <field name="ages_rent_hours"
+                       optional="show"
+                       column_invisible="not parent.ages_show_rent_hours"
+                       invisible="ages_rent_type != 'hour'"
+                       required="parent.ages_bill_type == 'rental' and ages_rent_type == 'hour' and display_type == 'product' and not ages_is_vendor_retention_line"
+                       readonly="ages_is_vendor_retention_line or ages_rent_type != 'hour'"/>
+                <field name="ages_rent_days"
+                       optional="show"
+                       column_invisible="not parent.ages_show_rent_days"
+                       invisible="ages_rent_type != 'day'"
+                       required="parent.ages_bill_type == 'rental' and ages_rent_type == 'day' and display_type == 'product' and not ages_is_vendor_retention_line"
+                       readonly="ages_is_vendor_retention_line or ages_rent_type != 'day'"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='product_uom_id'][@groups='uom.group_uom']" position="attributes">
+                <attribute name="column_invisible">parent.ages_bill_type == 'rental'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='product_id']" position="attributes">
+                <attribute name="readonly">ages_is_vendor_retention_line</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='account_id']" position="attributes">
+                <attribute name="readonly">ages_is_vendor_retention_line</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='price_unit']" position="attributes">
+                <attribute name="readonly">ages_is_vendor_retention_line</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter_ages_vendor_bill_type" model="ir.ui.view">
+        <field name="name">account.invoice.select.ages.vendor.bill.type</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='myinvoices']" position="after">
+                <separator/>
+                <filter name="ages_bill_normal" string="Normal Bills"
+                        domain="[('move_type', 'in', ('in_invoice', 'in_refund')), ('ages_bill_type', '=', 'normal')]"/>
+                <filter name="ages_bill_subcontract" string="Subcontractor Bills"
+                        domain="[('move_type', 'in', ('in_invoice', 'in_refund')), ('ages_bill_type', '=', 'subcontract'), ('ages_is_retention_release', '=', False)]"/>
+                <filter name="ages_bill_rental" string="Rental Bills"
+                        domain="[('move_type', 'in', ('in_invoice', 'in_refund')), ('ages_bill_type', '=', 'rental')]"/>
+                <filter name="ages_retention_release" string="Retention Releases"
+                        domain="[('ages_is_retention_release', '=', True)]"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter name="group_ages_bill_type" string="Bill Type" context="{'group_by': 'ages_bill_type'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_bill_filter_ages_vendor_bill_type" model="ir.ui.view">
+        <field name="name">account.bill.select.ages.vendor.bill.type</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_bill_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='draft']" position="before">
+                <filter name="ages_bill_normal" string="Normal Bills"
+                        domain="[('ages_bill_type', '=', 'normal'), ('ages_is_retention_release', '=', False)]"/>
+                <filter name="ages_bill_subcontract" string="Subcontractor Bills"
+                        domain="[('ages_bill_type', '=', 'subcontract'), ('ages_is_retention_release', '=', False)]"/>
+                <filter name="ages_bill_rental" string="Rental Bills"
+                        domain="[('ages_bill_type', '=', 'rental')]"/>
+                <filter name="ages_retention_release" string="Retention Releases"
+                        domain="[('ages_is_retention_release', '=', True)]"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_tree_ages_vendor_bill_type" model="ir.ui.view">
+        <field name="name">account.invoice.list.ages.vendor.bill.type</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_origin']" position="after">
+                <field name="ages_bill_type" optional="hide"
+                       column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

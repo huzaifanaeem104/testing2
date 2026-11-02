@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_executive_summary_pdf" model="ir.actions.report">
+        <field name="name">Executive Summary</field>
+        <field name="model">executive.summary.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_custom_reports.executive_summary_report</field>
+        <field name="report_file">ages_custom_reports.executive_summary_report</field>
+        <field name="paperformat_id" ref="paperformat_balance_sheet"/>
+    </record>
+
+    <record id="action_report_executive_summary_xlsx" model="ir.actions.report">
+        <field name="name">Executive Summary Excel</field>
+        <field name="model">executive.summary.wizard</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">ages_custom_reports.executive_summary_xlsx</field>
+        <field name="report_file">ages_custom_reports.executive_summary_xlsx</field>
+    </record>
+
+    <record id="action_executive_summary_interactive" model="ir.actions.client">
+        <field name="name">Executive Summary</field>
+        <field name="tag">ages_executive_summary_report</field>
+        <field name="target">main</field>
+    </record>
+
+    <menuitem id="menu_executive_summary_report"
+              name="Executive Summary"
+              parent="menu_ages_reporting_management"
+              action="action_executive_summary_interactive"
+              sequence="20"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+</odoo>

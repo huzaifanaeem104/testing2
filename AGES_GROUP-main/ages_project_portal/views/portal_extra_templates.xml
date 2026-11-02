@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- PIN lock screen -->
+    <template id="portal_pin_template" name="Project Portal PIN">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+                <style>
+                    body {
+                        background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 55%, #0f172a 100%);
+                        min-height: 100vh; display: flex; align-items: center; justify-content: center;
+                        font-family: "Segoe UI", system-ui, sans-serif; margin: 0; padding: 1rem;
+                    }
+                    .pin-card {
+                        background: #fff; border-radius: 20px; padding: 2rem 1.5rem;
+                        width: 100%; max-width: 380px; text-align: center;
+                        box-shadow: 0 25px 50px -12px rgba(0,0,0,.45);
+                    }
+                    .pin-input {
+                        letter-spacing: .4em; font-size: 1.5rem; text-align: center;
+                        font-weight: 700; border-radius: 12px;
+                    }
+                    .pin-logo { width: 112px; height: auto; display: block; margin: 0 auto 1rem; }
+                </style>
+            </t>
+            <div class="pin-card">
+                <img class="pin-logo" src="/ages_project_portal/static/src/img/ages_logo.png" alt="AGES"/>
+                <h1 class="h4 fw-bold">Enter Portal PIN</h1>
+                <p class="text-muted small mb-3">Hi <t t-esc="user_name"/>. Unlock this device to continue.</p>
+                <t t-if="error">
+                    <div class="alert alert-danger small py-2"><t t-esc="error"/></div>
+                </t>
+                <form method="post" action="/project/portal/pin">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="password" name="pin" class="form-control pin-input mb-3"
+                           inputmode="numeric" pattern="[0-9]*" maxlength="6"
+                           placeholder="••••" autocomplete="one-time-code" required="required"/>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold py-2 rounded-3">Unlock</button>
+                </form>
+                <div class="mt-3">
+                    <a href="/project/portal/logout" class="small text-muted">Logout</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- History -->
+    <template id="portal_history_template" name="Project Portal History">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+                <style>
+                    body { background: #f1f5f9; font-family: "Segoe UI", system-ui, sans-serif; margin: 0; color: #0f172a; }
+                    .top-bar {
+                        background: #0f172a;
+                        color: #fff;
+                        padding: .75rem 0;
+                        position: sticky; top: 0; z-index: 20;
+                    }
+                    .day-row {
+                        background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
+                        padding: .9rem 1rem; margin-bottom: .6rem; text-decoration: none; color: inherit;
+                        display: block;
+                    }
+                    .day-row:hover { border-color: #93c5fd; background: #eff6ff; }
+                </style>
+            </t>
+            <div class="top-bar">
+                <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="small text-white-50">History</div>
+                        <div class="fw-bold" t-esc="project.ages_portal_display_name()"/>
+                    </div>
+                    <a href="/project/portal" class="btn btn-sm btn-outline-light">Back</a>
+                </div>
+            </div>
+            <div class="container-fluid px-3 py-3" style="max-width:720px;margin:0 auto;">
+                <form class="row g-2 mb-3" method="get" action="/project/portal/history">
+                    <div class="col-6">
+                        <label class="form-label small mb-1">From</label>
+                        <input type="date" name="from" class="form-control" t-att-value="date_from"/>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small mb-1">To</label>
+                        <input type="date" name="to" class="form-control" t-att-value="date_to"/>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100">Apply filter</button>
+                    </div>
+                </form>
+                <t t-if="days">
+                    <t t-foreach="days" t-as="day">
+                        <a t-attf-href="/project/portal?date=#{day['date_str']}" class="day-row">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="fw-bold" t-esc="day['date_fmt']"/>
+                                    <div class="small text-muted">
+                                        Present <t t-esc="day['present']"/> ·
+                                        Absent <t t-esc="day['absent']"/> ·
+                                        OT <t t-esc="'%.1f' % day['overtime']"/>h
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <t t-if="day['confirmed']">
+                                        <span class="badge text-bg-secondary">Confirmed</span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge text-bg-warning">Draft</span>
+                                    </t>
+                                    <div class="small mt-1" t-if="day['failed']">
+                                        <span class="text-danger"><t t-esc="day['failed']"/> sync fail</span>
+                                    </div>
+                                    <div class="small mt-1" t-elif="day['synced']">
+                                        <span class="text-success"><t t-esc="day['synced']"/> synced</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </t>
+                </t>
+                <t t-else="">
+                    <div class="text-center text-muted py-5">No attendance in this range.</div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!-- Day summary printable + WhatsApp -->
+    <template id="portal_summary_template" name="Project Portal Day Summary">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+                <style>
+                    body { background: #f1f5f9; font-family: "Segoe UI", system-ui, sans-serif; margin: 0; color: #0f172a; }
+                    .actions {
+                        position: sticky; top: 0; z-index: 20;
+                        background: #0f172a;
+                        padding: .7rem 0;
+                    }
+                    @media print {
+                        .actions, .no-print { display: none !important; }
+                        body { background: #fff; }
+                    }
+                    .sheet {
+                        background: #fff; border-radius: 16px; padding: 1.25rem;
+                        max-width: 800px; margin: 1rem auto;
+                    }
+                </style>
+            </t>
+            <div class="actions no-print">
+                <div class="container-fluid px-3 d-flex flex-wrap gap-2 justify-content-between align-items-center">
+                    <a href="/project/portal" class="btn btn-sm btn-outline-light">Back</a>
+                    <div class="d-flex gap-2">
+                        <a t-att-href="wa_url" target="_blank" class="btn btn-sm btn-success">
+                            <i class="fa-brands fa-whatsapp me-1"></i> WhatsApp
+                        </a>
+                        <button type="button" class="btn btn-sm btn-light" onclick="window.print()">
+                            <i class="fa-solid fa-print me-1"></i> Print / PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="sheet">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <div class="text-muted small">AGES Attendance Summary</div>
+                        <h1 class="h4 fw-bold mb-0" t-esc="project.ages_portal_display_name()"/>
+                        <div class="text-muted" t-esc="target_date_formatted"/>
+                    </div>
+                    <div class="text-end small">
+                        <div>Present: <strong t-esc="stats['present']"/></div>
+                        <div>Absent: <strong t-esc="stats['absent']"/></div>
+                        <div>Unmarked: <strong t-esc="stats['unmarked']"/></div>
+                        <div>OT: <strong t-esc="'%.1f' % stats['overtime']"/> h</div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Employee Type</th>
+                                <th>Status</th>
+                                <th>IN</th>
+                                <th>OUT</th>
+                                <th>OT</th>
+                                <th>Sync</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="records" t-as="rec">
+                                <tr>
+                                    <td t-esc="rec.employee_id.name"/>
+                                    <td t-esc="rec.ages_employee_type_label()"/>
+                                    <td t-esc="(rec.work_entry_type or 'unmarked').title()"/>
+                                    <td t-esc="rec.check_in or '-'"/>
+                                    <td t-esc="rec.check_out or '-'"/>
+                                    <td t-esc="rec.overtime"/>
+                                    <td>
+                                        <t t-if="rec.sync_state == 'synced'">Synced</t>
+                                        <t t-elif="rec.sync_state == 'failed'">Failed</t>
+                                        <t t-elif="rec.sync_state == 'n/a'">N/A</t>
+                                        <t t-else="">Pending</t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

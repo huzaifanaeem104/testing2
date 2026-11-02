@@ -1,0 +1,745 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ages_enterprise_dashboard.Chart">
+        <div class="o_ages_ent_chart_wrap" t-att-class="sizeClass" t-att-aria-label="ariaLabel" role="img">
+            <canvas t-ref="canvas"/>
+            <div t-if="centerLabel" class="o_ages_ent_chart_center" t-esc="centerLabel"/>
+        </div>
+    </t>
+
+    <t t-name="ages_enterprise_dashboard.Root">
+        <div class="o_ages_ent_dashboard o_action"
+             t-att-class="{
+                'is-nav-open': state.navOpen,
+                'is-nav-collapsed': state.navCollapsed,
+                'has-inspector': state.selectedKpi,
+                'is-executive': isExecutiveShell,
+             }">
+            <a class="o_ages_ent_skip" href="#ages-ent-main">Skip to dashboard</a>
+            <div class="o_ages_ent_nav_backdrop" t-if="state.navOpen" t-on-click="closeNav" role="presentation"/>
+            <div class="o_content o_ages_ent_shell">
+            <aside class="o_ages_ent_nav" id="o_ages_ent_nav" t-att-aria-hidden="state.navCollapsed and !state.navOpen ? 'true' : 'false'">
+                <div class="o_ages_ent_brand">
+                    <div class="o_ages_ent_brand_row">
+                        <div>
+                            <div class="o_ages_ent_brand_title">AGES Dashboard</div>
+                            <div class="o_ages_ent_brand_sub">Management intelligence</div>
+                        </div>
+                        <button type="button"
+                                class="o_ages_ent_nav_close"
+                                aria-label="Close menu"
+                                title="Close menu"
+                                t-on-click="collapseNav">
+                            <i class="fa fa-times"/>
+                        </button>
+                    </div>
+                </div>
+                <nav class="o_ages_ent_nav_list" aria-label="Dashboards">
+                    <t t-foreach="navGroups" t-as="group" t-key="group.id">
+                        <div class="o_ages_ent_nav_group">
+                            <div class="o_ages_ent_nav_group_label" t-esc="group.label"/>
+                            <t t-foreach="group.items" t-as="dash" t-key="dash.key">
+                                <button type="button"
+                                        class="o_ages_ent_nav_item"
+                                        t-att-class="{'is-active': dash.key === state.activeKey}"
+                                        t-att-aria-current="dash.key === state.activeKey ? 'page' : false"
+                                        t-on-click="() => this.switchDashboard(dash.key)">
+                                    <i t-att-class="'fa ' + dash.icon"/>
+                                    <span t-esc="dash.label"/>
+                                </button>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-if="unavailableDashboards.length">
+                        <button type="button" class="o_ages_ent_nav_unavailable_toggle" t-on-click="toggleUnavailable">
+                            <span>Not installed / no access</span>
+                            <i t-att-class="'fa ' + (state.showUnavailable ? 'fa-chevron-up' : 'fa-chevron-down')"/>
+                        </button>
+                        <t t-if="state.showUnavailable">
+                            <t t-foreach="unavailableDashboards" t-as="dash" t-key="dash.key">
+                                <button type="button"
+                                        class="o_ages_ent_nav_item is-unavailable"
+                                        disabled="disabled"
+                                        t-att-title="dash.reason or 'Not installed or not authorized'">
+                                    <i t-att-class="'fa ' + dash.icon"/>
+                                    <span t-esc="dash.label"/>
+                                </button>
+                            </t>
+                        </t>
+                    </t>
+                </nav>
+            </aside>
+            <section class="o_ages_ent_main" id="ages-ent-main">
+                <header class="o_ages_ent_toolbar" t-att-class="{'is-filters-open': state.mobileFiltersOpen}">
+                    <div class="o_ages_ent_toolbar_top">
+                        <button type="button"
+                                class="btn btn-light o_ages_ent_nav_toggle"
+                                t-att-aria-expanded="(state.navOpen or !state.navCollapsed) ? 'true' : 'false'"
+                                aria-controls="o_ages_ent_nav"
+                                aria-label="Toggle dashboard menu"
+                                title="Menu"
+                                t-on-click="toggleNav">
+                            <i class="fa fa-bars"/>
+                        </button>
+                        <div class="o_ages_ent_title">
+                            <div class="o_ages_ent_crumb">AGES Dashboard / <t t-esc="activeDashboard and activeDashboard.label or 'Dashboard'"/></div>
+                            <h1 t-esc="activeDashboard and activeDashboard.label or 'Dashboard'"/>
+                            <div class="o_ages_ent_filter_summary d-lg-none" t-esc="filterSummaryLabel"/>
+                        </div>
+                        <div class="o_ages_ent_meta">
+                            <span t-esc="state.payload.meta and state.payload.meta.scope_label or ''"/>
+                            <t t-if="currency.name"> · <t t-esc="currency.name"/></t>
+                            <t t-if="lastUpdatedLabel"> · Updated <t t-esc="lastUpdatedLabel"/></t>
+                        </div>
+                        <div class="o_ages_ent_actions" t-att-class="{'is-quiet': isExecutiveShell}">
+                            <button type="button"
+                                    class="btn btn-light btn-sm o_ages_ent_filters_toggle d-lg-none"
+                                    t-att-aria-expanded="state.mobileFiltersOpen ? 'true' : 'false'"
+                                    t-att-class="{'is-active': state.mobileFiltersOpen}"
+                                    t-on-click="toggleMobileFilters">
+                                <i class="fa fa-filter me-1"/> Filters
+                            </button>
+                            <button type="button" class="btn btn-light btn-sm o_ages_ent_action_secondary" t-on-click="resetFilters" title="Reset">Reset</button>
+                            <button type="button" class="btn btn-light btn-sm o_ages_ent_action_secondary" t-on-click="exportCsv" title="Export">Export</button>
+                            <button type="button" class="btn btn-light btn-sm o_ages_ent_action_secondary" t-on-click="printDashboard" title="Print">Print</button>
+                            <button type="button" class="btn btn-primary btn-sm" t-on-click="reload">
+                                <i class="fa fa-rotate-right me-1"/><span class="o_ages_ent_refresh_label"> Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="o_ages_ent_scope" t-att-class="{'is-collapsed-mobile': !state.mobileFiltersOpen}">
+                        <div class="o_ages_ent_chips" role="group" aria-label="Period">
+                            <t t-foreach="periodChips" t-as="chip" t-key="chip.key">
+                                <button type="button"
+                                        class="o_ages_ent_chip"
+                                        t-att-class="{'is-active': state.filters.period === chip.key}"
+                                        t-on-click="() => this.setPeriod(chip.key)"
+                                        t-esc="chip.label"/>
+                            </t>
+                            <div class="o_ages_ent_morewrap">
+                                <button type="button" class="o_ages_ent_chip" t-on-click="() => this.state.morePeriods = !state.morePeriods">More periods</button>
+                                <div class="o_ages_ent_popover" t-if="state.morePeriods">
+                                    <t t-foreach="extraPeriods" t-as="period" t-key="period.key">
+                                        <button type="button" class="o_ages_ent_popover_item" t-on-click="() => this.setPeriod(period.key)" t-esc="period.label"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="o_ages_ent_segment" role="group" aria-label="Compare">
+                            <button type="button" class="o_ages_ent_chip" t-att-class="{'is-active': state.filters.compare_period === 'none'}" t-on-click="() => this.setCompare('none')">Off</button>
+                            <button type="button" class="o_ages_ent_chip" t-att-class="{'is-active': state.filters.compare_period === 'previous_period'}" t-on-click="() => this.setCompare('previous_period')">Previous</button>
+                            <button type="button" class="o_ages_ent_chip" t-att-class="{'is-active': state.filters.compare_period === 'previous_year'}" t-on-click="() => this.setCompare('previous_year')">Year ago</button>
+                        </div>
+                        <t t-if="state.filters.period === 'custom'">
+                            <input type="date" class="form-control form-control-sm" t-att-value="state.filters.date_from" t-on-change="onDateFromChange"/>
+                            <input type="date" class="form-control form-control-sm" t-att-value="state.filters.date_to" t-on-change="onDateToChange"/>
+                        </t>
+                        <div class="o_ages_ent_morewrap" t-if="showFilter('company')">
+                            <button type="button" class="o_ages_ent_chip" t-on-click="() => this.toggleDropdown('company')">Legal company</button>
+                            <div class="o_ages_ent_popover" t-if="state.openDropdown === 'company'">
+                                <t t-foreach="state.options.companies or []" t-as="company" t-key="company.id">
+                                    <label class="o_ages_ent_check">
+                                        <input type="checkbox"
+                                               t-att-checked="isSelected('company_ids', company.id) ? 'checked' : None"
+                                               t-on-change="() => this.toggleId('company_ids', company.id)"/>
+                                        <span t-esc="company.name"/>
+                                    </label>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="o_ages_ent_morewrap" t-if="showFilter('sub_company') and state.options.sub_companies and state.options.sub_companies.length">
+                            <button type="button" class="o_ages_ent_chip" t-on-click="() => this.toggleDropdown('sub')">Active company</button>
+                            <div class="o_ages_ent_popover" t-if="state.openDropdown === 'sub'">
+                                <label class="o_ages_ent_check">
+                                    <input type="checkbox"
+                                           t-att-checked="isSelected('sub_company_ids', 0) ? 'checked' : None"
+                                           t-on-change="() => this.toggleId('sub_company_ids', 0)"/>
+                                    <span>Unassigned</span>
+                                </label>
+                                <t t-foreach="state.options.sub_companies" t-as="sub" t-key="sub.id">
+                                    <label class="o_ages_ent_check">
+                                        <input type="checkbox"
+                                               t-att-checked="isSelected('sub_company_ids', sub.id) ? 'checked' : None"
+                                               t-on-change="() => this.toggleId('sub_company_ids', sub.id)"/>
+                                        <span t-esc="sub.name"/>
+                                    </label>
+                                </t>
+                            </div>
+                        </div>
+                        <button type="button" class="o_ages_ent_chip" t-on-click="() => this.state.moreFilters = !state.moreFilters">More filters</button>
+                        <label class="o_ages_ent_autorefresh" t-if="canAutoRefresh">
+                            <input type="checkbox" t-att-checked="state.autoRefresh ? 'checked' : None" t-on-change="onAutoRefreshChange"/>
+                            Auto-refresh
+                        </label>
+                    </div>
+                    <div class="o_ages_ent_more_filters" t-if="state.moreFilters">
+                        <t t-foreach="contextualFilters" t-as="filter" t-key="filter.key">
+                            <div class="o_ages_ent_filter_block">
+                                <div class="o_ages_ent_filter_label" t-esc="filter.placeholder"/>
+                                <input t-if="filter.searchable"
+                                       type="search"
+                                       class="form-control form-control-sm"
+                                       placeholder="Search"
+                                       t-att-value="state.searchQuery[filter.key] or ''"
+                                       t-on-input="(ev) => this.onFilterSearch(filter.key, ev)"/>
+                                <div class="o_ages_ent_filter_options">
+                                    <t t-foreach="filter.options" t-as="option" t-key="option.id">
+                                        <label class="o_ages_ent_check">
+                                            <input type="checkbox"
+                                                   t-att-checked="isSelected(filter.listField, option.id) ? 'checked' : None"
+                                                   t-on-change="() => this.toggleId(filter.listField, option.id)"/>
+                                            <span t-esc="option.name"/>
+                                        </label>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-if="showFilter('approval_status') and (state.options.approval_statuses or []).length">
+                            <select class="form-select form-select-sm" t-on-change="(ev) => this.onValueChange('approval_status', ev)">
+                                <option value="">All approval statuses</option>
+                                <t t-foreach="state.options.approval_statuses" t-as="option" t-key="option.id">
+                                    <option t-att-value="option.id" t-att-selected="state.filters.approval_status === option.id ? 'selected' : None" t-esc="option.name"/>
+                                </t>
+                            </select>
+                        </t>
+                        <t t-if="showFilter('document_status') and (state.options.document_statuses or []).length">
+                            <select class="form-select form-select-sm" t-on-change="(ev) => this.onValueChange('document_status', ev)">
+                                <option value="">All document statuses</option>
+                                <t t-foreach="state.options.document_statuses" t-as="option" t-key="option.id">
+                                    <option t-att-value="option.id" t-att-selected="state.filters.document_status === option.id ? 'selected' : None" t-esc="option.name"/>
+                                </t>
+                            </select>
+                        </t>
+                        <t t-if="showFilter('labour_category') and (state.options.labour_categories or []).length">
+                            <select class="form-select form-select-sm" t-on-change="(ev) => this.onValueChange('labour_category', ev)">
+                                <option value="">All labour categories</option>
+                                <t t-foreach="state.options.labour_categories" t-as="option" t-key="option.id">
+                                    <option t-att-value="option.id" t-att-selected="state.filters.labour_category === option.id ? 'selected' : None" t-esc="option.name"/>
+                                </t>
+                            </select>
+                        </t>
+                    </div>
+                    <div class="o_ages_ent_active_chips" t-if="activeChips.length">
+                        <t t-foreach="activeChips" t-as="chip" t-key="chip.field + '-' + chip.id">
+                            <button type="button" class="o_ages_ent_chip is-on" t-on-click="() => this.removeChip(chip)">
+                                <span t-esc="chip.label"/> ×
+                            </button>
+                        </t>
+                    </div>
+                </header>
+                <div class="o_ages_ent_body">
+                    <t t-if="state.refreshing">
+                        <div class="o_ages_ent_refreshing" aria-live="polite">Refreshing current section…</div>
+                    </t>
+                    <t t-if="state.error">
+                        <div class="alert alert-danger" t-esc="state.error"/>
+                    </t>
+                    <t t-if="state.loading and !hasPayload">
+                        <div class="o_ages_ent_loading" aria-label="Loading dashboard" aria-live="polite">
+                            <div class="o_ages_ent_skeleton"/>
+                            <div class="o_ages_ent_skeleton"/>
+                            <div class="o_ages_ent_skeleton"/>
+                            <div class="o_ages_ent_skeleton"/>
+                            <div class="o_ages_ent_skeleton"/>
+                            <div class="o_ages_ent_skeleton"/>
+                            <div class="o_ages_ent_skeleton is-chart"/>
+                            <div class="o_ages_ent_skeleton is-chart"/>
+                        </div>
+                    </t>
+                    <t t-elif="state.payload.available === false">
+                        <div class="o_ages_ent_empty" t-esc="state.payload.reason or 'This dashboard is not available.'"/>
+                    </t>
+                    <t t-elif="!hasPayload">
+                        <div class="o_ages_ent_empty">No dashboard data loaded for this section.</div>
+                    </t>
+                    <t t-elif="hasPayload">
+                        <t t-if="state.payload.scoped_note">
+                            <div class="o_ages_ent_empty is-soft" t-esc="state.payload.scoped_note"/>
+                        </t>
+                        <t t-if="warningPreview">
+                            <div class="o_ages_ent_warn">
+                                <span t-esc="warningPreview"/>
+                                <button type="button" class="btn btn-link btn-sm" t-if="(state.payload.meta.warnings or []).length &gt; 1" t-on-click="() => this.state.warnOpen = !state.warnOpen">Details</button>
+                                <t t-if="state.warnOpen">
+                                    <t t-foreach="state.payload.meta.warnings" t-as="warning" t-key="warning_index">
+                                        <div t-esc="warning"/>
+                                    </t>
+                                </t>
+                            </div>
+                        </t>
+                        <div class="o_ages_ent_grid" t-att-class="{'is-dim': state.refreshing}">
+                            <t t-if="isExecutiveShell and executiveBriefing">
+                                <div class="o_ages_ent_cell span-12">
+                                    <section class="o_ages_ent_briefing" aria-label="Today's read">
+                                        <div class="o_ages_ent_briefing_main">
+                                            <div class="o_ages_ent_briefing_eyebrow">Today's read</div>
+                                            <div class="o_ages_ent_briefing_headline" t-esc="executiveBriefing.headline"/>
+                                            <ul class="o_ages_ent_briefing_facts" t-if="executiveBriefing.facts.length">
+                                                <t t-foreach="executiveBriefing.facts" t-as="fact" t-key="fact_index">
+                                                    <li t-esc="fact"/>
+                                                </t>
+                                            </ul>
+                                        </div>
+                                        <div class="o_ages_ent_briefing_actions">
+                                            <button type="button"
+                                                    class="btn btn-primary btn-sm"
+                                                    t-if="executiveBriefing.primaryAction"
+                                                    t-on-click="() => this.openAction(executiveBriefing.primaryAction)"
+                                                    t-esc="executiveBriefing.primaryLabel"/>
+                                            <button type="button" class="btn btn-light btn-sm" t-on-click="openActionCenter">Open Action Center</button>
+                                        </div>
+                                    </section>
+                                </div>
+                            </t>
+                            <t t-foreach="layoutSections" t-as="section" t-key="section.id">
+                                <t t-if="section.type === 'commentary' and !isExecutiveShell and state.payload.commentary and state.payload.commentary.length">
+                                    <div class="o_ages_ent_cell span-12">
+                                        <div class="o_ages_ent_commentary">
+                                            <t t-foreach="state.payload.commentary" t-as="line" t-key="line_index">
+                                                <div t-esc="line"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-elif="section.type === 'kpis'">
+                                    <div t-att-class="'o_ages_ent_cell span-' + (section.span or 12)">
+                                        <div t-if="section.title" class="o_ages_ent_band_title" t-esc="section.title"/>
+                                        <t t-if="isCommandHero(section)">
+                                            <div class="o_ages_ent_command" t-att-class="{'has-focus': state.focusedKpi}">
+                                                <div class="o_ages_ent_command_primary">
+                                                    <div class="o_ages_ent_command_eyebrow">Financial health</div>
+                                                    <div class="o_ages_ent_command_pair">
+                                                        <t t-foreach="heroPrimaryKpis(section)" t-as="kpi" t-key="kpi.key">
+                                                            <article class="o_ages_ent_kpi is-hero is-primary"
+                                                                     t-att-class="directionClass(kpi) + kpiFocusClass(kpi)"
+                                                                     t-att-aria-describedby="'kpi-basis-' + kpi.key">
+                                                                <div class="o_ages_ent_kpi_head">
+                                                                    <button type="button" class="o_ages_ent_kpi_label is-focusable" t-on-click="() => this.toggleKpiFocus(kpi)" t-esc="kpi.label" title="Focus this metric"/>
+                                                                    <button type="button" class="o_ages_ent_info" t-on-click.stop="(ev) => this.onKpiInfoClick(kpi, ev)" aria-label="Why this number">i</button>
+                                                                </div>
+                                                                <button type="button" class="o_ages_ent_kpi_value" t-on-click="() => this.onKpiValueClick(kpi)" t-esc="kpi.formatted"/>
+                                                                <div class="o_ages_ent_kpi_delta" t-if="showKpiDelta(kpi)">
+                                                                    <span class="o_ages_ent_delta_chip" t-att-class="directionClass(kpi)">
+                                                                        <t t-esc="(kpi.percent or 0).toFixed ? kpi.percent.toFixed(1) : kpi.percent"/>%
+                                                                    </span>
+                                                                    <t t-if="kpiCompareLabel(kpi)"> <span class="o_ages_ent_kpi_compare" t-esc="kpiCompareLabel(kpi)"/></t>
+                                                                </div>
+                                                                <div class="o_ages_ent_kpi_delta is-quiet" t-elif="state.filters.compare_period === 'none'">
+                                                                    <span class="o_ages_ent_kpi_compare">Compare off</span>
+                                                                </div>
+                                                                <div class="o_ages_ent_progress" t-if="kpi.target">
+                                                                    <div class="o_ages_ent_progress_fill" t-att-class="'is-' + (kpi.target_status or 'ok')" t-att-style="'width:' + targetPercent(kpi) + '%'"/>
+                                                                </div>
+                                                                <div class="o_ages_ent_kpi_basis" t-att-id="'kpi-basis-' + kpi.key" t-if="kpi.basis or kpi.date_field or kpi.unavailable">
+                                                                    <t t-esc="kpi.basis or ''"/><t t-if="kpi.date_field"> · <t t-esc="kpi.date_field"/></t>
+                                                                </div>
+                                                                <div class="o_ages_ent_kpi_pop">
+                                                                    <t t-esc="kpi.basis or kpi.tooltip or 'Open details'"/>
+                                                                    <t t-if="kpi.action_key"> · click value to open records</t>
+                                                                </div>
+                                                                <t t-if="sparkSpec(kpi) and chartHasData(sparkSpec(kpi))">
+                                                                    <AgesEntChart spec="sparkSpec(kpi)" currency="currency"/>
+                                                                </t>
+                                                            </article>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                <div class="o_ages_ent_command_secondary">
+                                                    <t t-foreach="heroSecondaryKpis(section)" t-as="kpi" t-key="kpi.key">
+                                                        <article class="o_ages_ent_kpi is-hero is-secondary"
+                                                                 t-att-class="directionClass(kpi) + kpiFocusClass(kpi)"
+                                                                 t-att-aria-describedby="'kpi-basis-' + kpi.key">
+                                                            <div class="o_ages_ent_kpi_head">
+                                                                <button type="button" class="o_ages_ent_kpi_label is-focusable" t-on-click="() => this.toggleKpiFocus(kpi)" t-esc="kpi.label" title="Focus this metric"/>
+                                                                <button type="button" class="o_ages_ent_info" t-on-click.stop="(ev) => this.onKpiInfoClick(kpi, ev)" aria-label="Why this number">i</button>
+                                                            </div>
+                                                            <button type="button" class="o_ages_ent_kpi_value" t-on-click="() => this.onKpiValueClick(kpi)" t-esc="kpi.formatted"/>
+                                                            <div class="o_ages_ent_kpi_delta" t-if="showKpiDelta(kpi)">
+                                                                <span class="o_ages_ent_delta_chip" t-att-class="directionClass(kpi)">
+                                                                    <t t-esc="(kpi.percent or 0).toFixed ? kpi.percent.toFixed(1) : kpi.percent"/>%
+                                                                </span>
+                                                                <t t-if="kpiCompareLabel(kpi)"> <span class="o_ages_ent_kpi_compare" t-esc="kpiCompareLabel(kpi)"/></t>
+                                                            </div>
+                                                            <div class="o_ages_ent_kpi_delta is-quiet" t-elif="state.filters.compare_period === 'none'">
+                                                                <span class="o_ages_ent_kpi_compare">Compare off</span>
+                                                            </div>
+                                                            <div class="o_ages_ent_progress" t-if="kpi.target">
+                                                                <div class="o_ages_ent_progress_fill" t-att-class="'is-' + (kpi.target_status or 'ok')" t-att-style="'width:' + targetPercent(kpi) + '%'"/>
+                                                            </div>
+                                                            <div class="o_ages_ent_kpi_basis" t-att-id="'kpi-basis-' + kpi.key" t-if="kpi.basis or kpi.date_field or kpi.unavailable">
+                                                                <t t-esc="kpi.basis or ''"/><t t-if="kpi.date_field"> · <t t-esc="kpi.date_field"/></t>
+                                                            </div>
+                                                            <div class="o_ages_ent_kpi_pop">
+                                                                <t t-esc="kpi.basis or kpi.tooltip or 'Open details'"/>
+                                                                <t t-if="kpi.action_key"> · click value to open records</t>
+                                                            </div>
+                                                            <t t-if="sparkSpec(kpi) and chartHasData(sparkSpec(kpi))">
+                                                                <AgesEntChart spec="sparkSpec(kpi)" currency="currency"/>
+                                                            </t>
+                                                        </article>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <div t-else="" t-att-class="section.hero ? 'o_ages_ent_hero' : 'o_ages_ent_kpis'">
+                                            <t t-foreach="sectionKpis(section)" t-as="kpi" t-key="kpi.key">
+                                                <article class="o_ages_ent_kpi" t-att-class="directionClass(kpi) + (section.hero ? ' is-hero' : '')" t-att-aria-describedby="'kpi-basis-' + kpi.key">
+                                                    <div class="o_ages_ent_kpi_head">
+                                                        <div class="o_ages_ent_kpi_label" t-esc="kpi.label"/>
+                                                        <button type="button" class="o_ages_ent_info" t-on-click.stop="(ev) => this.onKpiInfoClick(kpi, ev)" aria-label="Why this number">i</button>
+                                                    </div>
+                                                    <button type="button" class="o_ages_ent_kpi_value" t-on-click="() => this.onKpiValueClick(kpi)" t-esc="kpi.formatted"/>
+                                                    <div class="o_ages_ent_kpi_delta" t-if="!kpi.unavailable and kpi.percent !== false and kpi.percent !== undefined">
+                                                        <t t-esc="(kpi.percent or 0).toFixed ? kpi.percent.toFixed(1) : kpi.percent"/>%
+                                                        <t t-if="kpi.comparison_label"> <span class="o_ages_ent_kpi_compare" t-esc="kpi.comparison_label"/></t>
+                                                    </div>
+                                                    <div class="o_ages_ent_progress" t-if="kpi.target">
+                                                        <div class="o_ages_ent_progress_fill" t-att-class="'is-' + (kpi.target_status or 'ok')" t-att-style="'width:' + targetPercent(kpi) + '%'"/>
+                                                    </div>
+                                                    <div class="o_ages_ent_kpi_basis" t-att-id="'kpi-basis-' + kpi.key" t-if="kpi.basis or kpi.date_field or kpi.unavailable">
+                                                        <t t-esc="kpi.basis or ''"/><t t-if="kpi.date_field"> · <t t-esc="kpi.date_field"/></t>
+                                                    </div>
+                                                    <t t-if="section.hero and sparkSpec(kpi) and chartHasData(sparkSpec(kpi))">
+                                                        <AgesEntChart spec="sparkSpec(kpi)" currency="currency"/>
+                                                    </t>
+                                                </article>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-elif="section.type === 'charts'">
+                                    <t t-foreach="section.keys or []" t-as="chartKey" t-key="chartKey">
+                                        <div t-if="chartSpec(chartKey)" t-att-class="'o_ages_ent_cell span-' + (section.span or 6)">
+                                            <div class="o_ages_ent_viz"
+                                                 t-att-class="{
+                                                    'is-lead': section.span &gt;= 8,
+                                                    'is-emphasized': isChartEmphasized(chartKey),
+                                                    'is-dimmed': state.focusedKpi and !isChartEmphasized(chartKey)
+                                                 }">
+                                                <div class="o_ages_ent_viz_head">
+                                                    <div>
+                                                        <h2 t-esc="chartSpec(chartKey).title"/>
+                                                        <div class="o_ages_ent_viz_sub" t-if="chartSpec(chartKey).subtitle or chartSpec(chartKey).unit" t-esc="(chartSpec(chartKey).subtitle or '') + (chartSpec(chartKey).unit ? ' · ' + chartSpec(chartKey).unit : '')"/>
+                                                    </div>
+                                                    <div class="o_ages_ent_viz_tools">
+                                                        <t t-if="chartSpec(chartKey).allow_toggle">
+                                                            <div class="o_ages_ent_segmented" role="group" aria-label="Chart type">
+                                                                <button type="button" class="o_ages_ent_seg" t-att-class="{'is-active': chartTypeActive(chartKey, 'bar')}" t-on-click="() => this.setChartType(chartKey, 'bar')">Bar</button>
+                                                                <button type="button" class="o_ages_ent_seg" t-att-class="{'is-active': chartTypeActive(chartKey, 'line')}" t-on-click="() => this.setChartType(chartKey, 'line')">Line</button>
+                                                                <button type="button" class="o_ages_ent_seg" t-att-class="{'is-active': chartTypeActive(chartKey, 'area')}" t-on-click="() => this.setChartType(chartKey, 'area')">Area</button>
+                                                            </div>
+                                                        </t>
+                                                        <button type="button"
+                                                                class="o_ages_ent_chip is-tool"
+                                                                t-if="isExecutiveShell and chartSpec(chartKey).allow_toggle"
+                                                                t-att-class="{'is-active': isHighlightLatest(chartKey)}"
+                                                                t-on-click="() => this.toggleHighlightLatest(chartKey)">
+                                                            Highlight latest
+                                                        </button>
+                                                        <button type="button"
+                                                                class="o_ages_ent_info"
+                                                                t-if="chartSpec(chartKey).why_key and kpiByKey(chartSpec(chartKey).why_key)"
+                                                                t-on-click.stop="(ev) => this.onChartWhyClick(chartKey, ev)"
+                                                                aria-label="Why this chart">i</button>
+                                                    </div>
+                                                </div>
+                                                <div class="o_ages_ent_series" t-if="isExecutiveShell and chartSeriesLabels(chartKey).length &gt; 1 and chartKey === 'pnl'">
+                                                    <t t-foreach="chartSeriesLabels(chartKey)" t-as="seriesLabel" t-key="seriesLabel">
+                                                        <button type="button"
+                                                                class="o_ages_ent_series_btn"
+                                                                t-att-class="{'is-active': isSeriesVisible(chartKey, seriesLabel)}"
+                                                                t-on-click="() => this.toggleChartSeries(chartKey, seriesLabel)"
+                                                                t-esc="seriesLabel"/>
+                                                    </t>
+                                                </div>
+                                                <t t-if="chartSpec(chartKey).heatstrip and chartSpec(chartKey).heatstrip.length">
+                                                    <div class="o_ages_ent_heatstrip" role="list">
+                                                        <t t-foreach="chartSpec(chartKey).heatstrip" t-as="cell" t-key="cell.label">
+                                                            <button type="button" class="o_ages_ent_heat" t-att-class="'is-' + (cell.tone or 'muted')" t-on-click="() => this.onHeatstripClick(chartSpec(chartKey), cell)">
+                                                                <span t-esc="cell.label"/>
+                                                                <strong t-esc="cell.value"/>
+                                                            </button>
+                                                        </t>
+                                                    </div>
+                                                </t>
+                                                <t t-if="chartHasData(chartSpec(chartKey))">
+                                                    <AgesEntChart spec="chartSpec(chartKey)" currency="currency" onSelect.bind="(payload) => this.onChartSelect(chartSpec(chartKey), payload)"/>
+                                                    <div class="o_ages_ent_statpills" t-if="chartStatPills(chartKey).length">
+                                                        <t t-foreach="chartStatPills(chartKey)" t-as="pill" t-key="pill.label">
+                                                            <div class="o_ages_ent_statpill">
+                                                                <span t-esc="pill.label"/>
+                                                                <strong t-esc="pill.value"/>
+                                                            </div>
+                                                        </t>
+                                                    </div>
+                                                    <div class="o_ages_ent_viz_note" t-if="chartHistoryNote(chartSpec(chartKey))">
+                                                        <span t-esc="chartHistoryNote(chartSpec(chartKey))"/>
+                                                        <button type="button" class="btn btn-link btn-sm" t-if="isExecutiveShell" t-on-click="suggestBroaderPeriod">Switch period</button>
+                                                    </div>
+                                                </t>
+                                                <div t-else="" class="o_ages_ent_chart_empty">
+                                                    No chart data in this scope.
+                                                    <div class="small" t-esc="state.payload.meta and state.payload.meta.scope_label or ''"/>
+                                                </div>
+                                                <div class="o_ages_ent_viz_foot" t-if="chartSpec(chartKey).action_key and chartHasData(chartSpec(chartKey))">Click a bar to open the list</div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </t>
+                                <t t-elif="section.type === 'alerts'">
+                                    <div class="o_ages_ent_cell span-12">
+                                        <div class="o_ages_ent_band_title" t-att-class="{'is-attention': isBriefingAlerts(section)}">
+                                            <div class="o_ages_ent_band_copy">
+                                                <span t-esc="section.title or 'Attention'"/>
+                                                <div class="o_ages_ent_band_help" t-if="isBriefingAlerts(section)">Sorted by exposure × age · click rank to focus · Review to resolve</div>
+                                            </div>
+                                            <label class="o_ages_ent_autorefresh is-quiet">
+                                                <input type="checkbox" t-att-checked="state.showCleared ? 'checked' : None" t-on-change="() => this.state.showCleared = !state.showCleared"/>
+                                                Show clear queues
+                                            </label>
+                                        </div>
+                                        <t t-if="!visibleAlerts.length">
+                                            <div class="o_ages_ent_empty is-soft is-success">No open credit exceptions in this scope.</div>
+                                        </t>
+                                        <t t-elif="isBriefingAlerts(section)">
+                                            <div class="o_ages_ent_workbench" t-att-class="{'has-focus': state.focusedQueue}">
+                                                <t t-foreach="flatAlertQueues(section)" t-as="queue" t-key="queue.key">
+                                                    <article class="o_ages_ent_workitem"
+                                                             t-att-class="'is-' + (queue.severity or 'warning') + queueFocusClass(queue)">
+                                                        <button type="button" class="o_ages_ent_workitem_main" t-on-click="() => this.focusQueue(queue)">
+                                                            <span class="o_ages_ent_queue_rail" aria-hidden="true"/>
+                                                            <div class="o_ages_ent_workitem_body">
+                                                                <div class="o_ages_ent_workitem_top">
+                                                                    <span class="o_ages_ent_workitem_rank">#<t t-esc="queue.rank"/></span>
+                                                                    <span class="o_ages_ent_queue_count" t-esc="queue.count"/>
+                                                                </div>
+                                                                <div class="o_ages_ent_queue_title"><span t-esc="queue.title"/></div>
+                                                                <div class="o_ages_ent_queue_meta" t-if="queue.amount_formatted">
+                                                                    <span class="o_ages_ent_queue_meta_label">Exposure</span>
+                                                                    <span t-esc="queue.amount_formatted"/>
+                                                                </div>
+                                                                <div class="o_ages_ent_queue_meta" t-if="queue.oldest_days !== false and queue.oldest_days !== undefined">
+                                                                    <span class="o_ages_ent_queue_meta_label">Oldest</span>
+                                                                    <span><t t-esc="queue.oldest_days"/>d</span>
+                                                                </div>
+                                                                <div class="o_ages_ent_queue_why" t-if="queue.why" t-esc="queue.why"/>
+                                                            </div>
+                                                        </button>
+                                                        <button type="button" class="o_ages_ent_workitem_cta" t-on-click.stop="() => this.openAction(queue.action_key)">Review</button>
+                                                    </article>
+                                                </t>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-foreach="queueGroups" t-as="group" t-key="group.key">
+                                                <div class="o_ages_ent_queue_group">
+                                                    <div class="o_ages_ent_queue_group_label" t-esc="group.label"/>
+                                                    <div class="o_ages_ent_queues">
+                                                        <t t-foreach="group.items" t-as="queue" t-key="queue.key">
+                                                            <button type="button" class="o_ages_ent_queue" t-att-class="'is-' + (queue.severity or 'warning')" t-on-click="() => this.openAction(queue.action_key)">
+                                                                <div class="o_ages_ent_queue_title">
+                                                                    <span t-esc="queue.title"/>
+                                                                    <strong t-esc="queue.count"/>
+                                                                </div>
+                                                                <div class="o_ages_ent_queue_meta" t-if="queue.amount_formatted or queue.oldest_days !== false">
+                                                                    <t t-if="queue.amount_formatted"><span t-esc="queue.amount_formatted"/></t>
+                                                                    <t t-if="queue.oldest_days !== false and queue.oldest_days !== undefined">
+                                                                        · oldest <t t-esc="queue.oldest_days"/>d
+                                                                    </t>
+                                                                </div>
+                                                                <div class="o_ages_ent_queue_why" t-if="queue.why" t-esc="queue.why"/>
+                                                            </button>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </t>
+                                    </div>
+                                </t>
+                                <t t-elif="section.type === 'watchlist'">
+                                    <div class="o_ages_ent_cell span-12">
+                                        <div class="o_ages_ent_band_title">
+                                            <div class="o_ages_ent_band_copy">
+                                                <span t-esc="section.title or 'Watchlist'"/>
+                                                <div class="o_ages_ent_band_help">Exceptions worth a glance · click a row to drill</div>
+                                            </div>
+                                        </div>
+                                        <div class="o_ages_ent_watchlist">
+                                            <t t-foreach="section.keys or []" t-as="tableKey" t-key="tableKey">
+                                                <div class="o_ages_ent_watchcard" t-if="watchlistSide(tableKey)"
+                                                     t-att-class="{'is-related': isWatchlistRelated(tableKey)}">
+                                                    <div class="o_ages_ent_watchcard_head">
+                                                        <h2 t-esc="watchlistSide(tableKey).title"/>
+                                                        <button type="button"
+                                                                class="btn btn-link btn-sm"
+                                                                t-if="watchlistSide(tableKey).total &gt; watchlistSide(tableKey).limit"
+                                                                t-on-click="() => this.toggleWatchlist(tableKey)">
+                                                            <t t-if="watchlistSide(tableKey).expanded">Show less</t>
+                                                            <t t-else="">View full list (<t t-esc="watchlistSide(tableKey).total"/>)</t>
+                                                        </button>
+                                                    </div>
+                                                    <t t-if="!watchlistSide(tableKey).total">
+                                                        <div class="o_ages_ent_empty is-soft" t-esc="watchlistSide(tableKey).empty"/>
+                                                    </t>
+                                                    <table class="table table-sm align-middle o_ages_ent_table" t-else="">
+                                                        <thead>
+                                                            <tr>
+                                                                <t t-foreach="watchlistSide(tableKey).columns" t-as="col" t-key="col.key">
+                                                                    <th t-att-class="{'is-num': isNumericColumn(col)}" t-esc="col.label"/>
+                                                                </t>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <t t-foreach="watchlistSide(tableKey).rows" t-as="row" t-key="row_index">
+                                                                <tr class="o_ages_ent_row" t-on-click="() => this.onRowClick(row)">
+                                                                    <t t-foreach="watchlistSide(tableKey).columns" t-as="col" t-key="col.key">
+                                                                        <td t-att-class="{'is-num': isNumericColumn(col), 'is-name': col.key === 'name'}" t-esc="row[col.key]"/>
+                                                                    </t>
+                                                                </tr>
+                                                            </t>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-elif="section.type === 'quality'">
+                                    <div class="o_ages_ent_cell span-12">
+                                        <div class="o_ages_ent_quality">
+                                            <t t-foreach="qualityCards(section)" t-as="card" t-key="card.key">
+                                                <button type="button" class="o_ages_ent_quality_card" t-on-click="() => this.openAction(card.action_key)" t-att-title="card.why">
+                                                    <div class="o_ages_ent_quality_title" t-esc="card.title"/>
+                                                    <div class="o_ages_ent_quality_value" t-if="card.available">
+                                                        <t t-esc="card.percent"/>%
+                                                    </div>
+                                                    <div class="o_ages_ent_quality_value is-muted" t-else="">Unavailable</div>
+                                                    <div class="o_ages_ent_progress" t-if="card.available">
+                                                        <div class="o_ages_ent_progress_fill" t-att-style="'width:' + (card.percent or 0) + '%'"/>
+                                                    </div>
+                                                    <div class="text-muted small" t-if="card.available">
+                                                        <t t-esc="card.assigned"/> of <t t-esc="card.total"/> · missing <t t-esc="card.missing"/>
+                                                    </div>
+                                                    <div class="o_ages_ent_quality_why" t-esc="card.why"/>
+                                                </button>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-elif="section.type === 'tables'">
+                                    <t t-foreach="section.keys or []" t-as="tableKey" t-key="tableKey">
+                                        <div t-if="tableEntry(tableKey)" class="o_ages_ent_cell span-12">
+                                            <div class="o_ages_ent_card">
+                                                <h2 t-esc="tableEntry(tableKey).table.title"/>
+                                                <t t-if="!tableEntry(tableKey).total">
+                                                    <div class="o_ages_ent_empty is-soft" t-esc="tableEntry(tableKey).table.empty or 'No records in this scope.'"/>
+                                                </t>
+                                                <div class="table-responsive" t-else="">
+                                                    <table class="table table-sm align-middle o_ages_ent_table">
+                                                        <caption class="visually-hidden" t-esc="tableEntry(tableKey).table.title"/>
+                                                        <thead>
+                                                            <tr>
+                                                                <t t-foreach="tableEntry(tableKey).table.columns" t-as="col" t-key="col.key">
+                                                                    <th class="o_ages_ent_th" t-att-class="{'is-num': isNumericColumn(col)}" t-on-click="() => this.sortTable(tableKey, col.key)">
+                                                                        <t t-esc="col.label"/>
+                                                                        <t t-if="tableEntry(tableKey).sort and tableEntry(tableKey).sort.key === col.key">
+                                                                            <span t-esc="tableEntry(tableKey).sort.dir === 'asc' ? ' ▲' : ' ▼'"/>
+                                                                        </t>
+                                                                    </th>
+                                                                </t>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <t t-foreach="tableEntry(tableKey).rows" t-as="row" t-key="row_index">
+                                                                <tr class="o_ages_ent_row" t-on-click="() => this.onRowClick(row)">
+                                                                    <t t-foreach="tableEntry(tableKey).table.columns" t-as="col" t-key="col.key">
+                                                                        <td t-att-data-label="col.label" t-att-class="{'is-num': isNumericColumn(col), 'is-name': col.key === 'name'}" t-esc="row[col.key]"/>
+                                                                    </t>
+                                                                </tr>
+                                                            </t>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="o_ages_ent_pager" t-if="tableEntry(tableKey).pages &gt; 1">
+                                                        <button type="button" class="btn btn-light btn-sm" t-att-disabled="tableEntry(tableKey).page === 0 ? 'disabled' : None" t-on-click="() => this.setTablePage(tableKey, tableEntry(tableKey).page - 1)">Prev</button>
+                                                        <span>Page <t t-esc="tableEntry(tableKey).page + 1"/> / <t t-esc="tableEntry(tableKey).pages"/></span>
+                                                        <button type="button" class="btn btn-light btn-sm" t-att-disabled="tableEntry(tableKey).page + 1 >= tableEntry(tableKey).pages ? 'disabled' : None" t-on-click="() => this.setTablePage(tableKey, tableEntry(tableKey).page + 1)">Next</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </t>
+                                <t t-elif="section.type === 'more' and moreBundle.hasMore">
+                                    <div class="o_ages_ent_cell span-12">
+                                        <button type="button" class="o_ages_ent_more_toggle" t-on-click="() => this.state.moreIndicators = !state.moreIndicators">
+                                            <span t-esc="section.title or 'More indicators'"/>
+                                            <i t-att-class="'fa ' + (state.moreIndicators ? 'fa-chevron-up' : 'fa-chevron-down')"/>
+                                        </button>
+                                        <t t-if="state.moreIndicators">
+                                            <div class="o_ages_ent_kpis" t-if="moreBundle.kpis.length">
+                                                <t t-foreach="moreBundle.kpis" t-as="kpi" t-key="kpi.key">
+                                                    <article class="o_ages_ent_kpi" t-att-class="directionClass(kpi)">
+                                                        <div class="o_ages_ent_kpi_head">
+                                                            <div class="o_ages_ent_kpi_label" t-esc="kpi.label"/>
+                                                            <button type="button" class="o_ages_ent_info" t-on-click.stop="(ev) => this.onKpiInfoClick(kpi, ev)">i</button>
+                                                        </div>
+                                                        <button type="button" class="o_ages_ent_kpi_value" t-on-click="() => this.onKpiValueClick(kpi)" t-esc="kpi.formatted"/>
+                                                        <div class="o_ages_ent_kpi_basis" t-if="kpi.basis" t-esc="kpi.basis"/>
+                                                    </article>
+                                                </t>
+                                            </div>
+                                            <div class="o_ages_ent_grid" t-if="moreBundle.charts.length">
+                                                <t t-foreach="moreBundle.charts" t-as="entry" t-key="entry[0]">
+                                                    <div class="o_ages_ent_cell span-6" t-if="chartHasData(entry[1]) or entry[1]">
+                                                        <div class="o_ages_ent_viz">
+                                                            <h2 t-esc="entry[1].title"/>
+                                                            <t t-if="chartHasData(entry[1])">
+                                                                <AgesEntChart spec="entry[1]" currency="currency" onSelect.bind="(payload) => this.onChartSelect(entry[1], payload)"/>
+                                                            </t>
+                                                            <div t-else="" class="o_ages_ent_chart_empty">No chart data in this scope.</div>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                        <t t-if="state.payload.progress">
+                            <div class="o_ages_ent_card o_ages_ent_coverage">
+                                <div class="o_ages_ent_kpi_label" t-esc="state.payload.progress.label or 'Progress'"/>
+                                <div class="o_ages_ent_progress">
+                                    <div class="o_ages_ent_progress_fill" t-att-style="'width:' + (state.payload.progress.value or 0) + '%'"/>
+                                </div>
+                                <div t-esc="(state.payload.progress.value or 0) + '%'"/>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-if="state.selectedKpi">
+                        <aside class="o_ages_ent_inspector" t-ref="inspector" role="dialog" aria-modal="true" aria-label="Why this number">
+                            <div class="o_ages_ent_why_head">
+                                <strong t-esc="state.selectedKpi.label"/>
+                                <button type="button" class="btn btn-light btn-sm" t-on-click="closeWhyPanel">Close</button>
+                            </div>
+                            <div class="o_ages_ent_kpi_value" t-esc="state.selectedKpi.formatted"/>
+                            <div class="text-muted small" t-esc="state.selectedKpi.formula or state.selectedKpi.tooltip"/>
+                            <div class="text-muted small" t-if="state.selectedKpi.comparison_label" t-esc="state.selectedKpi.comparison_label"/>
+                            <div class="text-muted small" t-if="state.selectedKpi.target_formatted">Target: <t t-esc="state.selectedKpi.target_formatted"/></div>
+                            <div class="text-muted small" t-if="!state.selectedKpi.target">Target not configured</div>
+                            <div class="o_ages_ent_progress" t-if="state.selectedKpi.target">
+                                <div class="o_ages_ent_progress_fill" t-att-class="'is-' + (state.selectedKpi.target_status or 'ok')" t-att-style="'width:' + targetPercent(state.selectedKpi) + '%'"/>
+                            </div>
+                            <div class="text-muted small" t-if="state.selectedKpi.basis">Basis: <t t-esc="state.selectedKpi.basis"/></div>
+                            <div class="text-muted small" t-if="state.selectedKpi.date_field">Date field: <t t-esc="state.selectedKpi.date_field"/></div>
+                            <div class="text-muted small" t-if="state.selectedKpi.model">Model: <t t-esc="state.selectedKpi.model"/></div>
+                            <div class="text-muted small" t-if="state.selectedKpi.scoped">Scope: <t t-esc="state.selectedKpi.scoped"/></div>
+                            <div class="text-muted small" t-if="state.selectedKpi.limitations" t-esc="state.selectedKpi.limitations"/>
+                        </aside>
+                    </t>
+                </div>
+            </section>
+            </div>
+        </div>
+    </t>
+</templates>

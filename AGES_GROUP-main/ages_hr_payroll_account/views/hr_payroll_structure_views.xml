@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_structure_form_account" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.form.account</field>
+        <field name="model">hr.payroll.structure</field>
+        <field name="inherit_id" ref="ages_hr_payroll.view_hr_payroll_structure_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='report_id']" position="after">
+                <field name="journal_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

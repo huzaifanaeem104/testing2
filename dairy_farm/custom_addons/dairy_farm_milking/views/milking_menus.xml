@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dairy_milking" name="Milking" parent="dairy_farm_core.menu_dairy_root" sequence="20"
+              groups="dairy_farm_core.group_dairy_milking_operator,dairy_farm_core.group_dairy_sales_operator,dairy_farm_core.group_dairy_accountant"/>
+    <menuitem id="menu_dairy_milking_today" name="Today's Sessions" parent="menu_dairy_milking"
+              action="action_dairy_milking_session_today" sequence="1"
+              groups="dairy_farm_core.group_dairy_milking_operator"/>
+    <menuitem id="menu_dairy_milking_all" name="All Sessions" parent="menu_dairy_milking"
+              action="action_dairy_milking_session" sequence="10"/>
+    <menuitem id="menu_dairy_milking_corrections" name="Corrections" parent="menu_dairy_milking"
+              action="action_dairy_milking_correction" sequence="20"
+              groups="dairy_farm_core.group_dairy_milking_operator"/>
+    <menuitem id="menu_dairy_milking_reports" name="Production Reports" parent="menu_dairy_milking" sequence="50"/>
+    <menuitem id="menu_dairy_milking_report_shift" name="By Shift" parent="menu_dairy_milking_reports"
+              action="action_dairy_milking_shift_report" sequence="1"/>
+    <menuitem id="menu_dairy_milking_report_animal" name="By Animal" parent="menu_dairy_milking_reports"
+              action="action_dairy_milking_line_by_animal" sequence="2"/>
+    <menuitem id="menu_dairy_milking_report_trend" name="Production Trend" parent="menu_dairy_milking_reports"
+              action="action_dairy_milking_line_report" sequence="3"/>
+    <menuitem id="menu_dairy_milking_report_incomplete" name="Incomplete Sessions" parent="menu_dairy_milking_reports"
+              action="action_dairy_milking_session_incomplete" sequence="4"/>
+    <menuitem id="menu_dairy_milking_report_decline" name="Yield Decline Alerts" parent="menu_dairy_milking_reports"
+              action="action_dairy_animal_yield_decline" sequence="5"/>
+
+    <menuitem id="menu_dairy_reporting_production" name="Production" parent="dairy_farm_core.menu_dairy_reporting"
+              action="action_dairy_milking_line_report" sequence="10"/>
+    <menuitem id="menu_dairy_reporting_animal_performance" name="Animal Performance" parent="dairy_farm_core.menu_dairy_reporting"
+              action="action_dairy_milking_line_by_animal" sequence="30"/>
+</odoo>

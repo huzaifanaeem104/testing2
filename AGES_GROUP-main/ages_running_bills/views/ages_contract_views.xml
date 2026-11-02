@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_contract_form_retention_percent" model="ir.ui.view">
+        <field name="name">ages.contract.form.retention.percent</field>
+        <field name="model">ages.contract</field>
+        <field name="inherit_id" ref="ages_contracts.view_ages_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='amounts_retention']" position="inside">
+                <field name="retention_percent" readonly="is_locked or state in ('closed', 'cancelled')"/>
+                <field name="wht_on_retention" readonly="is_locked or state in ('closed', 'cancelled')"/>
+            </xpath>
+            <xpath expr="//button[@name='action_create_ra_bill']" position="attributes">
+                <attribute name="invisible">state != 'running' or not can_create_ra_bill</attribute>
+            </xpath>
+            <xpath expr="//field[@name='is_locked']" position="after">
+                <field name="can_create_ra_bill" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_gate_pass_user,ages.gate.pass user,model_ages_gate_pass,group_gate_pass_user,1,1,1,0
+access_ages_gate_pass_manager,ages.gate.pass manager,model_ages_gate_pass,group_gate_pass_manager,1,1,1,1
+access_ages_gate_pass_line_user,ages.gate.pass.line user,model_ages_gate_pass_line,group_gate_pass_user,1,1,1,1
+access_ages_gate_pass_line_manager,ages.gate.pass.line manager,model_ages_gate_pass_line,group_gate_pass_manager,1,1,1,1
+access_ages_receipt_validation_wizard,ages.receipt.validation.wizard,model_ages_receipt_validation_wizard,,1,1,1,1

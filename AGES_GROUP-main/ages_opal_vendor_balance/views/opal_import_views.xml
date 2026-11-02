@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_opal_import_list" model="ir.ui.view">
+        <field name="name">opal.vendor.balance.import.list</field>
+        <field name="model">opal.vendor.balance.import</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="imported_at"/>
+                <field name="imported_by"/>
+                <field name="vendor_count"/>
+                <field name="client_count"/>
+                <field name="project_count"/>
+                <field name="line_count"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_opal_import_form" model="ir.ui.view">
+        <field name="name">opal.vendor.balance.import.form</field>
+        <field name="model">opal.vendor.balance.import</field>
+        <field name="arch" type="xml">
+            <form string="OPAL Import">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="state"/>
+                        <field name="imported_at"/>
+                        <field name="imported_by"/>
+                        <field name="line_count"/>
+                        <field name="vendor_count"/>
+                        <field name="client_count"/>
+                        <field name="project_count"/>
+                        <field name="note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_opal_import_history" model="ir.actions.act_window">
+        <field name="name">OPAL Import History</field>
+        <field name="res_model">opal.vendor.balance.import</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

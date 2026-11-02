@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="cash_flow_report">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-set="currency" t-value="currency or company.currency_id"/>
+                <t t-call="ages_custom_reports.ages_report_pdf_styles"/>
+
+                <div class="ages-fin-report ages-report-branded">
+                    <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+
+                    <div class="report-meta">
+                        <span class="meta-pair"><span class="meta-k">Period</span><span class="meta-v"><t t-esc="date_label"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Target</span><span class="meta-v"><t t-esc="target_move_label"/></span></span>
+                        <span class="meta-pair"><span class="meta-k">Currency</span><span class="meta-v"><t t-esc="currency.name"/></span></span>
+                    </div>
+
+                    <table class="fin-table ages-cf-table">
+                        <thead>
+                            <tr>
+                                <th class="label-col"/>
+                                <th class="amount-col">
+                                    Balance
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="lines" t-as="line">
+                                <t t-call="ages_custom_reports.ages_report_hierarchy_row"/>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

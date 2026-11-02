@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_users_form_ages_gate_pass_extended" model="ir.ui.view">
+        <field name="name">res.users.form.ages.gate.pass.extended</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='access_rights']" position="after">
+                <page string="Gate Pass Access" name="ages_gate_pass_access"
+                      groups="ages_gate_pass.group_gate_pass_user">
+                    <group>
+                        <field name="gate_pass_sub_company_ids" widget="many2many_tags"/>
+                        <p class="text-muted" colspan="2">
+                            Leave empty to only allow this user to see Gate Passes
+                            that have no Active Company set. Add specific Active
+                            Companies to widen access. Gate Pass Managers always
+                            see every Active Company regardless of this list.
+                        </p>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

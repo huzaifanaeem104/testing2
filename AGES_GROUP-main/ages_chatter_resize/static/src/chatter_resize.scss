@@ -1,0 +1,143 @@
+.o_form_view.o_xxl_form_view {
+    --ages-chatter-width: 530px;
+
+    .o-mail-Form-chatter.o-aside {
+        width: var(--ages-chatter-width) !important;
+        flex: 0 0 var(--ages-chatter-width) !important;
+        max-width: 70%;
+        min-width: 280px;
+        position: relative;
+    }
+
+    .o_form_sheet_bg {
+        flex: 1 1 auto !important;
+        min-width: 0;
+    }
+
+    &.o_ages_chatter_hidden {
+        .o-mail-Form-chatter {
+            display: none !important;
+        }
+
+        .o_form_sheet_bg {
+            flex: 1 1 100% !important;
+            width: 100%;
+            padding-right: 2.75rem;
+        }
+    }
+}
+
+.o_form_view:not(.o_xxl_form_view).o_ages_chatter_hidden {
+    .o-mail-Form-chatter {
+        display: none !important;
+    }
+}
+
+.o-mail-Chatter {
+    position: relative;
+}
+
+.ages_chatter_resize_handle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 100%;
+    z-index: 10;
+    cursor: col-resize;
+    touch-action: none;
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 12%;
+        bottom: 12%;
+        left: 3px;
+        width: 2px;
+        border-radius: 2px;
+        background: #c9cdd2;
+        opacity: 0.85;
+    }
+
+    &:hover::after,
+    body.o_ages_chatter_resizing &::after {
+        background: #5b6b7c;
+        opacity: 1;
+        width: 3px;
+        left: 2px;
+    }
+}
+
+.ages_chatter_hide_btn {
+    color: #6c757d !important;
+    padding: 0.25rem 0.4rem !important;
+
+    &:hover {
+        color: #3f4d5a !important;
+        background: rgba(0, 0, 0, 0.04);
+        border-radius: 0.25rem;
+    }
+}
+
+.o_form_view.o_ages_chatter_hidden {
+    position: relative;
+}
+
+.ages_chatter_show_btn {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    width: 2.15rem;
+    min-height: 8.5rem;
+    padding: 0.85rem 0.2rem;
+    border: 1px solid #d5d8dc;
+    border-right: 0;
+    border-radius: 0.5rem 0 0 0.5rem;
+    background: #f7f8f9;
+    color: #4b5563;
+    box-shadow: -2px 0 8px rgba(17, 24, 39, 0.06);
+    transform: translateY(-50%);
+    transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+
+    i {
+        font-size: 0.95rem;
+        line-height: 1;
+    }
+
+    span {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        line-height: 1;
+    }
+
+    &:hover,
+    &:focus {
+        background: #ffffff;
+        color: #2f3b48;
+        box-shadow: -3px 0 12px rgba(17, 24, 39, 0.1);
+        outline: none;
+    }
+}
+
+body.o_ages_chatter_resizing {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
+
+@media print {
+    .ages_chatter_resize_handle,
+    .ages_chatter_hide_btn,
+    .ages_chatter_show_btn {
+        display: none !important;
+    }
+}

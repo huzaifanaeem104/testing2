@@ -1,0 +1,117 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'AGES Custom Reports',
+    'summary': 'Professional financial reports for AGES Group',
+    'description': """
+        Custom reporting module including:
+        - Project Directory Ledger (interactive filters, PDF, Excel)
+        - Balance Sheet (Enterprise-style hierarchy, interactive unfold, PDF, Excel)
+        - Profit and Loss (Enterprise-style hierarchy, interactive unfold, PDF, Excel)
+        - General Ledger (Enterprise-style accounts, journal items unfold, PDF, Excel)
+        - Cash Flow Statement (Enterprise-style direct method, interactive unfold, PDF, Excel)
+        - Executive Summary (KPI dashboard, PDF, Excel)
+        - Partner Ledger (Enterprise-style partners, journal items unfold, PDF, Excel)
+        - Aged Receivable and Payable (as-of aging, drilldowns, PDF, Excel)
+        - Journal Audit (Enterprise-style journals/accounts, tax summary, PDF, Excel)
+        - Trial Balance (Enterprise-style hierarchy, initial/period/end columns, PDF, Excel)
+        - Tax Return (Pakistan tax tags, comparison, closing entry, PDF, Excel)
+        - Tax Return Periodicity (Accounting settings, reminder, closing journal)
+        - Community bank statement imports, Dynamic Reports and Document Digitization settings
+    """,
+    'author': 'Muhammad Sana Ullah',
+    'website': 'https://www.yourcompany.com',
+    'category': 'Accounting/Accounting',
+    'version': '18.0.7.38.29',
+    'depends': ['base', 'account', 'analytic', 'report_xlsx', 'web', 'ages_company', 'ages_contracts'],
+    'post_init_hook': 'set_periodicity_journal_on_companies',
+    'data': [
+        'security/ir.model.access.csv',
+        'data/mail_activity_type_data.xml',
+        'report/report_branding_template.xml',
+        'report/project_directory_ledger_template.xml',
+        'report/report_action.xml',
+        'report/balance_sheet_template.xml',
+        'report/profit_loss_template.xml',
+        'report/general_ledger_template.xml',
+        'report/cash_flow_template.xml',
+        'report/executive_summary_template.xml',
+        'report/partner_ledger_template.xml',
+        'report/aged_partner_balance_template.xml',
+        'report/journal_audit_template.xml',
+        'report/trial_balance_template.xml',
+        'report/tax_return_template.xml',
+        'views/project_directory_ledger_wizard_view.xml',
+        'views/balance_sheet_wizard_view.xml',
+        'views/profit_loss_wizard_view.xml',
+        'views/general_ledger_wizard_view.xml',
+        'views/cash_flow_wizard_view.xml',
+        'views/executive_summary_wizard_view.xml',
+        'views/partner_ledger_wizard_view.xml',
+        'views/aged_partner_balance_views.xml',
+        'views/journal_audit_wizard_view.xml',
+        'views/trial_balance_wizard_view.xml',
+        'views/tax_return_wizard_view.xml',
+        'views/res_config_settings_views.xml',
+        'views/account_menu_views.xml',
+        'views/views.xml',
+        'views/templates.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'ages_custom_reports/static/src/report_display/report_display.js',
+            'ages_custom_reports/static/src/report_state_utils/report_state_utils.js',
+            'ages_custom_reports/static/src/report_filters/report_filters.js',
+            'ages_custom_reports/static/src/report_filters/report_filters.xml',
+            'ages_custom_reports/static/src/report_filters/report_filters.scss',
+            'ages_custom_reports/static/src/report_navigation/report_navigation.js',
+            'ages_custom_reports/static/src/report_navigation/list_highlight_patch.js',
+            'ages_custom_reports/static/src/report_navigation/list_highlight_patch.scss',
+            'ages_custom_reports/static/src/report_line_menu/report_line_menu.scss',
+            'ages_custom_reports/static/src/report_line_menu/report_line_menu.js',
+            'ages_custom_reports/static/src/report_line_menu/report_line_menu.xml',
+            'ages_custom_reports/static/src/report_optional_columns/report_optional_columns.scss',
+            'ages_custom_reports/static/src/report_optional_columns/report_optional_columns.js',
+            'ages_custom_reports/static/src/report_optional_columns/report_optional_columns.xml',
+            'ages_custom_reports/static/src/report_virtual_rows/report_virtual_rows.js',
+            'ages_custom_reports/static/src/project_directory_ledger_report/project_directory_ledger_report.scss',
+            'ages_custom_reports/static/src/project_directory_ledger_report/project_directory_ledger_report.js',
+            'ages_custom_reports/static/src/project_directory_ledger_report/project_directory_ledger_report.xml',
+            'ages_custom_reports/static/src/balance_sheet_report/balance_sheet_report.scss',
+            'ages_custom_reports/static/src/balance_sheet_report/balance_sheet_report.js',
+            'ages_custom_reports/static/src/balance_sheet_report/balance_sheet_report.xml',
+            'ages_custom_reports/static/src/profit_loss_report/profit_loss_report.js',
+            'ages_custom_reports/static/src/profit_loss_report/profit_loss_report.xml',
+            'ages_custom_reports/static/src/general_ledger_report/general_ledger_report.scss',
+            'ages_custom_reports/static/src/general_ledger_report/general_ledger_report.js',
+            'ages_custom_reports/static/src/general_ledger_report/general_ledger_report.xml',
+            'ages_custom_reports/static/src/cash_flow_report/cash_flow_report.scss',
+            'ages_custom_reports/static/src/cash_flow_report/cash_flow_report.js',
+            'ages_custom_reports/static/src/cash_flow_report/cash_flow_report.xml',
+            'ages_custom_reports/static/src/executive_summary_report/executive_summary_report.scss',
+            'ages_custom_reports/static/src/executive_summary_report/executive_summary_report.js',
+            'ages_custom_reports/static/src/executive_summary_report/executive_summary_report.xml',
+            'ages_custom_reports/static/src/partner_ledger_report/partner_ledger_report.scss',
+            'ages_custom_reports/static/src/partner_ledger_report/partner_ledger_report.js',
+            'ages_custom_reports/static/src/partner_ledger_report/partner_ledger_report.xml',
+            'ages_custom_reports/static/src/aged_partner_balance_report/aged_partner_balance_report.scss',
+            'ages_custom_reports/static/src/aged_partner_balance_report/aged_partner_balance_report.js',
+            'ages_custom_reports/static/src/aged_partner_balance_report/aged_partner_balance_report.xml',
+            'ages_custom_reports/static/src/journal_audit_report/journal_audit_report.scss',
+            'ages_custom_reports/static/src/journal_audit_report/journal_audit_report.js',
+            'ages_custom_reports/static/src/journal_audit_report/journal_audit_report.xml',
+            'ages_custom_reports/static/src/trial_balance_report/trial_balance_report.scss',
+            'ages_custom_reports/static/src/trial_balance_report/trial_balance_report.js',
+            'ages_custom_reports/static/src/trial_balance_report/trial_balance_report.xml',
+            'ages_custom_reports/static/src/tax_return_report/tax_return_report.scss',
+            'ages_custom_reports/static/src/tax_return_report/tax_return_report.js',
+            'ages_custom_reports/static/src/tax_return_report/tax_return_report.xml',
+            'ages_custom_reports/static/src/report_common.scss',
+        ],
+        'web.assets_web_dark': [
+            'ages_custom_reports/static/src/report_common.dark.scss',
+        ],
+    },
+    'license': 'LGPL-3',
+    'installable': True,
+    'application': False,
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="input_advance" model="hr.payslip.input.type">
+            <field name="name">Advance Recovery</field>
+            <field name="code">ADVANCE</field>
+            <field name="country_id" eval="False"/>
+            <field name="available_in_attachments" eval="False"/>
+        </record>
+        <record id="input_loan" model="hr.payslip.input.type">
+            <field name="name">Loan Installment</field>
+            <field name="code">LOAN</field>
+            <field name="country_id" eval="False"/>
+            <field name="available_in_attachments" eval="False"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="default_advance_salary_rule" model="hr.salary.rule">
+            <field name="category_id" ref="ages_hr_payroll.DED"/>
+            <field name="name">Advance Recovery</field>
+            <field name="sequence">190</field>
+            <field name="code">ADVANCE</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(same_type_input_lines['ADVANCE']) or 'ADVANCE' in inputs</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -sum(same_type_input_lines['ADVANCE'].mapped('amount')) if same_type_input_lines['ADVANCE'] else -inputs['ADVANCE'].amount</field>
+            <field name="struct_id" ref="ages_hr_payroll.default_structure"/>
+        </record>
+        <record id="default_loan_salary_rule" model="hr.salary.rule">
+            <field name="category_id" ref="ages_hr_payroll.DED"/>
+            <field name="name">Loan Installment</field>
+            <field name="sequence">191</field>
+            <field name="code">LOAN</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = bool(same_type_input_lines['LOAN']) or 'LOAN' in inputs</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = -sum(same_type_input_lines['LOAN'].mapped('amount')) if same_type_input_lines['LOAN'] else -inputs['LOAN'].amount</field>
+            <field name="struct_id" ref="ages_hr_payroll.default_structure"/>
+        </record>
+
+        <record id="ages_hr_payroll.default_structure" model="hr.payroll.structure">
+            <field name="input_line_type_ids" eval="[(4, ref('input_advance')), (4, ref('input_loan'))]"/>
+        </record>
+    </data>
+</odoo>

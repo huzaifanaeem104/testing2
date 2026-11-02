@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_shift_list" model="ir.ui.view">
+        <field name="name">dairy.shift.list</field>
+        <field name="model">dairy.shift</field>
+        <field name="arch" type="xml">
+            <list string="Shifts" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="start_time" widget="float_time"/>
+                <field name="end_time" widget="float_time"/>
+                <field name="is_milking"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dairy_shift" model="ir.actions.act_window">
+        <field name="name">Shifts</field>
+        <field name="res_model">dairy.shift</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+</odoo>

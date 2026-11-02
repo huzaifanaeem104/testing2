@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_feed_plan_user,feed.plan user,model_dairy_feed_plan,dairy_farm_core.group_dairy_user,1,0,0,0
+access_feed_plan_operator,feed.plan operator,model_dairy_feed_plan,dairy_farm_core.group_dairy_feed_operator,1,0,0,0
+access_feed_plan_manager,feed.plan manager,model_dairy_feed_plan,dairy_farm_core.group_dairy_manager,1,1,1,1
+access_feed_plan_line_user,feed.plan.line user,model_dairy_feed_plan_line,dairy_farm_core.group_dairy_user,1,0,0,0
+access_feed_plan_line_manager,feed.plan.line manager,model_dairy_feed_plan_line,dairy_farm_core.group_dairy_manager,1,1,1,1
+access_feed_consumption_user,feed.consumption user,model_dairy_feed_consumption,dairy_farm_core.group_dairy_user,1,0,0,0
+access_feed_consumption_operator,feed.consumption operator,model_dairy_feed_consumption,dairy_farm_core.group_dairy_feed_operator,1,1,1,1
+access_feed_allocation_report_user,feed.allocation.report user,model_dairy_feed_allocation_report,dairy_farm_core.group_dairy_user,1,0,0,0
+access_feed_generate_wizard,feed.generate.wizard,model_dairy_feed_generate_wizard,dairy_farm_core.group_dairy_feed_operator,1,1,1,1

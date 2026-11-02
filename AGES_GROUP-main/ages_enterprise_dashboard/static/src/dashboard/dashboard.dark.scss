@@ -1,0 +1,114 @@
+.o_ages_ent_dashboard {
+    --ages-ent-ink: var(--msu-text, #e2e8f0);
+    --ages-ent-muted: var(--msu-text-muted, #94a3b8);
+    --ages-ent-line: var(--msu-border, #334155);
+    --ages-ent-bg: var(--msu-surface-2, #0b1220);
+    --ages-ent-card: var(--msu-surface, #111827);
+    --ages-ent-accent: #d45454;
+    --ages-ent-accent-soft: rgba(212, 84, 84, 0.14);
+    --ages-ent-expense: #f07178;
+    --ages-ent-success: var(--msu-success, #4ade80);
+    --ages-ent-danger: var(--msu-danger, #f87171);
+    --ages-ent-warning: var(--msu-warning, #fbbf24);
+    --ages-ent-info: var(--msu-info, #38bdf8);
+    --ages-ent-nav: #4a1014;
+    --ages-ent-nav-deep: #2a0a0d;
+    --ages-ent-nav-teal: #0f766e;
+    --ages-ent-nav-text: #f8f0f0;
+    --ages-ent-nav-muted: #e3b6bc;
+    --ages-ent-shadow: 0 1px 2px rgba(0,0,0,.28), 0 8px 24px rgba(0,0,0,.18);
+}
+.o_ages_ent_dashboard.is-executive {
+    background:
+        radial-gradient(1000px 380px at 10% -10%, rgba(212, 84, 84, 0.14), transparent 55%),
+        linear-gradient(180deg, #0b1220 0%, #0f172a 48%, #0b1220 100%);
+}
+.o_ages_ent_toolbar,
+.o_ages_ent_card,
+.o_ages_ent_viz,
+.o_ages_ent_queue,
+.o_ages_ent_quality_card,
+.o_ages_ent_kpi,
+.o_ages_ent_inspector,
+.o_ages_ent_commentary,
+.o_ages_ent_warn,
+.o_ages_ent_popover,
+.o_ages_ent_command_primary {
+    background: var(--ages-ent-card);
+    border-color: var(--ages-ent-line);
+    color: var(--ages-ent-ink);
+}
+.o_ages_ent_command_primary .o_ages_ent_kpi {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+.o_ages_ent_kpi.is-unavailable { opacity: .75; }
+.o_ages_ent_row:hover { background: rgba(212, 84, 84, 0.08); }
+.o_ages_ent_table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.03); }
+.o_ages_ent_heat { background: rgba(255, 255, 255, 0.04); }
+.o_ages_ent_heat.is-warning { background: rgba(251, 191, 36, 0.16); }
+.o_ages_ent_heat.is-danger { background: rgba(248, 113, 113, 0.16); }
+.o_ages_ent_queue.is-danger { border-color: rgba(248, 113, 113, 0.35); }
+.o_ages_ent_queue.is-warning { border-color: rgba(251, 191, 36, 0.35); }
+.o_ages_ent_queue.is-info { border-color: rgba(56, 189, 248, 0.35); }
+.o_ages_ent_empty { color: var(--ages-ent-muted); }
+.o_ages_ent_nav { background: var(--ages-ent-nav); }
+.o_ages_ent_kpi.is-up .o_ages_ent_kpi_delta,
+.o_ages_ent_delta_chip.is-up { color: var(--ages-ent-success); }
+.o_ages_ent_kpi.is-down .o_ages_ent_kpi_delta,
+.o_ages_ent_delta_chip.is-down { color: var(--ages-ent-danger); }
+.o_ages_ent_delta_chip {
+    background: rgba(148, 163, 184, 0.16);
+    color: var(--ages-ent-muted);
+}
+.o_ages_ent_delta_chip.is-up { background: rgba(74, 222, 128, 0.14); }
+.o_ages_ent_delta_chip.is-down { background: rgba(248, 113, 113, 0.14); }
+.o_ages_ent_table thead th { background: var(--ages-ent-card); }
+.o_ages_ent_segmented { background: rgba(255, 255, 255, 0.04); }
+.o_ages_ent_seg.is-active {
+    background: var(--ages-ent-accent);
+    color: #fff;
+}
+.o_ages_ent_viz_note {
+    background: var(--ages-ent-accent-soft);
+    color: var(--ages-ent-ink);
+}
+.o_ages_ent_chip.is-active,
+.o_ages_ent_chip.is-on {
+    background: #e2e8f0;
+    color: #0f172a;
+    border-color: #e2e8f0;
+}
+.o_ages_ent_briefing {
+    background: linear-gradient(120deg, rgba(212, 84, 84, 0.14), var(--ages-ent-card) 45%);
+}
+.o_ages_ent_workitem,
+.o_ages_ent_watchcard {
+    background: var(--ages-ent-card);
+    border-color: var(--ages-ent-line);
+}
+.o_ages_ent_workitem_cta {
+    background: var(--ages-ent-accent-soft);
+    color: #fecaca;
+    border-color: rgba(212, 84, 84, 0.35);
+}
+.o_ages_ent_workitem_cta:hover,
+.o_ages_ent_workitem_cta:focus-visible {
+    background: var(--ages-ent-accent);
+    color: #fff;
+}
+.o_ages_ent_series_btn.is-active {
+    background: var(--ages-ent-accent-soft);
+    color: #fecaca;
+}
+.o_ages_ent_statpill { background: rgba(255, 255, 255, 0.04); }
+.o_ages_ent_kpi_pop { background: rgba(255, 255, 255, 0.05); }
+.o_ages_ent_empty.is-success {
+    background: rgba(74, 222, 128, 0.08);
+    border-color: rgba(74, 222, 128, 0.28);
+    color: var(--ages-ent-success);
+}
+.o_ages_ent_actions.is-quiet .btn-light:hover {
+    background: rgba(255, 255, 255, 0.06);
+}

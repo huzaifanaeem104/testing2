@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_quality_root" name="Quality" parent="stock.menu_stock_root" sequence="25"
+              groups="quality.group_quality_user"/>
+    <menuitem id="menu_quality_checks" name="Quality Checks" parent="menu_quality_root" action="quality.quality_check_action" sequence="1"/>
+    <menuitem id="menu_quality_alerts" name="Quality Alerts" parent="menu_quality_root" action="quality.quality_alert_action" sequence="2"/>
+    <menuitem id="menu_quality_config" name="Configuration" parent="menu_quality_root" sequence="90" groups="quality.group_quality_manager"/>
+    <menuitem id="menu_quality_points" name="Control Points" parent="menu_quality_config" action="quality.quality_point_action" sequence="1"/>
+    <menuitem id="menu_quality_teams" name="Quality Teams" parent="menu_quality_config" action="quality.quality_team_action" sequence="2"/>
+</odoo>

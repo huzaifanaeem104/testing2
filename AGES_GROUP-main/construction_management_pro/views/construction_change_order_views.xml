@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_change_order_list" model="ir.ui.view">
+        <field name="name">construction.change.order.list</field>
+        <field name="model">construction.change.order</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'approved'" decoration-danger="state == 'rejected'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="date"/>
+                <field name="impact_days"/>
+                <field name="amount_total"/>
+                <field name="approved_by"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_construction_change_order_form" model="ir.ui.view">
+        <field name="name">construction.change.order.form</field>
+        <field name="model">construction.change.order</field>
+        <field name="arch" type="xml">
+            <form string="Change Order">
+                <header>
+                    <button name="action_submit" type="object" string="Submit" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object" string="Approve" class="btn-primary" invisible="state != 'submitted'" groups="construction_management_pro.group_construction_manager"/>
+                    <button name="action_reject" type="object" string="Reject" invisible="state != 'submitted'" groups="construction_management_pro.group_construction_manager"/>
+                    <button name="action_reset" type="object" string="Reset to Draft" invisible="state not in ('rejected','cancel')"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="date"/>
+                            <field name="impact_days"/>
+                        </group>
+                        <group>
+                            <field name="approved_by"/>
+                            <field name="approved_date"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Reason / Scope Change"><field name="reason" nolabel="1"/></group>
+                    <field name="line_ids" readonly="state == 'approved'">
+                        <list editable="bottom">
+                            <field name="product_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="uom_id"/>
+                            <field name="unit_cost"/>
+                            <field name="subtotal" sum="Total"/>
+                            <field name="currency_id" column_invisible="True"/>
+                        </list>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right"><field name="amount_total"/></group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_change_order" model="ir.actions.act_window">
+        <field name="name">Change Orders</field>
+        <field name="res_model">construction.change.order</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

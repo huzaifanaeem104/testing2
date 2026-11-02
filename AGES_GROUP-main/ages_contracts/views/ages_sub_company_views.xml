@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_sub_company_form_taxes" model="ir.ui.view">
+        <field name="name">ages.sub.company.form.taxes</field>
+        <field name="model">ages.sub.company</field>
+        <field name="inherit_id" ref="ages_company.view_ages_sub_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='account_mapping']" position="before">
+                <page string="Taxes" name="taxes">
+                    <p class="text-muted">
+                        Select the taxes available when this Sub Company is the Active Company
+                        on a Contract or Running Bill. Sales Tax (%), WTH (%) and
+                        WTH on Sales Tax (%) on those forms only show the taxes chosen here.
+                    </p>
+                    <group>
+                        <field name="sales_tax_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="wth_tax_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="wth_on_sales_tax_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

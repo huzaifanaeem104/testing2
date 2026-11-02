@@ -1,0 +1,259 @@
+.o_ages_works {
+    --aw-bg: var(--o-view-background-color, #f8f9fa);
+    --aw-surface: var(--o-view-background-color, #fff);
+    --aw-border: var(--border-color, #dee2e6);
+    --aw-text: var(--body-color, #212529);
+    --aw-muted: var(--o-gray-600, #6c757d);
+    --aw-selected: var(--o-action, #714B67);
+    --aw-warning: var(--o-warning, #d97706);
+    --aw-danger: var(--o-danger, #dc3545);
+    background: var(--aw-bg);
+    color: var(--aw-text);
+    min-height: 100%;
+}
+
+.o_ages_works .aw-nav {
+    border-bottom: 1px solid var(--aw-border);
+    background: var(--aw-surface);
+}
+
+.o_ages_works .aw-tab {
+    border: 1px solid transparent;
+    background: transparent;
+    color: inherit;
+    font-size: 0.8rem;
+    padding: 0.28rem 0.55rem;
+}
+
+.o_ages_works .aw-tab.aw-selected {
+    border-color: var(--aw-selected);
+    font-weight: 600;
+    background: color-mix(in srgb, var(--aw-selected) 12%, transparent);
+}
+
+.o_ages_works .aw-toolbar {
+    border-bottom: 1px solid var(--aw-border);
+    background: var(--aw-surface);
+    gap: 0.5rem;
+}
+
+.o_ages_works .aw-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+}
+
+.o_ages_works .aw-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--aw-muted);
+}
+
+.o_ages_works .aw-filter .form-select,
+.o_ages_works .aw-filter .form-control {
+    min-width: 9rem;
+    max-width: 14rem;
+}
+
+.o_ages_works .aw-status {
+    font-size: 0.8rem;
+    color: var(--aw-muted);
+    padding: 0.25rem 0.5rem;
+}
+
+.o_ages_works .aw-error {
+    color: var(--aw-danger);
+}
+
+.o_ages_works .aw-body {
+    min-height: 0;
+}
+
+.o_ages_works .aw-queues,
+.o_ages_works .aw-inspector {
+    width: 16.5rem;
+    min-width: 13rem;
+    border-right: 1px solid var(--aw-border);
+    overflow: auto;
+    background: var(--aw-surface);
+    padding: 0.35rem 0.4rem 0.75rem;
+}
+
+.o_ages_works .aw-inspector {
+    border-right: 0;
+    border-left: 1px solid var(--aw-border);
+}
+
+.o_ages_works .aw-table {
+    overflow: auto;
+    padding: 0.35rem 0.4rem;
+}
+
+.o_ages_works .aw-pane-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--aw-muted);
+    margin-bottom: 0.35rem;
+}
+
+.o_ages_works .aw-queue {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border: 1px solid transparent;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    padding: 0.28rem 0.4rem;
+    margin-bottom: 0.15rem;
+    font-size: 0.8rem;
+}
+
+.o_ages_works .aw-queue.aw-selected {
+    border-color: var(--aw-selected);
+    background: color-mix(in srgb, var(--aw-selected) 12%, transparent);
+}
+
+.o_ages_works .aw-sev-warning .aw-queue-count {
+    color: var(--aw-warning);
+    font-weight: 600;
+}
+
+.o_ages_works .aw-sev-danger .aw-queue-count {
+    color: var(--aw-danger);
+    font-weight: 700;
+}
+
+.o_ages_works:focus {
+    outline: none;
+}
+
+.o_ages_works .aw-queue-count {
+    cursor: pointer;
+}
+
+.o_ages_works .aw-empty {
+    color: var(--aw-muted);
+    font-size: 0.8rem;
+    padding: 0.5rem 0.2rem;
+}
+
+.o_ages_works .aw-grid {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.o_ages_works .aw-grid th,
+.o_ages_works .aw-grid td {
+    border-bottom: 1px solid var(--aw-border);
+    padding: 0.28rem 0.4rem;
+    white-space: nowrap;
+}
+
+.o_ages_works .aw-grid th {
+    color: var(--aw-muted);
+    font-weight: 600;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    position: sticky;
+    top: 0;
+    background: var(--aw-surface);
+}
+
+.o_ages_works .aw-sortable {
+    cursor: pointer;
+}
+
+.o_ages_works .aw-grid tr.aw-selected td {
+    background: color-mix(in srgb, var(--aw-selected) 12%, transparent);
+}
+
+.o_ages_works .aw-num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.o_ages_works .aw-link {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.o_ages_works .aw-insp-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.o_ages_works .aw-fact {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    padding: 0.15rem 0;
+    border-bottom: 1px solid var(--aw-border);
+}
+
+.o_ages_works .aw-section-label {
+    margin-top: 0.7rem;
+    margin-bottom: 0.25rem;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--aw-muted);
+}
+
+.o_ages_works .aw-waterfall {
+    display: grid;
+    grid-template-columns: 1.4rem 1fr auto;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    padding: 0.12rem 0;
+}
+
+.o_ages_works .aw-letter {
+    font-weight: 700;
+    color: var(--aw-muted);
+}
+
+.o_ages_works .aw-kpi-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+    margin: 0.5rem 0;
+}
+
+.o_ages_works .aw-kpi {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid var(--aw-border);
+    background: transparent;
+    color: inherit;
+    padding: 0.3rem 0.4rem;
+    font-size: 0.78rem;
+}
+
+.o_ages_works .aw-insp-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+}
+
+@media (max-width: 1100px) {
+    .o_ages_works .aw-body {
+        flex-direction: column;
+    }
+    .o_ages_works .aw-queues,
+    .o_ages_works .aw-inspector {
+        width: 100%;
+        min-width: 0;
+        border: 0;
+        border-bottom: 1px solid var(--aw-border);
+        max-height: 12rem;
+    }
+}

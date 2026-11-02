@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_journal_audit_pdf" model="ir.actions.report">
+        <field name="name">Journal Audit</field>
+        <field name="model">journal.audit.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_custom_reports.journal_audit_report</field>
+        <field name="report_file">ages_custom_reports.journal_audit_report</field>
+        <field name="paperformat_id" ref="paperformat_balance_sheet"/>
+    </record>
+
+    <record id="action_report_journal_audit_xlsx" model="ir.actions.report">
+        <field name="name">Journal Audit Excel</field>
+        <field name="model">journal.audit.wizard</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">ages_custom_reports.journal_audit_xlsx</field>
+        <field name="report_file">ages_custom_reports.journal_audit_xlsx</field>
+    </record>
+
+    <record id="action_journal_audit_interactive" model="ir.actions.client">
+        <field name="name">Journal Audit</field>
+        <field name="tag">ages_journal_audit_report</field>
+        <field name="target">main</field>
+    </record>
+
+    <menuitem id="menu_journal_audit_report"
+              name="Journal Audit"
+              parent="menu_ages_reporting_ledgers"
+              action="action_journal_audit_interactive"
+              sequence="30"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+</odoo>

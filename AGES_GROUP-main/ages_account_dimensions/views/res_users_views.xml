@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_ages_misc_rights" model="ir.ui.view">
+        <field name="name">res.users.form.ages.misc.rights</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='preferences']/group[1]" position="after">
+                <group string="Misc. rights" name="ages_misc_rights">
+                    <field name="ages_hide_users_bills"/>
+                    <field name="ages_hide_users_jes"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

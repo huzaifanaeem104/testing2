@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_ages_gate_pass_dashboard" model="ir.actions.act_window">
+        <field name="name">Gate Pass Dashboard</field>
+        <field name="res_model">ages.gate.pass</field>
+        <field name="view_mode">kanban,list,graph,pivot,form</field>
+        <field name="context">{'search_default_filter_today': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No Gate Passes for today</p>
+            <p>Create Gate Passes from Inventory → Gate Pass, or from a Receipt/Delivery.</p>
+        </field>
+    </record>
+
+    <record id="action_ages_gate_pass_waiting_security" model="ir.actions.act_window">
+        <field name="name">Waiting Security</field>
+        <field name="res_model">ages.gate.pass</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('state', '=', 'waiting_security')]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="action_ages_gate_pass_overdue_rgp" model="ir.actions.act_window">
+        <field name="name">Overdue RGP</field>
+        <field name="res_model">ages.gate.pass</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('return_state', '=', 'overdue')]</field>
+    </record>
+
+    <record id="action_ages_gate_pass_variance" model="ir.actions.act_window">
+        <field name="name">Transfers with Variance</field>
+        <field name="res_model">ages.gate.pass</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('has_qty_variance', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No quantity variances found</p>
+            <p>Shows Internal Transfer – In Gate Passes where the received
+               quantity does not match the linked Outward Gate Pass.</p>
+        </field>
+    </record>
+
+    <record id="action_ages_gate_pass_vehicles_inside" model="ir.actions.act_window">
+        <field name="name">Vehicles Currently Inside</field>
+        <field name="res_model">ages.gate.pass</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('gate_in_datetime', '!=', False), ('gate_out_datetime', '=', False)]</field>
+    </record>
+
+    <menuitem id="menu_ages_gate_pass_dashboard"
+              name="Dashboard"
+              parent="ages_gate_pass.menu_ages_gate_pass_root"
+              action="action_ages_gate_pass_dashboard"
+              sequence="5"
+              groups="ages_gate_pass.group_gate_pass_user"/>
+
+    <menuitem id="menu_ages_gate_pass_waiting_security"
+              name="Waiting Security"
+              parent="ages_gate_pass.menu_ages_gate_pass_root"
+              action="action_ages_gate_pass_waiting_security"
+              sequence="15"
+              groups="ages_gate_pass_extended.group_gate_pass_security"/>
+
+    <menuitem id="menu_ages_gate_pass_vehicles_inside"
+              name="Vehicles Inside"
+              parent="ages_gate_pass.menu_ages_gate_pass_root"
+              action="action_ages_gate_pass_vehicles_inside"
+              sequence="17"
+              groups="ages_gate_pass_extended.group_gate_pass_security"/>
+
+    <menuitem id="menu_ages_gate_pass_overdue_rgp"
+              name="Overdue RGP"
+              parent="ages_gate_pass.menu_ages_gate_pass_root"
+              action="action_ages_gate_pass_overdue_rgp"
+              sequence="20"
+              groups="ages_gate_pass.group_gate_pass_user"/>
+
+    <menuitem id="menu_ages_gate_pass_variance"
+              name="Transfers with Variance"
+              parent="ages_gate_pass.menu_ages_gate_pass_root"
+              action="action_ages_gate_pass_variance"
+              sequence="25"
+              groups="ages_gate_pass.group_gate_pass_user"/>
+
+</odoo>

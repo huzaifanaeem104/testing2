@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_dairy" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.dairy</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="60"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Dairy Farm" string="Dairy Farm" name="dairy_farm_core"
+                     groups="dairy_farm_core.group_dairy_admin">
+                    <block title="Alerts" name="dairy_alerts">
+                        <setting id="dairy_alert_user" company_dependent="1"
+                                 help="Receives automatic reminders when no responsible person is set on a record">
+                            <field name="dairy_alert_user_id"/>
+                        </setting>
+                        <setting id="dairy_yield_decline" company_dependent="1"
+                                 help="Alert when a cow's 7-day average yield drops by more than this percentage">
+                            <field name="dairy_yield_decline_pct"/>
+                        </setting>
+                        <setting id="dairy_vaccination_alert" company_dependent="1"
+                                 help="Remind this many days before a vaccination is due">
+                            <field name="dairy_vaccination_alert_days"/>
+                        </setting>
+                    </block>
+                    <block title="Reproduction" name="dairy_reproduction">
+                        <setting id="dairy_gestation" company_dependent="1"
+                                 help="Used to estimate the expected calving date after a positive pregnancy check">
+                            <field name="dairy_gestation_days"/>
+                        </setting>
+                        <setting id="dairy_preg_check" company_dependent="1"
+                                 help="Days after insemination when the pregnancy examination is scheduled">
+                            <field name="dairy_pregnancy_check_days"/>
+                        </setting>
+                        <setting id="dairy_calving_alert" company_dependent="1"
+                                 help="Remind this many days before the expected calving date">
+                            <field name="dairy_calving_alert_days"/>
+                        </setting>
+                        <setting id="dairy_dry_off" company_dependent="1"
+                                 help="Suggested dry-off period before the expected calving date">
+                            <field name="dairy_dry_off_days"/>
+                        </setting>
+                    </block>
+                    <block title="Milk Collection" name="dairy_milk_collection">
+                        <setting id="dairy_milk_variance" company_dependent="1"
+                                 help="Maximum accepted difference between cow-wise milk records and the measured batch quantity">
+                            <field name="dairy_milk_variance_pct"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_dairy_config_settings" model="ir.actions.act_window">
+        <field name="name">Farm Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'dairy_farm_core', 'bin_size': False}</field>
+    </record>
+
+    <record id="action_dairy_alert_rules" model="ir.actions.act_window">
+        <field name="name">Alert Rules (Scheduled Jobs)</field>
+        <field name="res_model">ir.cron</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('cron_name', '=like', 'Dairy:%')]</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+</odoo>

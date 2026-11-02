@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form_ages_material_consumption" model="ir.ui.view">
+        <field name="name">account.move.form.ages.material.consumption</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@id='other_tab_entry']//group[@name='misc_group']" position="inside">
+                <field name="ages_material_consumption_id" readonly="1"
+                         invisible="not ages_material_consumption_id"/>
+                <field name="ages_project_id" readonly="1"
+                         invisible="not ages_material_consumption_id"/>
+                <field name="ages_contract_id" readonly="1"
+                         invisible="not ages_material_consumption_id"/>
+                <field name="ages_sub_company_id" readonly="1"
+                         invisible="not ages_material_consumption_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

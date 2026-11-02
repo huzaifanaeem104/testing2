@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ages_deletion_audit_exception_list" model="ir.ui.view">
+        <field name="name">ages.deletion.audit.exception.list</field>
+        <field name="model">ages.deletion.audit.exception</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="model_id"/>
+                <field name="model_name"/>
+                <field name="action"/>
+                <field name="business_module"
+                       required="action == 'include'"
+                       invisible="action != 'include'"/>
+                <field name="note"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_ages_deletion_audit_exception" model="ir.actions.act_window">
+        <field name="name">Deletion Audit Exceptions</field>
+        <field name="res_model">ages.deletion.audit.exception</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No include / exclude exceptions.
+            </p>
+            <p>
+                Models in Project, Sales, Purchase, Accounting, Expense,
+                Purchase Request, Inventory, Employees, Payroll, and Attendances
+                are audited automatically. Add an exception to force-include a
+                model from another app, or to skip a noisy technical model.
+            </p>
+        </field>
+    </record>
+</odoo>

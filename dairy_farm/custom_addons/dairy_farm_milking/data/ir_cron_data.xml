@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_cron_milking_session_reminders" model="ir.cron">
+            <field name="name">Dairy: milking session reminders</field>
+            <field name="model_id" ref="model_dairy_milking_session"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_session_reminders()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="ir_cron_milking_yield_trends" model="ir.cron">
+            <field name="name">Dairy: yield trends and decline alerts</field>
+            <field name="model_id" ref="dairy_farm_core.model_dairy_animal"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_update_yield_trends()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

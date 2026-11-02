@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_request_form_ages" model="ir.ui.view">
+        <field name="name">purchase.request.form.ages.project</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='assigned_to']" position="after">
+                <field name="ages_project_id"
+                       readonly="is_editable == False"
+                       options="{'no_create': True}"/>
+                <field name="ages_analytic_account_id"
+                       readonly="is_editable == False"
+                       options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_request_tree_ages" model="ir.ui.view">
+        <field name="name">purchase.request.list.ages.project</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='requested_by']" position="after">
+                <field name="ages_project_id" optional="show"/>
+                <field name="ages_analytic_account_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_request_search_ages" model="ir.ui.view">
+        <field name="name">purchase.request.search.ages.project</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='assigned_to']" position="after">
+                <field name="ages_project_id"/>
+                <field name="ages_analytic_account_id"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter name="group_ages_project"
+                        string="Project"
+                        context="{'group_by': 'ages_project_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

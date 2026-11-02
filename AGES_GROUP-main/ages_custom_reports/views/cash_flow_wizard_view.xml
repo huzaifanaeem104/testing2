@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_cash_flow" model="report.paperformat">
+        <field name="name">Cash Flow Statement A4</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="action_report_cash_flow_pdf" model="ir.actions.report">
+        <field name="name">Cash Flow Statement</field>
+        <field name="model">cash.flow.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_custom_reports.cash_flow_report</field>
+        <field name="report_file">ages_custom_reports.cash_flow_report</field>
+        <field name="paperformat_id" ref="paperformat_cash_flow"/>
+    </record>
+
+    <record id="action_report_cash_flow_xlsx" model="ir.actions.report">
+        <field name="name">Cash Flow Statement Excel</field>
+        <field name="model">cash.flow.wizard</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">ages_custom_reports.cash_flow_xlsx</field>
+        <field name="report_file">ages_custom_reports.cash_flow_xlsx</field>
+    </record>
+
+    <record id="action_cash_flow_interactive" model="ir.actions.client">
+        <field name="name">Cash Flow Statement</field>
+        <field name="tag">ages_cash_flow_report</field>
+        <field name="target">main</field>
+    </record>
+
+    <menuitem id="menu_cash_flow_report"
+              name="Cash Flow Statement"
+              parent="menu_ages_reporting_statements"
+              action="action_cash_flow_interactive"
+              sequence="30"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+</odoo>

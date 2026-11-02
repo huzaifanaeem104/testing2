@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_dairy_feed" model="ir.ui.view">
+        <field name="name">product.template.form.dairy.feed</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <div name="options" position="inside">
+                <span class="d-inline-flex">
+                    <field name="is_dairy_feed"/>
+                    <label for="is_dairy_feed"/>
+                </span>
+            </div>
+        </field>
+    </record>
+
+    <record id="product_template_search_view_dairy_feed" model="ir.ui.view">
+        <field name="name">product.template.search.dairy.feed</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <filter name="filter_to_sell" position="before">
+                <filter name="filter_dairy_feed" string="Dairy Feed" domain="[('is_dairy_feed', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="action_dairy_feed_products" model="ir.actions.act_window">
+        <field name="name">Feed Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('is_dairy_feed', '=', True)]</field>
+        <field name="context">{'default_is_dairy_feed': True, 'default_is_storable': True, 'default_type': 'consu',
+                               'default_categ_id': ref('dairy_farm_feed.product_category_dairy_feed')}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your feed products</p>
+            <p>Feed products are storable products: purchases, receipts and counts go through
+               Purchase and Inventory; feeding records consume this stock.</p>
+        </field>
+    </record>
+
+    <record id="action_dairy_feed_stock_alerts" model="ir.actions.act_window">
+        <field name="name">Feed Stock Alerts</field>
+        <field name="res_model">stock.warehouse.orderpoint</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('product_id.is_dairy_feed', '=', True)]</field>
+        <field name="context">{'search_default_filter_to_reorder': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No feed reordering rules yet</p>
+            <p>Define a minimum quantity per feed product; the daily alert job and Inventory's
+               replenishment report use it.</p>
+        </field>
+    </record>
+
+    <record id="action_dairy_feed_stock_on_hand" model="ir.actions.act_window">
+        <field name="name">Feed Stock on Hand</field>
+        <field name="res_model">stock.quant</field>
+        <field name="view_mode">list,pivot</field>
+        <field name="domain">[('product_id.is_dairy_feed', '=', True), ('location_id.usage', '=', 'internal')]</field>
+        <field name="context">{'search_default_productgroup': 1}</field>
+    </record>
+</odoo>

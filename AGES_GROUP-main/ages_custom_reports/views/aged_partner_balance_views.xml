@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_aged_partner_balance_wizard_form" model="ir.ui.view">
+        <field name="name">aged.partner.balance.wizard.form</field>
+        <field name="model">aged.partner.balance.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Aged Partner Balance">
+                <group>
+                    <group string="Report">
+                        <field name="report_type"/>
+                        <field name="date_to"/>
+                        <field name="company_id" invisible="1"/>
+                    </group>
+                    <group string="Aging">
+                        <field name="aging_based_on"/>
+                        <field name="aging_interval"/>
+                    </group>
+                    <group string="Filters">
+                        <field name="partner_ids"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="partner_category_ids"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="filter_trade"/>
+                        <field name="filter_non_trade"/>
+                        <field name="all_entries"/>
+                    </group>
+                    <group string="Display">
+                        <field name="show_currency"/>
+                        <field name="show_account"/>
+                        <field name="hide_zero_lines"/>
+                        <field name="unfold_all"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Open Interactive Report"
+                            name="action_open_interactive_report"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Download PDF"
+                            name="action_print_pdf"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button string="Export Excel"
+                            name="action_print_excel"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_report_aged_receivable_pdf" model="ir.actions.report">
+        <field name="name">Aged Receivable</field>
+        <field name="model">aged.partner.balance.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_custom_reports.aged_partner_balance_report</field>
+        <field name="report_file">ages_custom_reports.aged_partner_balance_report</field>
+        <field name="paperformat_id" ref="paperformat_general_ledger"/>
+        <field name="print_report_name">'Aged Receivable - %s' % (object.date_to)</field>
+    </record>
+
+    <record id="action_report_aged_payable_pdf" model="ir.actions.report">
+        <field name="name">Aged Payable</field>
+        <field name="model">aged.partner.balance.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_custom_reports.aged_partner_balance_report</field>
+        <field name="report_file">ages_custom_reports.aged_partner_balance_report</field>
+        <field name="paperformat_id" ref="paperformat_general_ledger"/>
+        <field name="print_report_name">'Aged Payable - %s' % (object.date_to)</field>
+    </record>
+
+    <record id="action_report_aged_receivable_xlsx" model="ir.actions.report">
+        <field name="name">Aged Receivable Excel</field>
+        <field name="model">aged.partner.balance.wizard</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">ages_custom_reports.aged_partner_balance_xlsx</field>
+        <field name="report_file">ages_custom_reports.aged_partner_balance_xlsx</field>
+        <field name="print_report_name">'Aged Receivable - %s' % (object.date_to)</field>
+    </record>
+
+    <record id="action_report_aged_payable_xlsx" model="ir.actions.report">
+        <field name="name">Aged Payable Excel</field>
+        <field name="model">aged.partner.balance.wizard</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">ages_custom_reports.aged_partner_balance_xlsx</field>
+        <field name="report_file">ages_custom_reports.aged_partner_balance_xlsx</field>
+        <field name="print_report_name">'Aged Payable - %s' % (object.date_to)</field>
+    </record>
+
+    <record id="action_aged_receivable_interactive" model="ir.actions.client">
+        <field name="name">Aged Receivable</field>
+        <field name="tag">ages_aged_partner_balance_report</field>
+        <field name="target">main</field>
+        <field name="params" eval="{'report_type': 'receivable'}"/>
+    </record>
+
+    <record id="action_aged_payable_interactive" model="ir.actions.client">
+        <field name="name">Aged Payable</field>
+        <field name="tag">ages_aged_partner_balance_report</field>
+        <field name="target">main</field>
+        <field name="params" eval="{'report_type': 'payable'}"/>
+    </record>
+
+    <record id="action_aged_partner_balance_wizard" model="ir.actions.act_window">
+        <field name="name">Aged Partner Balance</field>
+        <field name="res_model">aged.partner.balance.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_aged_receivable_report"
+              name="Aged Receivable"
+              parent="menu_ages_reporting_partners"
+              action="action_aged_receivable_interactive"
+              sequence="1"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+
+    <menuitem id="menu_aged_payable_report"
+              name="Aged Payable"
+              parent="menu_ages_reporting_partners"
+              action="action_aged_payable_interactive"
+              sequence="2"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+</odoo>

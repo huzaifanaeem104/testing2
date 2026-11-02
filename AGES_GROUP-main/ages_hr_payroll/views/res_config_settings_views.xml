@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.payroll</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Payroll" name="ages_hr_payroll" groups="ages_hr_payroll.group_hr_payroll_manager">
+                    <block title="Payroll Integrations">
+                        <setting string="Payroll Accounting" help="Create journal entries from payslips">
+                            <field name="module_ages_hr_payroll_account"/>
+                        </setting>
+                        <setting string="Attendance" help="Attendance-based work entries and overtime">
+                            <field name="module_ages_hr_payroll_attendance"/>
+                        </setting>
+                        <setting string="Time Off" help="Defer leaves overlapping validated payslips">
+                            <field name="module_ages_hr_payroll_holidays"/>
+                        </setting>
+                        <setting string="Loans &amp; Advances" help="Employee advance and loan applications with payroll recovery">
+                            <field name="module_ages_hr_loan_advance"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+    <record id="action_hr_payroll_configuration" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'module': 'ages_hr_payroll'}</field>
+    </record>
+</odoo>

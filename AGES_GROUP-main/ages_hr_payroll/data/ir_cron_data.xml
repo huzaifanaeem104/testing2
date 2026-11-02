@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ir_cron_update_payroll_data" model="ir.cron">
+            <field name="name">Payroll: Update data</field>
+            <field name="model_id" ref="model_hr_payslip"/>
+            <field name="state">code</field>
+            <field name="code">model._update_payroll_data()</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+        </record>
+        <record id="ir_cron_generate_payslip_pdfs" model="ir.cron">
+            <field name="name">Payroll: Generate pdfs</field>
+            <field name="model_id" ref="model_hr_payslip"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_generate_pdf()</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+        </record>
+    </data>
+</odoo>

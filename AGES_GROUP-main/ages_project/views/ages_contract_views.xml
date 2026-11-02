@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ages_contract_form_ages_project" model="ir.ui.view">
+        <field name="name">ages.contract.form.ages.project</field>
+        <field name="model">ages.contract</field>
+        <field name="inherit_id" ref="ages_contracts.view_ages_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='locations']" position="replace"/>
+            <xpath expr="//page[@name='project']" position="replace"/>
+            <xpath expr="//field[@name='date_close']" position="after">
+                <field name="project_id" string="Project Name"
+                       readonly="is_locked or state != 'new'" force_save="1"/>
+                <field name="analytic_account_id" string="Analytic"
+                       readonly="1" force_save="1"/>
+                <field name="location_id" string="Location"
+                       readonly="1" force_save="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

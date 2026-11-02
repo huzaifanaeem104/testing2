@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form_ages_retention_recovery" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.ages.retention.recovery</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="ages_mobilization_received.view_move_form_ages_mobilization_received"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ages_mobilization_advance_id']" position="after">
+                <field name="ages_retention_recovery_id" readonly="1"
+                         invisible="move_type not in ('out_invoice', 'out_refund') or not ages_retention_recovery_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

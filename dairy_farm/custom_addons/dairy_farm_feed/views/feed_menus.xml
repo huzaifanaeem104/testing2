@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dairy_feed" name="Feeding" parent="dairy_farm_core.menu_dairy_root" sequence="30"
+              groups="dairy_farm_core.group_dairy_feed_operator,dairy_farm_core.group_dairy_accountant"/>
+    <menuitem id="menu_dairy_feed_plan" name="Feed Plans" parent="menu_dairy_feed"
+              action="action_dairy_feed_plan" sequence="1"/>
+    <menuitem id="menu_dairy_feed_consumption" name="Consumption" parent="menu_dairy_feed"
+              action="action_dairy_feed_consumption" sequence="10"/>
+    <menuitem id="menu_dairy_feed_cost" name="Feed Cost Reports" parent="menu_dairy_feed" sequence="20"/>
+    <menuitem id="menu_dairy_feed_cost_analysis" name="Feed Cost Analysis" parent="menu_dairy_feed_cost"
+              action="action_dairy_feed_cost_report" sequence="1"/>
+    <menuitem id="menu_dairy_feed_cost_per_cow" name="Feed Cost per Cow" parent="menu_dairy_feed_cost"
+              action="action_dairy_feed_allocation_report" sequence="2"/>
+    <menuitem id="menu_dairy_feed_stock" name="Stock Alerts" parent="menu_dairy_feed" sequence="30"
+              groups="stock.group_stock_user"/>
+    <menuitem id="menu_dairy_feed_stock_alerts" name="Reordering Alerts" parent="menu_dairy_feed_stock"
+              action="action_dairy_feed_stock_alerts" sequence="1"/>
+    <menuitem id="menu_dairy_feed_stock_on_hand" name="Feed on Hand" parent="menu_dairy_feed_stock"
+              action="action_dairy_feed_stock_on_hand" sequence="2"/>
+    <menuitem id="menu_dairy_feed_products" name="Feed Products" parent="menu_dairy_feed"
+              action="action_dairy_feed_products" sequence="40" groups="stock.group_stock_user"/>
+    <menuitem id="menu_dairy_feed_purchase" name="Feed Purchases" parent="menu_dairy_feed"
+              action="purchase.purchase_form_action" sequence="50" groups="purchase.group_purchase_user"/>
+    <menuitem id="menu_dairy_feed_receipts" name="Receipts" parent="menu_dairy_feed"
+              action="stock.action_picking_tree_incoming" sequence="60" groups="stock.group_stock_user"/>
+
+    <menuitem id="menu_dairy_reporting_feed" name="Feed Costs" parent="dairy_farm_core.menu_dairy_reporting"
+              action="action_dairy_feed_allocation_report" sequence="20"/>
+</odoo>

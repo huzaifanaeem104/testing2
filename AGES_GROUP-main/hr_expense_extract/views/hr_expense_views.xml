@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_expense_view_form_extract" model="ir.ui.view">
+        <field name="name">hr.expense.form.extract</field>
+        <field name="model">hr.expense</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_digitize_receipt" type="object" string="Digitize"
+                        class="btn-secondary" invisible="extract_state == 'done'"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <group string="Digitalization" invisible="extract_state == 'no'">
+                    <field name="extract_state"/>
+                    <field name="extract_text" invisible="not extract_text"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

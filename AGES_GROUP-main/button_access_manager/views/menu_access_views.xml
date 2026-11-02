@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_button_access_menu_rule_list" model="ir.ui.view">
+        <field name="name">button.access.menu.rule.list</field>
+        <field name="model">button.access.menu.rule</field>
+        <field name="arch" type="xml">
+            <list string="Hidden Apps &amp; Menus">
+                <field name="is_root" optional="show"/>
+                <field name="menu_complete"/>
+                <field name="user_ids" widget="many2many_tags"/>
+                <field name="group_ids" widget="many2many_tags"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_button_access_menu_rule_form" model="ir.ui.view">
+        <field name="name">button.access.menu.rule.form</field>
+        <field name="model">button.access.menu.rule</field>
+        <field name="arch" type="xml">
+            <form string="Hidden App / Menu">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="menu_id" context="{'ir.ui.menu.full_list': True}"/>
+                            <field name="menu_complete"/>
+                            <field name="is_root" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="user_ids" widget="many2many_tags"/>
+                            <field name="group_ids" widget="many2many_tags"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="note" placeholder="Optional notes for other admins..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_button_access_menu_rule_search" model="ir.ui.view">
+        <field name="name">button.access.menu.rule.search</field>
+        <field name="model">button.access.menu.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="menu_complete"/>
+                <field name="user_ids"/>
+                <field name="group_ids"/>
+                <filter string="Home apps" name="filter_root" domain="[('is_root', '=', True)]"/>
+                <filter string="Submenus" name="filter_child" domain="[('is_root', '=', False)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Menu" name="group_menu" context="{'group_by': 'menu_id'}"/>
+                    <filter string="User" name="group_user" context="{'group_by': 'user_ids'}"/>
+                    <filter string="Group" name="group_group" context="{'group_by': 'group_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_button_access_menu_rule" model="ir.actions.act_window">
+        <field name="name">Hidden Apps &amp; Menus</field>
+        <field name="res_model">button.access.menu.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_button_access_menu_rule_search"/>
+    </record>
+
+    <menuitem id="menu_button_access_menu_rule"
+              name="Hidden Apps &amp; Menus"
+              parent="base.next_id_2"
+              action="action_button_access_menu_rule"
+              groups="base.group_system"
+              sequence="51"/>
+
+    <record id="view_button_access_menu_wizard_form" model="ir.ui.view">
+        <field name="name">button.access.menu.wizard.form</field>
+        <field name="model">button.access.menu.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Hide Apps &amp; Menus">
+                <div class="alert alert-info" role="alert">
+                    Hiding an app removes it from the home screen and app switcher,
+                    and blocks opening its menus by URL. It does not remove the
+                    user's Access Rights groups. To also block reading a model,
+                    add an Access Profile model line. This is a denylist: an
+                    app hide covers every submenu; you cannot show one submenu
+                    while the app is hidden.
+                    Menu hiding is not company-specific.
+                </div>
+                <group>
+                    <field name="user_ids" widget="many2many_tags"
+                           readonly="context.get('lock_user_field')"/>
+                    <field name="group_ids" widget="many2many_tags"
+                           readonly="context.get('lock_group_field')"/>
+                    <field name="profile_id" invisible="not profile_id"/>
+                    <field name="app_menu_id"
+                           placeholder="Empty = installed home apps. Set an app to edit its menu tree."
+                           options="{'no_create': True}"
+                           context="{'ir.ui.menu.full_list': True}"/>
+                    <field name="hidden_summary"/>
+                </group>
+                <field name="line_ids">
+                    <list editable="bottom" create="false" delete="false" default_order="id">
+                        <field name="hide" readonly="hidden_by_parent"/>
+                        <field name="display_label" string="Menu"/>
+                        <field name="module_shortdesc" optional="show" string="Module"/>
+                        <field name="xmlid" optional="hide"/>
+                        <field name="is_root" optional="hide"/>
+                        <field name="has_action" optional="hide"/>
+                        <field name="hidden_by_parent" optional="hide"/>
+                        <field name="child_count" optional="hide"/>
+                        <field name="menu_id" column_invisible="1"/>
+                        <field name="depth" column_invisible="1"/>
+                    </list>
+                </field>
+                <group string="Preview" invisible="not preview_text">
+                    <field name="preview_text" nolabel="1" colspan="2"/>
+                </group>
+                <footer>
+                    <button name="action_apply" type="object" string="Apply"
+                            class="btn-primary"/>
+                    <button name="action_reload_apps" type="object"
+                            string="Reload installed apps"/>
+                    <button name="action_hide_all" type="object"
+                            string="Hide all in this app"/>
+                    <button name="action_show_all" type="object"
+                            string="Show all in this app"/>
+                    <button name="action_preview" type="object"
+                            string="Preview as this user"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_button_access_menu_wizard" model="ir.actions.act_window">
+        <field name="name">Hide Apps &amp; Menus</field>
+        <field name="res_model">button.access.menu.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

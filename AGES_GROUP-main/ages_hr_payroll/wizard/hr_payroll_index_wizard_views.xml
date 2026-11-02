@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_index_form" model="ir.ui.view">
+        <field name="name">hr.payroll.index.form</field>
+        <field name="model">hr.payroll.index</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="percentage"/>
+                    <field name="description"/>
+                    <field name="contract_ids" widget="many2many_tags"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Apply" class="btn-primary"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

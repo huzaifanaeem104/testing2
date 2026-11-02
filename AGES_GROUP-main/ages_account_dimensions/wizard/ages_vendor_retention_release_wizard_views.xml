@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ages_vendor_retention_release_wizard_form" model="ir.ui.view">
+        <field name="name">ages.vendor.retention.release.wizard.form</field>
+        <field name="model">ages.vendor.retention.release.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Release Retention">
+                <group>
+                    <group>
+                        <field name="move_id" readonly="1"/>
+                        <field name="partner_id"/>
+                        <field name="ages_project_id"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="held_amount"/>
+                        <field name="released_amount"/>
+                        <field name="remaining_amount"/>
+                        <field name="date"/>
+                        <field name="amount"/>
+                    </group>
+                </group>
+                <div class="alert alert-info" role="alert">
+                    This creates a draft vendor bill that moves the held amount from
+                    Retention Money Payables to the vendor. Confirm that bill, then Pay
+                    (Vendor Payments) to send cash.
+                </div>
+                <footer>
+                    <button name="action_create_release_bill"
+                            type="object"
+                            string="Create Release Bill"
+                            class="oe_highlight"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

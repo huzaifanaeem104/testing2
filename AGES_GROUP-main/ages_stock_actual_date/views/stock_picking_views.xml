@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_picking_form_ages_actual_date" model="ir.ui.view">
+        <field name="name">stock.picking.form.ages.actual.date</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock_move_actual_date.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='actual_date']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

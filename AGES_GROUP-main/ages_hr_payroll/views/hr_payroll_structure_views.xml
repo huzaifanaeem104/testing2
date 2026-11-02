@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_payroll_structure_list" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.list</field>
+        <field name="model">hr.payroll.structure</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="type_id"/>
+                <field name="country_id"/>
+                <field name="use_worked_day_lines"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_hr_payroll_structure_form" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.form</field>
+        <field name="model">hr.payroll.structure</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="type_id"/>
+                            <field name="country_id"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="use_worked_day_lines"/>
+                            <field name="ytd_computation"/>
+                            <field name="payslip_name"/>
+                            <field name="report_id"/>
+                            <field name="unpaid_work_entry_type_ids" widget="many2many_tags"/>
+                            <field name="input_line_type_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Salary Rules">
+                            <field name="rule_ids">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="category_id"/>
+                                    <field name="amount_select"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Description">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_hr_payroll_structure_list" model="ir.actions.act_window">
+        <field name="name">Salary Structures</field>
+        <field name="res_model">hr.payroll.structure</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

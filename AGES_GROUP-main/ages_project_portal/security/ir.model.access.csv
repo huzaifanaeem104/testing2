@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_project_portal_attendance_user,access.project.portal.attendance.user,model_project_portal_attendance,base.group_user,1,1,1,1
+access_project_portal_attendance_portal,access.project.portal.attendance.portal,model_project_portal_attendance,base.group_portal,1,1,1,0

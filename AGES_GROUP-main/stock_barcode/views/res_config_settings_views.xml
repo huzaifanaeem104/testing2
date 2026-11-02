@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_stock_barcode" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.stock.barcode</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='process_operations_barcodes']" position="inside">
+                <field name="show_barcode_nomenclature" invisible="1"/>
+                <div class="content-group row mt16" invisible="not module_stock_barcode">
+                    <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
+                    <field name="barcode_nomenclature_id" options="{'no_open': 1}"/>
+                </div>
+                <div class="content-group">
+                    <div class="mt8" invisible="not module_stock_barcode">
+                        <button class="btn-link" type="action" string="Configure Product Barcodes"
+                                name="%(stock_barcode.product_action_barcodes)d" icon="oi-arrow-right"/>
+                    </div>
+                </div>
+                <div invisible="not module_stock_barcode">
+                    <a href="/report/pdf/stock_barcode.action_report_barcode_commands/" class="oe_link" target="_blank">
+                        <i class="fa fa-print"/> Print barcode commands and operation types
+                    </a>
+                </div>
+                <div groups="stock.group_stock_multi_locations" invisible="not module_stock_barcode">
+                    <a href="/report/pdf/stock_barcode.action_report_barcode_locations/" class="oe_link" target="_blank">
+                        <i class="fa fa-print"/> Print storage locations
+                    </a>
+                </div>
+            </xpath>
+            <xpath expr="//block[@name='barcode_setting_container']" position="inside">
+                <setting id="show_qty_to_count" help="Allow users to see the expected quantity of a product to count in a location">
+                    <field name="group_barcode_show_quantity_count"/>
+                </setting>
+                <setting id="count_entire_location" help="When scanning a location in inventory adjustments, you will be assigned to count all products from this location"
+                         invisible="group_stock_multi_locations == False">
+                    <field name="group_barcode_count_entire_location"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

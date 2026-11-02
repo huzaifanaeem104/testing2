@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ages_opal_vendor_balance.OpalVendorBalanceReport">
+        <div class="o_action o_ages_bs_report o_ages_pl_report o_ages_opal_report account_report" t-ref="root">
+            <Layout display="display">
+                <t t-set-slot="control-panel-create-button">
+                    <button t-if="canImport" class="btn btn-secondary me-1" t-on-click="onImport">Import</button>
+                    <button t-if="canImport" class="btn btn-secondary me-1" t-on-click="onOpenMapping">Mapping</button>
+                    <button class="btn btn-secondary me-1" t-on-click="onPrintExcel">XLSX</button>
+                    <button class="btn btn-primary" t-on-click="onPrintPdf">PDF</button>
+                </t>
+
+                <t t-set-slot="layout-actions">
+                    <div class="o_ages_pl_filters_area o_ages_report_filters_area">
+                        <div class="d-flex gap-1 flex-wrap align-items-center o_ages_report_filters">
+                            <div class="o_ages_report_search">
+                                <i class="fa fa-search"/>
+                                <input type="text" placeholder="Search..." t-att-value="state.lineSearch" t-on-input="onLineSearch"/>
+                            </div>
+                            <button type="button" class="btn btn-secondary" t-on-click="(ev) => this.toggleFilterMenu('asOf', ev)">
+                                <i class="fa fa-calendar me-1"/>
+                                <t t-esc="asOfLabel"/>
+                            </button>
+                            <button type="button" class="btn btn-secondary" t-on-click="(ev) => this.toggleFilterMenu('vendors', ev)">
+                                <i class="fa fa-users me-1"/>
+                                <t t-esc="vendorFilterLabel"/>
+                            </button>
+                            <button type="button" class="btn btn-secondary" t-on-click="(ev) => this.toggleFilterMenu('projects', ev)">
+                                <i class="fa fa-folder-open me-1"/>
+                                <t t-esc="projectFilterLabel"/>
+                            </button>
+                            <button type="button" class="btn btn-secondary" t-on-click="(ev) => this.toggleFilterMenu('accounts', ev)">
+                                <i class="fa fa-list me-1"/>
+                                <t t-esc="accountFilterLabel"/>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-att-class="{ 'o_ages_opal_columns_active': columnsFilterLabel !== 'Columns' }"
+                                    t-on-click="(ev) => this.toggleFilterMenu('columns', ev)">
+                                <i class="fa fa-columns me-1"/>
+                                <t t-esc="columnsFilterLabel"/>
+                            </button>
+                            <button type="button" class="btn btn-secondary o_ages_report_gear_btn" title="Report options" t-on-click="(ev) => this.toggleFilterMenu('options', ev)">
+                                <i class="fa fa-fw fa-cog"/>
+                            </button>
+                            <span t-if="state.loading" class="text-muted small ms-1">
+                                <i class="fa fa-spinner fa-spin"/>
+                            </span>
+                        </div>
+
+                        <div t-if="state.openMenu === 'asOf'" class="o_ages_report_dropdown" t-att-style="filterMenuStyle()">
+                            <div class="dropdown-item date d-flex justify-content-between align-items-center">
+                                <label class="mb-0">As of</label>
+                                <input type="date" class="o_ages_report_date_input" t-att-value="state.asOf" t-on-change="onAsOfChange"/>
+                            </div>
+                        </div>
+                        <div t-if="state.openMenu === 'vendors'" class="o_ages_report_dropdown" t-att-style="filterMenuStyle()">
+                            <input type="text" class="form-control form-control-sm mb-2" placeholder="Search vendors or clients..."
+                                   t-att-value="state.optionSearch" t-on-input="(ev) => this.state.optionSearch = ev.target.value"/>
+                            <t t-foreach="visibleVendorOptions" t-as="name" t-key="name">
+                                <label class="dropdown-item mb-0">
+                                    <input type="checkbox" class="form-check-input me-2"
+                                           t-att-checked="isSelected('vendorNames', name)"
+                                           t-on-change="() => this.toggleListValue('vendorNames', name)"/>
+                                    <t t-esc="name"/>
+                                </label>
+                            </t>
+                            <div t-if="vendorOptionsCapped" class="text-muted small px-2 pt-1">Type to find more vendors or clients</div>
+                        </div>
+                        <div t-if="state.openMenu === 'projects'" class="o_ages_report_dropdown" t-att-style="filterMenuStyle()">
+                            <input type="text" class="form-control form-control-sm mb-2" placeholder="Search projects..."
+                                   t-att-value="state.optionSearch" t-on-input="(ev) => this.state.optionSearch = ev.target.value"/>
+                            <t t-foreach="visibleProjectOptions" t-as="project" t-key="project.code">
+                                <label class="dropdown-item mb-0">
+                                    <input type="checkbox" class="form-check-input me-2"
+                                           t-att-checked="isSelected('projectCodes', project.code)"
+                                           t-on-change="() => this.toggleListValue('projectCodes', project.code)"/>
+                                    <t t-esc="project.code"/>
+                                    <span t-if="project.name" class="text-muted"> — <t t-esc="project.name"/></span>
+                                </label>
+                            </t>
+                        </div>
+                        <div t-if="state.openMenu === 'accounts'" class="o_ages_report_dropdown" t-att-style="filterMenuStyle()">
+                            <input type="text" class="form-control form-control-sm mb-2" placeholder="Search accounts..."
+                                   t-att-value="state.optionSearch" t-on-input="(ev) => this.state.optionSearch = ev.target.value"/>
+                            <t t-foreach="visibleAccountOptions" t-as="name" t-key="name">
+                                <label class="dropdown-item mb-0">
+                                    <input type="checkbox" class="form-check-input me-2"
+                                           t-att-checked="isSelected('accountNames', name)"
+                                           t-on-change="() => this.toggleListValue('accountNames', name)"/>
+                                    <t t-esc="name"/>
+                                </label>
+                            </t>
+                        </div>
+                        <div t-if="state.openMenu === 'columns'" class="o_ages_report_dropdown" t-att-style="filterMenuStyle()">
+                            <div class="text-muted text-uppercase small px-2 pb-1">Show columns</div>
+                            <t t-foreach="optionalColumnDefs" t-as="column" t-key="column.id">
+                                <label class="dropdown-item mb-0">
+                                    <input type="checkbox" class="form-check-input me-2"
+                                           t-att-checked="isColumnVisible(column.id)"
+                                           t-on-change="() => this.toggleColumn(column.id)"/>
+                                    <t t-esc="column.label"/>
+                                </label>
+                            </t>
+                        </div>
+                        <div t-if="state.openMenu === 'options'" class="o_ages_report_dropdown" t-att-style="filterMenuStyle()">
+                            <button type="button" class="dropdown-item" t-att-class="{ selected: state.showZeroLines }" t-on-click="() => this.toggleOption('showZeroLines')">Show zero OPAL balances</button>
+                            <button type="button" class="dropdown-item" t-att-class="{ selected: state.showOdooOverall }" t-on-click="() => this.toggleOption('showOdooOverall')">Show Odoo overall on vendor totals</button>
+                            <button type="button" class="dropdown-item" t-att-class="{ selected: state.showUnmappedOnly }" t-on-click="() => this.toggleOption('showUnmappedOnly')">Unmapped vendors only</button>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="o_ages_bs_content">
+                    <div class="o_ages_opal_tabs" role="tablist">
+                        <t t-foreach="tabs" t-as="tab" t-key="tab.id">
+                            <button type="button"
+                                    class="o_ages_opal_tab"
+                                    t-att-class="{ 'is-active': state.tab === tab.id }"
+                                    role="tab"
+                                    t-att-aria-selected="state.tab === tab.id ? 'true' : 'false'"
+                                    t-on-click="() => this.setTab(tab.id)">
+                                <t t-esc="tab.label"/>
+                            </button>
+                        </t>
+                    </div>
+
+                    <t t-if="!state.hasData and !state.loading">
+                        <div class="o_ages_opal_empty text-center py-5">
+                            <p class="mb-3">No OPAL workbook imported yet.</p>
+                            <button t-if="canImport" type="button" class="btn btn-primary" t-on-click="onImport">Import OPAL Excel</button>
+                        </div>
+                    </t>
+
+                    <div t-if="state.hasData" class="o_ages_opal_scroll" t-ref="scroll" t-on-scroll="onTableScroll">
+                        <div class="o_ages_pl_sheet mx-auto fit-content">
+                            <table class="table table-borderless table-hover o_ages_pl_table o_ages_opal_table mb-0">
+                                <thead class="sticky">
+                                    <tr>
+                                        <t t-foreach="visibleColumns" t-as="column" t-key="column.id">
+                                            <th t-att-class="column.type === 'monetary' ? 'text-end' : ''">
+                                                <t t-esc="column.label"/>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-if="windowPad.top" class="o_ages_opal_pad">
+                                        <td t-att-colspan="visibleColumns.length" t-att-style="'height:' + windowPad.top + 'px'"/>
+                                    </tr>
+                                    <t t-foreach="windowedLines" t-as="line" t-key="line.id">
+                                        <tr t-att-class="rowClass(line)" t-on-click="() => this.onLineClick(line)">
+                                            <t t-foreach="visibleColumns" t-as="column" t-key="column.id">
+                                                <td t-if="column.id === 'source'">
+                                                    <span t-att-class="badgeClass(line)" t-esc="badgeLabel(line)"/>
+                                                    <span class="ms-1" t-esc="cellValue(line, column)"/>
+                                                </td>
+                                                <td t-elif="column.type === 'monetary'"
+                                                    class="text-end"
+                                                    t-att-class="amountClass(cellValue(line, column))">
+                                                    <t t-esc="formatAmount(cellValue(line, column))"/>
+                                                </td>
+                                                <td t-else="">
+                                                    <t t-esc="cellValue(line, column) === false ? '' : cellValue(line, column)"/>
+                                                </td>
+                                            </t>
+                                        </tr>
+                                    </t>
+                                    <tr t-if="windowPad.bottom" class="o_ages_opal_pad">
+                                        <td t-att-colspan="visibleColumns.length" t-att-style="'height:' + windowPad.bottom + 'px'"/>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="o_ages_opal_total">
+                                        <t t-foreach="visibleColumns" t-as="column" t-key="'total-' + column.id">
+                                            <td t-if="column_first and column.type !== 'monetary'">OPAL total</td>
+                                            <td t-elif="column_first and column.type === 'monetary'" class="text-end">
+                                                <t t-if="state.totals[column.id] !== undefined" t-esc="formatAmount(state.totals[column.id])"/>
+                                            </td>
+                                            <td t-elif="column.type === 'monetary'" class="text-end">
+                                                <t t-if="state.totals[column.id] !== undefined" t-esc="formatAmount(state.totals[column.id])"/>
+                                            </td>
+                                            <td t-else=""/>
+                                        </t>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </Layout>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_asset_form_ages_transfer" model="ir.ui.view">
+        <field name="name">account.asset.form.ages.transfer</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset_management.account_asset_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_transfer_history" type="object"
+                        class="oe_stat_button" icon="fa-exchange"
+                        groups="ages_asset_transfer.group_asset_transfer_user,ages_asset_transfer.group_asset_transfer_accountant">
+                    <field name="transfer_history_count" widget="statinfo" string="Transfer History"/>
+                </button>
+                <button name="action_transfer_this_asset" type="object"
+                        class="oe_stat_button" icon="fa-arrow-right"
+                        groups="ages_asset_transfer.group_asset_transfer_user"
+                        invisible="not current_location_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Transfer</span>
+                        <span class="o_stat_text">this Asset</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//group[@id='header_left_group']" position="inside">
+                <field name="current_location_id"/>
+                <field name="current_project_id"/>
+                <field name="product_id"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Transfer History" name="transfer_history"
+                      groups="ages_asset_transfer.group_asset_transfer_user,ages_asset_transfer.group_asset_transfer_accountant">
+                    <field name="transfer_history_ids" readonly="1">
+                        <list>
+                            <field name="date"/>
+                            <field name="name"/>
+                            <field name="location_from_id"/>
+                            <field name="location_to_id"/>
+                            <field name="project_id"/>
+                            <field name="user_id"/>
+                            <field name="reason"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_asset_list_ages_transfer" model="ir.ui.view">
+        <field name="name">account.asset.list.ages.transfer</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset_management.account_asset_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="current_location_id" optional="show"/>
+                <field name="current_project_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

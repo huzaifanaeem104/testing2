@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ages_web_sidebar.AppsBar"
+       t-inherit="muk_web_appsbar.AppsBar"
+       t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('mk_apps_sidebar_panel')]" position="attributes">
+            <attribute name="t-att-class">sidebarPanelClass</attribute>
+            <attribute name="t-on-mouseenter">onSidebarMouseEnter</attribute>
+            <attribute name="t-on-mouseleave">onSidebarMouseLeave</attribute>
+        </xpath>
+    </t>
+
+</templates>

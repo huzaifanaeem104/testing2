@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_button_access" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.button.access</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Button Access" string="Button Access"
+                     name="button_access_manager" groups="base.group_system">
+                    <block title="Framework allowlist" name="button_access_allowlist">
+                        <setting string="Extra technical models"
+                                 help="Comma-separated technical names. Global New / Delete / Duplicate rules skip these models (chatter, login, and other framework models are already skipped).">
+                            <field name="button_access_extra_allowlist"
+                                   placeholder="my.custom.wizard, other.tech.model"/>
+                        </setting>
+                        <setting string="Extra protected menus"
+                                 help="Comma-separated menu xmlids that cannot be hidden from a Settings administrator (Settings, Apps, Users, and Access Profiles are already protected).">
+                            <field name="button_access_protected_menu_xmlids"
+                                   placeholder="my_module.menu_root"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

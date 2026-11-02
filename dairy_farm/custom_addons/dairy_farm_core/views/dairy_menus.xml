@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_dairy_root" name="Dairy Farm" sequence="25"
+              web_icon="dairy_farm_core,static/description/icon.png"
+              groups="dairy_farm_core.group_dairy_user"/>
+
+    <menuitem id="menu_dairy_animals" name="Animals" parent="menu_dairy_root" sequence="10"/>
+    <menuitem id="menu_dairy_animal_all" name="All Animals" parent="menu_dairy_animals"
+              action="action_dairy_animal" sequence="1"/>
+    <menuitem id="menu_dairy_breed" name="Breeds" parent="menu_dairy_animals"
+              action="action_dairy_breed" sequence="20"/>
+    <menuitem id="menu_dairy_animal_group" name="Groups" parent="menu_dairy_animals"
+              action="action_dairy_animal_group" sequence="30"/>
+    <menuitem id="menu_dairy_location" name="Locations" parent="menu_dairy_animals"
+              action="action_dairy_location" sequence="40"/>
+    <menuitem id="menu_dairy_milk_withdrawal" name="Milk Withdrawals" parent="menu_dairy_animals"
+              action="action_dairy_milk_withdrawal" sequence="50"/>
+
+    <menuitem id="menu_dairy_reporting" name="Reporting" parent="menu_dairy_root" sequence="80"
+              groups="dairy_farm_core.group_dairy_manager,dairy_farm_core.group_dairy_accountant"/>
+
+    <menuitem id="menu_dairy_config" name="Configuration" parent="menu_dairy_root" sequence="100"
+              groups="dairy_farm_core.group_dairy_admin"/>
+    <menuitem id="menu_dairy_config_settings" name="Farm Settings" parent="menu_dairy_config"
+              action="action_dairy_config_settings" sequence="1" groups="base.group_system"/>
+    <menuitem id="menu_dairy_config_shift" name="Shifts" parent="menu_dairy_config"
+              action="action_dairy_shift" sequence="10"/>
+    <menuitem id="menu_dairy_config_alert_rules" name="Alert Rules" parent="menu_dairy_config"
+              action="action_dairy_alert_rules" sequence="90" groups="base.group_system"/>
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payroll_edit_payslip_lines_form" model="ir.ui.view">
+        <field name="name">hr.payroll.edit.payslip.lines.wizard.form</field>
+        <field name="model">hr.payroll.edit.payslip.lines.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="payslip_id" invisible="1"/>
+                <notebook>
+                    <page string="Lines">
+                        <field name="line_ids">
+                            <list editable="bottom">
+                                <field name="sequence"/>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="salary_rule_id"/>
+                                <field name="quantity"/>
+                                <field name="rate"/>
+                                <field name="amount"/>
+                                <field name="total"/>
+                            </list>
+                        </field>
+                    </page>
+                    <page string="Worked Days">
+                        <field name="worked_days_line_ids">
+                            <list editable="bottom">
+                                <field name="name"/>
+                                <field name="work_entry_type_id"/>
+                                <field name="number_of_days"/>
+                                <field name="number_of_hours"/>
+                                <field name="amount"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="action_validate_edition" type="object" string="Save" class="btn-primary"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_animal_form_health" model="ir.ui.view">
+        <field name="name">dairy.animal.form.health</field>
+        <field name="model">dairy.animal</field>
+        <field name="inherit_id" ref="dairy_farm_core.view_dairy_animal_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_health_cases" type="object" class="oe_stat_button" icon="fa-stethoscope">
+                    <field name="health_case_count" widget="statinfo" string="Health Cases"/>
+                </button>
+                <button name="action_view_vaccinations" type="object" class="oe_stat_button" icon="fa-eyedropper">
+                    <field name="vaccination_count" widget="statinfo" string="Vaccinations"/>
+                </button>
+            </div>
+            <page name="health" position="inside">
+                <separator string="Health Cases"/>
+                <field name="health_case_ids" readonly="1">
+                    <list>
+                        <field name="name"/>
+                        <field name="date"/>
+                        <field name="condition"/>
+                        <field name="diagnosis"/>
+                        <field name="outcome"/>
+                        <field name="state"/>
+                    </list>
+                </field>
+                <separator string="Vaccinations"/>
+                <field name="vaccination_ids" readonly="1">
+                    <list>
+                        <field name="product_id"/>
+                        <field name="disease"/>
+                        <field name="planned_date"/>
+                        <field name="date_given"/>
+                        <field name="state"/>
+                    </list>
+                </field>
+            </page>
+        </field>
+    </record>
+</odoo>

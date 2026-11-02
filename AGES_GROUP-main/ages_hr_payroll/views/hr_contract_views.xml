@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form_payroll" model="ir.ui.view">
+        <field name="name">hr.contract.form.payroll</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_payslips" type="object" class="oe_stat_button" icon="fa-money"
+                        groups="ages_hr_payroll.group_hr_payroll_user">
+                    <field name="payslips_count" widget="statinfo" string="Payslips"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='structure_type_id']" position="after">
+                <field name="schedule_pay"/>
+                <field name="wage_type"/>
+                <field name="hourly_wage" invisible="wage_type != 'hourly'"/>
+            </xpath>
+            <xpath expr="//label[@for='wage']" position="attributes">
+                <attribute name="invisible">wage_type != 'monthly'</attribute>
+            </xpath>
+            <xpath expr="//div[@name='wage']" position="attributes">
+                <attribute name="invisible">wage_type != 'monthly'</attribute>
+            </xpath>
+            <xpath expr="//div[@name='wage']" position="after">
+                <label for="daily_wage" string="Wage" invisible="wage_type != 'daily'"/>
+                <div class="o_row oe_inline" name="daily_wage" invisible="wage_type != 'daily'">
+                    <field name="daily_wage" widget="monetary" class="oe_inline" nolabel="1"/>
+                    <span class="ms-2">/ daily</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

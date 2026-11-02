@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_groups_form_button_access" model="ir.ui.view">
+        <field name="name">res.groups.form.button.access</field>
+        <field name="model">res.groups</field>
+        <field name="inherit_id" ref="base.view_groups_form"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Hide Buttons" name="hide_buttons_page" groups="base.group_system">
+                    <group string="Quick Global Restrictions (applies to every model at once)">
+                        <div class="alert alert-warning" role="alert" colspan="2" style="margin-bottom: 12px;">
+                            Tick any box below to hide and block that action for every user
+                            in this group. Remember to click Save after ticking boxes.
+                        </div>
+                        <group>
+                            <field name="restrict_new"/>
+                            <field name="restrict_delete"/>
+                            <field name="restrict_duplicate"/>
+                            <field name="restrict_import"/>
+                            <field name="restrict_export"/>
+                            <field name="restrict_archive"/>
+                            <field name="restrict_print"/>
+                            <field name="restrict_cancel"/>
+                        </group>
+                        <group>
+                            <field name="restrict_reset_draft"/>
+                            <field name="restrict_confirm"/>
+                            <field name="restrict_post"/>
+                            <field name="restrict_lock"/>
+                            <field name="restrict_unlock"/>
+                            <field name="restrict_send_email"/>
+                            <field name="restrict_done"/>
+                        </group>
+                    </group>
+                    <group string="Precise, Per-Model Buttons">
+                        <button name="%(button_access_manager.action_button_access_scan_wizard)d"
+                                type="action" string="Add / Manage Hidden Buttons"
+                                class="btn-primary mb-3"
+                                context="{'default_group_ids': [id], 'lock_group_field': True}"/>
+                        <button name="%(button_access_manager.action_button_access_copy_wizard)d"
+                                type="action" string="Copy Hidden Buttons From..."
+                                class="btn-secondary mb-3"
+                                context="{'default_target_group_ids': [id], 'lock_target_group': True}"/>
+                        <field name="button_access_rule_ids" nolabel="1">
+                            <list create="false" delete="true">
+                                <field name="model_name" string="Model"/>
+                                <field name="button_type"/>
+                                <field name="button_string" string="Label"/>
+                                <field name="technical_name"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+                <page string="Hide Apps &amp; Menus" name="hide_apps_menus_page" groups="base.group_system">
+                    <group>
+                        <div class="alert alert-info" role="alert" colspan="2">
+                            Hiding an app removes it from the home screen and app switcher
+                            for every user in this group, and blocks those menus by URL.
+                            It does not remove Access Rights groups. Save after changing.
+                        </div>
+                        <field name="hidden_home_app_ids" widget="many2many_tags"
+                               context="{'ir.ui.menu.full_list': True}"/>
+                        <field name="hidden_submenu_count"/>
+                    </group>
+                    <group>
+                        <button name="action_open_hidden_apps_wizard" type="object"
+                                string="Configure apps &amp; menus…"
+                                class="btn-primary mb-3"/>
+                        <button name="%(button_access_manager.action_button_access_copy_wizard)d"
+                                type="action" string="Copy apps/menus from…"
+                                class="btn-secondary mb-3"
+                                context="{'default_target_group_ids': [id], 'lock_target_group': True, 'default_copy_buttons': False, 'default_copy_menus': True}"/>
+                    </group>
+                    <field name="hidden_menu_rule_ids" nolabel="1">
+                        <list create="false" delete="true">
+                            <field name="menu_complete"/>
+                            <field name="is_root"/>
+                            <field name="user_ids" widget="many2many_tags" optional="hide"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

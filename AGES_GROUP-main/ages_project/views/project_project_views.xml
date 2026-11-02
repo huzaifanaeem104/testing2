@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Create wizard: customer, dates, active company; billable stays visible -->
+    <record id="project_project_view_form_simplified_ages" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.ages</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_settings_container')]" position="before">
+                <group>
+                    <group>
+                        <field name="partner_id" required="1"
+                               widget="res_partner_many2one"
+                               context="{'res_partner_search_mode': 'customer'}"
+                               options="{'no_create_edit': True}"
+                               placeholder="Select a client..."/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="ages_sub_company_id" required="1"
+                               options="{'no_create': True, 'no_create_edit': True}"
+                               placeholder="Select a sub company..."/>
+                    </group>
+                    <group>
+                        <field name="date_start" string="Start Date"/>
+                        <field name="date" string="End Date"/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//div[hasclass('o_settings_container')]//div[@invisible='not allow_billable']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Create project opens the full project form instead of tasks -->
+    <record id="project_project_view_form_simplified_footer_ages" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.footer.ages</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified_footer"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_tasks']" position="attributes">
+                <attribute name="name">action_open_project_form</attribute>
+                <attribute name="class">btn-primary</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project.open_create_project" model="ir.actions.act_window">
+        <field name="context">{"default_allow_billable": 1}</field>
+    </record>
+
+    <!-- Full project form -->
+    <record id="view_project_project_form_ages" model="ir.ui.view">
+        <field name="name">project.project.form.ages</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='project_update_all_action']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_customer_preview']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_sos'][1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_view_sos'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_create_contract" type="object"
+                        string="Create Contract" class="btn-primary"
+                        groups="project.group_project_user"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_contracts" type="object"
+                        class="oe_stat_button" icon="fa-book"
+                        groups="project.group_project_user">
+                    <field name="ages_contract_count" widget="statinfo" string="Contracts"/>
+                </button>
+                <button name="action_view_running_bills" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o"
+                        groups="project.group_project_user">
+                    <field name="running_bill_count" widget="statinfo" string="Running Bills"/>
+                </button>
+                <button name="action_view_mobilization_received" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        groups="project.group_project_user">
+                    <field name="mobilization_count" widget="statinfo" string="Mobilization Received"/>
+                </button>
+                <button name="action_view_retention_release" type="object"
+                        class="oe_stat_button" icon="fa-unlock-alt"
+                        groups="project.group_project_user">
+                    <field name="retention_count" widget="statinfo" string="Retention Release"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_project_project_form_ages_contract_fields" model="ir.ui.view">
+        <field name="name">project.project.form.ages.contract.fields</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="ages_contracts.view_project_project_form_ages_contract"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ages_location_id']" position="after">
+                <field name="ages_sub_company_id" required="1"
+                       options="{'no_create': True, 'no_create_edit': True}"
+                       placeholder="Select a sub company..."/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Only change sequence. A bare <menuitem> without parent turns Tasks into a root app. -->
+    <record id="project.menu_project_management" model="ir.ui.menu">
+        <field name="name">Tasks</field>
+        <field name="parent_id" ref="project.menu_main_pm"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <!-- Card click opens the project form; footer shows Contracts; Tasks stay in ⋮ menu -->
+    <record id="view_project_kanban_ages" model="ir.ui.view">
+        <field name="name">project.project.kanban.ages</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="action"/>
+                <attribute name="type"/>
+            </xpath>
+            <xpath expr="//field[@name='sequence']" position="after">
+                <field name="ages_contract_count"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_project_kanban_boxes')]/a[@name='action_view_tasks']" position="replace">
+                <a class="o_project_kanban_box me-1" name="action_view_contracts" type="object">
+                    <div>
+                        <field name="ages_contract_count" class="o_value"/>
+                        <span class="ms-1">Contracts</span>
+                    </div>
+                </a>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

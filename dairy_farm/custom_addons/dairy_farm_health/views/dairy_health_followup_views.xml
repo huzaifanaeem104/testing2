@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_health_followup_list" model="ir.ui.view">
+        <field name="name">dairy.health.followup.list</field>
+        <field name="model">dairy.health.followup</field>
+        <field name="arch" type="xml">
+            <list string="Follow-ups" decoration-muted="state != 'planned'">
+                <field name="date"/>
+                <field name="animal_id"/>
+                <field name="case_id"/>
+                <field name="name"/>
+                <field name="responsible_id" widget="many2one_avatar_user"/>
+                <field name="result"/>
+                <field name="state" widget="badge"/>
+                <button name="action_done" type="object" string="Done" icon="fa-check" invisible="state != 'planned'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_health_followup_form" model="ir.ui.view">
+        <field name="name">dairy.health.followup.form</field>
+        <field name="model">dairy.health.followup</field>
+        <field name="arch" type="xml">
+            <form string="Follow-up">
+                <header>
+                    <button name="action_done" type="object" string="Done" class="btn-primary" invisible="state != 'planned'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state != 'planned'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="case_id" options="{'no_create': True}"/>
+                            <field name="animal_id"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="done_date"/>
+                            <field name="responsible_id"/>
+                            <field name="result"/>
+                        </group>
+                    </group>
+                    <field name="findings" placeholder="Findings"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dairy_health_followup_search" model="ir.ui.view">
+        <field name="name">dairy.health.followup.search</field>
+        <field name="model">dairy.health.followup</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="animal_id"/>
+                <field name="case_id"/>
+                <filter name="filter_planned" string="Planned" domain="[('state', '=', 'planned')]"/>
+                <filter name="filter_overdue" string="Overdue"
+                        domain="[('state', '=', 'planned'), ('date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dairy_health_followup" model="ir.actions.act_window">
+        <field name="name">Follow-ups</field>
+        <field name="res_model">dairy.health.followup</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_planned': 1}</field>
+    </record>
+</odoo>

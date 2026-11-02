@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_contract_invoice,ages.contract invoice,ages_contracts_menu.model_ages_contract,account.group_account_invoice,1,0,0,0
+access_account_payment_detail_line_user,account.payment.detail.line.user,model_account_payment_detail_line,base.group_user,1,1,1,1
+access_ages_mob_retention_payment_wizard,ages.mob.retention.payment.wizard.user,model_ages_mob_retention_payment_wizard,account.group_account_invoice,1,1,1,1
+access_ages_mob_retention_payment_wizard_manager,ages.mob.retention.payment.wizard.manager,model_ages_mob_retention_payment_wizard,account.group_account_manager,1,1,1,1
+access_ages_mob_ret_pay_wiz_wht_line,ages.mob.ret.pay.wiz.wht.line.user,model_ages_mob_retention_payment_wizard_withholding_line,account.group_account_invoice,1,1,1,1
+access_ages_mob_ret_pay_wiz_wht_line_mgr,ages.mob.ret.pay.wiz.wht.line.manager,model_ages_mob_retention_payment_wizard_withholding_line,account.group_account_manager,1,1,1,1
+access_ages_vendor_retention_release_wizard_invoice,ages.vendor.retention.release.wizard invoice,model_ages_vendor_retention_release_wizard,account.group_account_invoice,1,1,1,1

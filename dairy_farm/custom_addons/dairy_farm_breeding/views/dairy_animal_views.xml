@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_animal_form_breeding" model="ir.ui.view">
+        <field name="name">dairy.animal.form.breeding</field>
+        <field name="model">dairy.animal</field>
+        <field name="inherit_id" ref="dairy_farm_core.view_dairy_animal_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_breeding" type="object" class="oe_stat_button" icon="fa-heart"
+                        invisible="gender != 'female'">
+                    <field name="breeding_count" widget="statinfo" string="Services"/>
+                </button>
+            </div>
+            <field name="production_status" position="after">
+                <field name="reproductive_status" invisible="gender != 'female'"/>
+                <field name="expected_calving_date" invisible="reproductive_status != 'pregnant'"/>
+            </field>
+            <page name="breeding" position="inside">
+                <group>
+                    <group>
+                        <field name="last_heat_date"/>
+                        <field name="last_breeding_date"/>
+                    </group>
+                    <group>
+                        <field name="calving_count"/>
+                    </group>
+                </group>
+                <separator string="Breeding Events"/>
+                <field name="breeding_event_ids" readonly="1">
+                    <list>
+                        <field name="name"/>
+                        <field name="event_type"/>
+                        <field name="event_date"/>
+                        <field name="method"/>
+                        <field name="sire_id"/>
+                        <field name="service_number"/>
+                        <field name="result"/>
+                    </list>
+                </field>
+                <separator string="Pregnancy Checks"/>
+                <field name="pregnancy_check_ids" readonly="1">
+                    <list>
+                        <field name="date"/>
+                        <field name="method"/>
+                        <field name="result"/>
+                        <field name="expected_calving_date"/>
+                        <field name="veterinarian_id"/>
+                    </list>
+                </field>
+                <separator string="Calvings"/>
+                <field name="calving_ids" readonly="1">
+                    <list>
+                        <field name="name"/>
+                        <field name="calving_date"/>
+                        <field name="outcome"/>
+                        <field name="calving_ease"/>
+                        <field name="calf_count"/>
+                    </list>
+                </field>
+            </page>
+        </field>
+    </record>
+
+    <record id="view_dairy_animal_list_breeding" model="ir.ui.view">
+        <field name="name">dairy.animal.list.breeding</field>
+        <field name="model">dairy.animal</field>
+        <field name="inherit_id" ref="dairy_farm_core.view_dairy_animal_list"/>
+        <field name="arch" type="xml">
+            <field name="lactation_number" position="after">
+                <field name="reproductive_status" optional="show"/>
+                <field name="expected_calving_date" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_dairy_animal_search_breeding" model="ir.ui.view">
+        <field name="name">dairy.animal.search.breeding</field>
+        <field name="model">dairy.animal</field>
+        <field name="inherit_id" ref="dairy_farm_core.view_dairy_animal_search"/>
+        <field name="arch" type="xml">
+            <filter name="filter_restricted" position="before">
+                <filter name="filter_pregnant" string="Pregnant" domain="[('reproductive_status', '=', 'pregnant')]"/>
+                <filter name="filter_inseminated" string="Awaiting Pregnancy Check" domain="[('reproductive_status', '=', 'inseminated')]"/>
+                <filter name="filter_open" string="Open" domain="[('reproductive_status', '=', 'open'), ('gender', '=', 'female')]"/>
+                <separator/>
+            </filter>
+            <filter name="groupby_lifecycle" position="after">
+                <filter name="groupby_reproductive" string="Reproductive Status" context="{'group_by': 'reproductive_status'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>

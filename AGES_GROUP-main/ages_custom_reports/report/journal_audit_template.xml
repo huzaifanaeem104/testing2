@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="journal_audit_report">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <t t-set="currency" t-value="currency or company.currency_id"/>
+                <t t-call="ages_custom_reports.ages_report_pdf_styles"/>
+                <style type="text/css">
+                    .ages-ja-report { font-family: Helvetica, Arial, sans-serif; color: #1a2332; }
+                    .ages-ja-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+                    .ages-ja-table th { background: #8B1A1A; color: #fff; padding: 6px 8px; font-size: 9px; text-transform: uppercase; }
+                    .ages-ja-table td { padding: 4px 8px; border-bottom: 1px solid #eed6da; vertical-align: top; }
+                    .ages-ja-table td.amount { text-align: right; white-space: nowrap; }
+                    .ages-ja-table tr.journal td { font-weight: bold; background: #f8f9fa; }
+                    .ages-ja-section { background: #faf0f1; font-weight: bold; padding: 6px 8px; margin-top: 12px; }
+                    .ages-ja-negative { color: #c0392b !important; }
+                    .ages-ja-tax-grid { width: 100%; }
+                    .ages-ja-tax-grid td { width: 50%; vertical-align: top; padding-right: 12px; }
+                </style>
+                <div class="ages-ja-report ages-report-branded">
+                    <t t-call="ages_custom_reports.ages_report_pdf_header"/>
+                    <div class="ages-ja-meta">
+                        Target: <t t-esc="target_move_label"/> · Currency: <t t-esc="currency.name"/>
+                    </div>
+                    <table class="ages-ja-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Name</th>
+                                <th>Code</th>
+                                <th style="text-align:right;">Debit</th>
+                                <th style="text-align:right;">Credit</th>
+                                <th style="text-align:right;">Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="lines" t-as="line">
+                                <tr t-att-class="line['line_type']">
+                                    <td t-att-style="'padding-left: %spx;' % (8 + line['level'] * 14)">
+                                        <t t-esc="line['name']"/>
+                                    </td>
+                                    <td><t t-esc="line.get('code') or ''"/></td>
+                                    <td class="amount">
+                                        <t t-if="line.get('debit')">
+                                            <span t-out="line['debit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </t>
+                                    </td>
+                                    <td class="amount">
+                                        <t t-if="line.get('credit')">
+                                            <span t-out="line['credit']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </t>
+                                    </td>
+                                    <td class="amount">
+                                        <t t-if="line.get('balance') not in (False, None)">
+                                            <span t-out="line['balance']"
+                                                  t-att-class="'ages-ja-negative' if line.get('balance', 0.0) &lt; 0 else ''"
+                                                  t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <t t-if="tax_summary">
+                        <div class="ages-ja-section">Global Tax Summary</div>
+                        <table class="ages-ja-tax-grid">
+                            <tr>
+                                <td>
+                                    <div style="font-weight:bold;margin:8px 0 4px;">Taxes Applied</div>
+                                    <table class="ages-ja-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align:left;">Name</th>
+                                                <th style="text-align:right;">Base Amount</th>
+                                                <th style="text-align:right;">Tax Amount</th>
+                                                <th style="text-align:right;">Non-Deductible</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="tax_summary.get('taxes_applied') or []" t-as="tax">
+                                                <tr>
+                                                    <td><t t-esc="tax['name']"/></td>
+                                                    <td class="amount">
+                                                        <span t-out="tax.get('base_amount', 0.0)" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                    </td>
+                                                    <td class="amount">
+                                                        <span t-out="tax.get('tax_amount', 0.0)" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                    </td>
+                                                    <td class="amount">
+                                                        <span t-out="tax.get('non_deductible', 0.0)" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                    <div style="font-weight:bold;margin:8px 0 4px;">Impacted Tax Grids</div>
+                                    <table class="ages-ja-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align:left;">Grid</th>
+                                                <th style="text-align:right;">+</th>
+                                                <th style="text-align:right;">-</th>
+                                                <th style="text-align:right;">Impact On Grid</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="tax_summary.get('tax_grids') or []" t-as="grid">
+                                                <tr>
+                                                    <td><t t-esc="grid['name']"/></td>
+                                                    <td class="amount">
+                                                        <t t-if="grid.get('plus')">
+                                                            <span t-out="grid['plus']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                        </t>
+                                                    </td>
+                                                    <td class="amount">
+                                                        <t t-if="grid.get('minus')">
+                                                            <span t-out="grid['minus']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                        </t>
+                                                    </td>
+                                                    <td class="amount">
+                                                        <span t-out="grid.get('impact', 0.0)" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

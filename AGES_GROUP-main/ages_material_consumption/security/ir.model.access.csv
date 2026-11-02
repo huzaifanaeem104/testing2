@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_material_consumption_user,ages.material.consumption user,model_ages_material_consumption,stock.group_stock_user,1,1,1,1
+access_ages_material_consumption_manager,ages.material.consumption manager,model_ages_material_consumption,stock.group_stock_manager,1,1,1,1
+access_ages_material_consumption_line_user,ages.material.consumption.line user,model_ages_material_consumption_line,stock.group_stock_user,1,1,1,1
+access_ages_material_consumption_line_manager,ages.material.consumption.line manager,model_ages_material_consumption_line,stock.group_stock_manager,1,1,1,1
+access_ages_material_consumption_return_user,ages.material.consumption.return user,model_ages_material_consumption_return,stock.group_stock_user,1,1,1,1
+access_ages_material_consumption_return_manager,ages.material.consumption.return manager,model_ages_material_consumption_return,stock.group_stock_manager,1,1,1,1
+access_ages_material_consumption_return_line_user,ages.material.consumption.return.line user,model_ages_material_consumption_return_line,stock.group_stock_user,1,1,1,1
+access_ages_material_consumption_return_line_manager,ages.material.consumption.return.line manager,model_ages_material_consumption_return_line,stock.group_stock_manager,1,1,1,1

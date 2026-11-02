@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ages_user_presence.PresenceListView" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//t[@t-component='props.Renderer']" position="before">
+            <div class="o_ages_presence_summary alert alert-info d-flex flex-wrap align-items-center gap-3 mb-2 mx-2 mt-2" role="status">
+                <div>
+                    <strong>Users Online:</strong>
+                    <span t-esc="summary.users_online"/>
+                </div>
+                <div>
+                    <strong>Active Sessions:</strong>
+                    <span t-esc="summary.active_sessions"/>
+                </div>
+                <div>🟢 Active: <t t-esc="summary.active"/></div>
+                <div>🔵 Background: <t t-esc="summary.background"/></div>
+                <div>🟡 Idle: <t t-esc="summary.idle"/></div>
+                <div>⚪ Inactive: <t t-esc="summary.inactive"/></div>
+                <div class="text-muted small ms-auto">
+                    Users Online counts people. Active Sessions counts browsers/devices.
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

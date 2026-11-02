@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_advance_application_tree" model="ir.ui.view">
+        <field name="name">hr.advance.application.list</field>
+        <field name="model">hr.advance.application</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="date"/>
+                <field name="amount" sum="Total"/>
+                <field name="amount_residual"/>
+                <field name="payment_method"/>
+                <field name="deduction_state"
+                         decoration-success="deduction_state == 'deducted'"
+                         decoration-warning="deduction_state in ('partial', 'skipped')"
+                         decoration-info="deduction_state == 'pending'"
+                         widget="badge"/>
+                <field name="state"
+                         decoration-info="state == 'draft'"
+                         decoration-warning="state == 'to_approve'"
+                         decoration-primary="state == 'approved'"
+                         decoration-success="state == 'confirmed'"
+                         widget="badge"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hr_advance_application_form" model="ir.ui.view">
+        <field name="name">hr.advance.application.form</field>
+        <field name="model">hr.advance.application</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" string="Submit" type="object" class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
+                            invisible="state != 'to_approve'"
+                            groups="ages_hr_payroll.group_hr_payroll_manager"/>
+                    <button name="action_refuse" string="Refuse" type="object"
+                            invisible="state != 'to_approve'"
+                            groups="ages_hr_payroll.group_hr_payroll_manager"/>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight"
+                            invisible="state != 'approved'"
+                            groups="ages_hr_payroll.group_hr_payroll_manager"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                            invisible="state not in ('to_approve', 'approved', 'cancel')"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state in ('confirmed', 'cancel')"/>
+                    <button name="action_mark_skipped" string="Skip Next Payslip" type="object"
+                            invisible="state != 'confirmed' or skip_next_payslip"/>
+                    <button name="action_resume_deduction" string="Resume Deduction" type="object"
+                            invisible="state != 'confirmed' or not skip_next_payslip"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,to_approve,approved,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_move" type="object" class="oe_stat_button" icon="fa-book"
+                                invisible="not move_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Journal Entry</span>
+                            </div>
+                        </button>
+                        <button name="action_open_payslips" type="object" class="oe_stat_button" icon="fa-money"
+                                invisible="payslip_count == 0">
+                            <field name="payslip_count" widget="statinfo" string="Payslips"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" readonly="state != 'draft'"/>
+                            <field name="department_id"/>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="recovery_date" readonly="state == 'confirmed'"/>
+                            <field name="amount" readonly="state != 'draft'"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="payment_method" readonly="state == 'confirmed'"/>
+                            <field name="journal_id" readonly="state == 'confirmed'"/>
+                            <field name="receivable_account_id" readonly="state == 'confirmed'"/>
+                            <field name="payment_account_id" readonly="state == 'confirmed'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state == 'confirmed'"/>
+                            <field name="deduction_state" readonly="1"/>
+                            <field name="amount_deducted" readonly="1"/>
+                            <field name="amount_residual" readonly="1"/>
+                            <field name="skip_next_payslip"/>
+                            <field name="move_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="note" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_advance_application_search" model="ir.ui.view">
+        <field name="name">hr.advance.application.search</field>
+        <field name="model">hr.advance.application</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="employee_id"/>
+                <filter string="To Approve" name="to_approve" domain="[('state', '=', 'to_approve')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Pending Deduction" name="pending_deduction"
+                        domain="[('deduction_state', 'in', ('pending', 'partial', 'skipped'))]"/>
+                <group>
+                    <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_advance_application" model="ir.actions.act_window">
+        <field name="name">Advance Applications</field>
+        <field name="res_model">hr.advance.application</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_hr_advance_application_search"/>
+    </record>
+</odoo>

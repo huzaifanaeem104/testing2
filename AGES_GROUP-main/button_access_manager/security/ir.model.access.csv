@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_button_access_rule_system,button.access.rule.system,model_button_access_rule,base.group_system,1,1,1,1
+access_button_access_menu_rule_system,button.access.menu.rule.system,model_button_access_menu_rule,base.group_system,1,1,1,1
+access_button_access_scan_wizard_system,button.access.scan.wizard.system,model_button_access_scan_wizard,base.group_system,1,1,1,1
+access_button_access_scan_line_system,button.access.scan.line.system,model_button_access_scan_line,base.group_system,1,1,1,1
+access_button_access_copy_wizard_system,button.access.copy.wizard.system,model_button_access_copy_wizard,base.group_system,1,1,1,1
+access_button_access_menu_wizard_system,button.access.menu.wizard.system,model_button_access_menu_wizard,base.group_system,1,1,1,1
+access_button_access_menu_wizard_line_system,button.access.menu.wizard.line.system,model_button_access_menu_wizard_line,base.group_system,1,1,1,1
+access_access_profile_system,access.profile.system,model_access_profile,base.group_system,1,1,1,1
+access_access_profile_model_system,access.profile.model.system,model_access_profile_model,base.group_system,1,1,1,1
+access_access_profile_exception_system,access.profile.exception.system,model_access_profile_exception,base.group_system,1,1,1,1
+access_access_profile_log_system,access.profile.log.system,model_access_profile_log,base.group_system,1,1,0,1
+access_access_block_log_system,access.block.log.system,model_access_block_log,base.group_system,1,1,1,1
+access_access_profile_preset_wizard_system,access.profile.preset.wizard.system,model_access_profile_preset_wizard,base.group_system,1,1,1,1
+access_access_profile_simulator_system,access.profile.simulator.system,model_access_profile_simulator,base.group_system,1,1,1,1
+access_access_profile_simulator_line_system,access.profile.simulator.line.system,model_access_profile_simulator_line,base.group_system,1,1,1,1

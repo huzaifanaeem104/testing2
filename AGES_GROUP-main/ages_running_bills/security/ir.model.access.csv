@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ages_running_bill_material_line_user,ages.running.bill.material.line user,model_ages_running_bill_material_line,project.group_project_user,1,1,1,1
+access_ages_running_bill_material_line_manager,ages.running.bill.material.line manager,model_ages_running_bill_material_line,project.group_project_manager,1,1,1,1

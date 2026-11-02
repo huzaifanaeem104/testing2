@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="hr_payroll_dashboard_warning_employee_without_contract" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees Without Running Contracts</field>
+            <field name="country_id" eval="False"/>
+            <field name="sequence">10</field>
+            <field name="evaluation_code"><![CDATA[
+employees_without_contracts = self.env['hr.employee']
+all_employees = self.env['hr.employee'].search([
+    ('employee_type', '=', 'employee'),
+    ('company_id', 'in', self.env.companies.ids),
+])
+today = date.today()
+for employee in all_employees:
+    contract = employee.contract_id.sudo()
+    if contract and contract.date_end and contract.date_end < today:
+        employees_without_contracts += employee
+    elif not contract:
+        existing_draft_contract = self.env['hr.contract'].search([
+            ('employee_id', '=', employee.id),
+            ('company_id', '=', employee.company_id.id),
+            ('state', '=', 'draft'),
+            ('kanban_state', '=', 'done'),
+        ], limit=1)
+        if not existing_draft_contract:
+            employees_without_contracts += employee
+if employees_without_contracts:
+    warning_count = len(employees_without_contracts)
+    warning_records = employees_without_contracts
+]]></field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_employee_missing_from_open_batch" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees (With Running Contracts) missing from open batches</field>
+            <field name="country_id" eval="False"/>
+            <field name="sequence">20</field>
+            <field name="evaluation_code"><![CDATA[
+open_batches = last_batches.filtered(lambda b: b.state in ('draft', 'verify'))
+if open_batches:
+    employees_missing_payslip = self.env['hr.employee'].search([
+        ('company_id', 'in', open_batches.company_id.ids),
+        ('id', 'not in', open_batches.slip_ids.employee_id.ids),
+        ('contract_id.state', '=', 'open'),
+    ])
+    if employees_missing_payslip:
+        warning_count = len(employees_missing_payslip)
+        warning_records = employees_missing_payslip.contract_id
+]]></field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_employee_without_identification" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees Without Identification Number</field>
+            <field name="country_id" eval="False"/>
+            <field name="sequence">30</field>
+            <field name="evaluation_code"><![CDATA[
+employees_wo_id = self.env['hr.employee'].search([
+    ('identification_id', '=', False),
+    ('company_id', 'in', self.env.companies.ids),
+])
+if employees_wo_id:
+    warning_count = len(employees_wo_id)
+    warning_records = employees_wo_id
+]]></field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_employee_without_bank_account" model="hr.payroll.dashboard.warning">
+            <field name="name">Employees Without Bank account Number</field>
+            <field name="country_id" eval="False"/>
+            <field name="sequence">40</field>
+            <field name="evaluation_code"><![CDATA[
+employees_wo_bnk_acc = self.env['hr.employee'].search([
+    ('bank_account_id', '=', False),
+    ('contract_id', '!=', False),
+    ('company_id', 'in', self.env.companies.ids),
+])
+if employees_wo_bnk_acc:
+    warning_count = len(employees_wo_bnk_acc)
+    warning_records = employees_wo_bnk_acc
+]]></field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_payslips_negative_net" model="hr.payroll.dashboard.warning">
+            <field name="name">Payslips With Negative NET</field>
+            <field name="country_id" eval="False"/>
+            <field name="sequence">50</field>
+            <field name="evaluation_code"><![CDATA[
+payslips_with_negative_net = self.env['hr.payslip']
+for slip in last_batches.slip_ids:
+    if slip.state == 'cancel':
+        continue
+    if slip.net_wage < 0:
+        payslips_with_negative_net |= slip
+if payslips_with_negative_net:
+    warning_count = len(payslips_with_negative_net)
+    warning_records = payslips_with_negative_net
+]]></field>
+        </record>
+
+        <record id="hr_payroll_dashboard_warning_work_entries_in_conflict" model="hr.payroll.dashboard.warning">
+            <field name="name">Work Entries in Conflict</field>
+            <field name="country_id" eval="False"/>
+            <field name="sequence">60</field>
+            <field name="evaluation_code"><![CDATA[
+conflicts = self.env['hr.work.entry'].search([('state', '=', 'conflict')])
+if conflicts:
+    warning_count = len(conflicts)
+    warning_records = conflicts
+]]></field>
+        </record>
+    </data>
+</odoo>

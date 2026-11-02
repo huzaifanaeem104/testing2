@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_health_case_user,health.case user,model_dairy_health_case,dairy_farm_core.group_dairy_user,1,0,0,0
+access_health_case_vet,health.case vet,model_dairy_health_case,dairy_farm_core.group_dairy_veterinarian,1,1,1,1
+access_treatment_user,treatment user,model_dairy_treatment,dairy_farm_core.group_dairy_user,1,0,0,0
+access_treatment_vet,treatment vet,model_dairy_treatment,dairy_farm_core.group_dairy_veterinarian,1,1,1,1
+access_vaccination_user,vaccination user,model_dairy_vaccination,dairy_farm_core.group_dairy_user,1,0,0,0
+access_vaccination_vet,vaccination vet,model_dairy_vaccination,dairy_farm_core.group_dairy_veterinarian,1,1,1,1
+access_followup_user,followup user,model_dairy_health_followup,dairy_farm_core.group_dairy_user,1,0,0,0
+access_followup_vet,followup vet,model_dairy_health_followup,dairy_farm_core.group_dairy_veterinarian,1,1,1,1
+access_vaccination_plan_wizard,vaccination.plan.wizard,model_dairy_vaccination_plan_wizard,dairy_farm_core.group_dairy_veterinarian,1,1,1,1

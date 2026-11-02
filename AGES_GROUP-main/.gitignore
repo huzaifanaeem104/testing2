@@ -1,0 +1,20 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Odoo
+*.log
+*.sqlite3
+
+# Virtual env
+venv/
+apex_studio/
+
+# Inactive modules moved out of the active addons path
+Dormant_Module/
+Requirements/
+# ages_management_dashboard
+ks_access_manager_ninja.zip
+# ages_enterprise_dashboard/
+ages_erp_copilot/
+student_basic/

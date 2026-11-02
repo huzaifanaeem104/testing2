@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_form_account" model="ir.ui.view">
+        <field name="name">hr.salary.rule.form.account</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="ages_hr_payroll.hr_salary_rule_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Accounting" name="accounting">
+                    <group>
+                        <field name="account_debit"/>
+                        <field name="account_credit"/>
+                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="not_computed_in_net"/>
+                        <field name="split_move_lines"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

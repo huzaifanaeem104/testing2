@@ -1,0 +1,60 @@
+$ages-sidebar-large-width: 146px;
+$ages-sidebar-small-width: 46px;
+$ages-sidebar-transition: 0.25s ease;
+
+body.mk_sidebar_type_large:not(.o_home_menu_background):not(.o_fullscreen),
+body.mk_sidebar_type_small:not(.o_home_menu_background):not(.o_fullscreen) {
+    .mk_apps_sidebar_panel {
+        transition: width $ages-sidebar-transition;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .mk_apps_sidebar_name,
+    .mk_apps_sidebar_logo {
+        transition: opacity $ages-sidebar-transition, max-width $ages-sidebar-transition;
+    }
+
+    .mk_apps_sidebar_panel.mk_apps_sidebar_collapsed {
+        width: $ages-sidebar-small-width !important;
+
+        .mk_apps_sidebar_name {
+            opacity: 0;
+            max-width: 0;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .mk_apps_sidebar_icon {
+            margin-right: 0 !important;
+        }
+
+        .mk_apps_sidebar_logo {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 !important;
+        }
+    }
+
+    .mk_apps_sidebar_panel.mk_apps_sidebar_expanded {
+        width: $ages-sidebar-large-width !important;
+        z-index: 1000;
+        box-shadow: 2px 0 12px rgba(0, 0, 0, 0.18);
+
+        .mk_apps_sidebar_name {
+            opacity: 1;
+            max-width: 120px;
+        }
+
+        .mk_apps_sidebar_icon {
+            margin-right: 5px !important;
+        }
+
+        .mk_apps_sidebar_logo {
+            opacity: 1;
+            max-height: 120px;
+        }
+    }
+}

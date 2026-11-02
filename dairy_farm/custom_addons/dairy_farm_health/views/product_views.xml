@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_dairy_medicine" model="ir.ui.view">
+        <field name="name">product.template.form.dairy.medicine</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <div name="options" position="inside">
+                <span class="d-inline-flex">
+                    <field name="is_dairy_medicine"/>
+                    <label for="is_dairy_medicine"/>
+                </span>
+            </div>
+            <notebook position="inside">
+                <page string="Veterinary" name="dairy_veterinary" invisible="not is_dairy_medicine">
+                    <group>
+                        <group>
+                            <field name="is_dairy_vaccine"/>
+                            <field name="dairy_default_route"/>
+                            <field name="dairy_revaccination_days" invisible="not is_dairy_vaccine"/>
+                        </group>
+                        <group string="Withdrawal Periods">
+                            <field name="dairy_milk_withdrawal_days"/>
+                            <field name="dairy_meat_withdrawal_days"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <record id="action_dairy_medicine_products" model="ir.actions.act_window">
+        <field name="name">Medicines &amp; Vaccines</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('is_dairy_medicine', '=', True)]</field>
+        <field name="context">{'default_is_dairy_medicine': True, 'default_is_storable': True, 'default_type': 'consu'}</field>
+    </record>
+
+    <record id="action_dairy_medicine_lots" model="ir.actions.act_window">
+        <field name="name">Medicine Lots &amp; Expiry</field>
+        <field name="res_model">stock.lot</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('product_id.is_dairy_medicine', '=', True)]</field>
+        <field name="context">{'search_default_expiration_alerts': 1}</field>
+    </record>
+</odoo>

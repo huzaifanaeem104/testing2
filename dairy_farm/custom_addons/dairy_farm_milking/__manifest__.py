@@ -1,0 +1,21 @@
+{
+    'name': 'Dairy Farm - Milking',
+    'version': '18.0.1.0.0',
+    'category': 'Agriculture/Dairy Farm',
+    'summary': 'Three-shift milking sessions, cow-wise yields, corrections and production reports',
+    'author': 'Dairy Farm ERP',
+    'license': 'LGPL-3',
+    'depends': ['dairy_farm_core', 'mail'],
+    'data': [
+        'security/ir.model.access.csv',
+        'security/milking_rules.xml',
+        'data/ir_sequence_data.xml',
+        'data/ir_cron_data.xml',
+        'views/dairy_milking_session_views.xml',
+        'views/dairy_milking_line_views.xml',
+        'views/dairy_milking_correction_views.xml',
+        'views/dairy_animal_views.xml',
+        'views/milking_menus.xml',
+    ],
+    'installable': True,
+}

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_ages_gate_pass_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="row mb-3">
+                            <div class="col-8">
+                                <h2>Gate Pass</h2>
+                                <h3 t-field="o.name"/>
+                                <p>
+                                    <strong>Type:</strong>
+                                    <span t-field="o.gate_type"/>
+                                    <br/>
+                                    <strong>Status:</strong>
+                                    <span t-field="o.state"/>
+                                </p>
+                            </div>
+                            <div class="col-4 text-end" t-if="o.qr_code">
+                                <div t-field="o.qr_code"
+                                     t-options="{'widget': 'barcode', 'symbology': 'QR', 'width': 120, 'height': 120, 'img_style': 'width:120px;height:120px;'}"/>
+                                <div class="small" t-field="o.name"/>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <strong>Vendor</strong>
+                                <div t-field="o.partner_id"/>
+                                <strong>Truck No</strong>
+                                <div t-field="o.truck_no"/>
+                                <strong>Driver</strong>
+                                <div>
+                                    <span t-field="o.driver_name"/>
+                                    <span t-if="o.driver_phone"> / <span t-field="o.driver_phone"/></span>
+                                </div>
+                                <strong>Receiver</strong>
+                                <div t-field="o.receiver"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Pass Date</strong>
+                                <div t-field="o.pass_date"/>
+                                <strong>Gate In / Out</strong>
+                                <div>
+                                    <span t-field="o.gate_in_datetime"/>
+                                    <span t-if="o.gate_out_datetime"> to <span t-field="o.gate_out_datetime"/></span>
+                                </div>
+                                <strong>Warehouse</strong>
+                                <div t-field="o.warehouse_id"/>
+                                <strong>Project</strong>
+                                <div t-field="o.project_id"/>
+                                <strong>Active Company</strong>
+                                <div t-field="o.sub_company_id"/>
+                                <strong>Linked Transfers</strong>
+                                <div>
+                                    <t t-foreach="o.picking_ids | o.picking_id" t-as="picking">
+                                        <div t-field="picking.name"/>
+                                    </t>
+                                </div>
+                                <t t-if="o.gate_type == 'rgp'">
+                                    <strong>Expected Return</strong>
+                                    <div t-field="o.expected_return_date"/>
+                                </t>
+                                <t t-if="o.source_rgp_id">
+                                    <strong>Return Against</strong>
+                                    <div t-field="o.source_rgp_id.name"/>
+                                </t>
+                                <t t-if="o.outward_gate_pass_id">
+                                    <strong>Outward Reference</strong>
+                                    <div t-field="o.outward_gate_pass_id.name"/>
+                                    <div t-if="o.has_qty_variance" class="text-danger">
+                                        <strong>⚠ Quantity variance vs. outward — see system record.</strong>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Other Item</th>
+                                    <th>Description</th>
+                                    <th>Unit</th>
+                                    <th class="text-end">Quantity</th>
+                                    <th class="text-end">Confirm Qty</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids" t-as="line">
+                                    <td t-field="line.product_id"/>
+                                    <td t-field="line.other_item"/>
+                                    <td t-field="line.name"/>
+                                    <td t-field="line.uom_id"/>
+                                    <td class="text-end" t-field="line.quantity"/>
+                                    <td class="text-end" t-field="line.confirm_qty"/>
+                                    <td t-field="line.remarks"/>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row mt-5">
+                            <div class="col-4 text-center">
+                                <div>________________________</div>
+                                <div>Security</div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div>________________________</div>
+                                <div>Store / Warehouse</div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div>________________________</div>
+                                <div>Driver</div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

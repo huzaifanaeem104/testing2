@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- List -->
+    <record id="view_ages_contract_list" model="ir.ui.view">
+        <field name="name">ages.contract.list.ages.contracts</field>
+        <field name="model">ages.contract</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <list string="Contracts">
+                <field name="name"/>
+                <field name="project_wise_name"/>
+                <field name="partner_id"/>
+                <field name="sub_company_id"/>
+                <field name="date_start"/>
+                <field name="date_close"/>
+                <field name="total_work_done_value"/>
+                <field name="state"
+                         decoration-info="state == 'new'"
+                         decoration-success="state == 'running'"
+                         decoration-muted="state == 'closed'"
+                         decoration-danger="state == 'cancelled'"
+                         widget="badge"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kanban -->
+    <record id="view_ages_contract_kanban" model="ir.ui.view">
+        <field name="name">ages.contract.kanban</field>
+        <field name="model">ages.contract</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_mobile" sample="1">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="sub_company_id"/>
+                <field name="date_start"/>
+                <field name="date_close"/>
+                <field name="state"/>
+                <field name="total_work_done_value"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column gap-1">
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="project_wise_name"/>
+                            <field name="partner_id"/>
+                            <field name="sub_company_id"/>
+                            <div class="text-muted">
+                                <field name="date_start"/>
+                                <span t-if="record.date_close.raw_value"> → </span>
+                                <field name="date_close"/>
+                            </div>
+                            <div>
+                                <span class="text-muted">Total Contract Value: </span>
+                                <field name="total_work_done_value"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="view_ages_contract_form" model="ir.ui.view">
+        <field name="name">ages.contract.form.ages.contracts</field>
+        <field name="model">ages.contract</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Contract">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                            class="btn-primary" invisible="state != 'new'" data-hotkey="v"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state != 'new'"/>
+                    <button name="action_reset" type="object" string="Reset"
+                            invisible="state != 'cancelled'"/>
+                    <button name="action_create_ra_bill" type="object" string="Create Running Bill"
+                            class="btn-primary" invisible="state != 'running'"/>
+                    <button name="action_mobilization_receiving" type="object"
+                            string="Mobilization Receiving"
+                            invisible="state != 'running' or mobilization_advance_id or total_mobilization_amount == 0"/>
+                    <button name="action_retention_release" type="object"
+                            string="Retention Release"
+                            invisible="state != 'closed' or retention_recovery_id"/>
+                    <button name="action_lock" type="object" string="Lock"
+                            invisible="is_locked or state == 'cancelled'"/>
+                    <button name="action_unlock" type="object" string="Unlock"
+                            invisible="not is_locked"/>
+                    <button name="action_close" type="object" string="Close"
+                            invisible="state != 'running'"/>
+                    <button name="action_reopen" type="object" string="Re Open"
+                            class="btn-primary" invisible="state != 'closed'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new,running,closed"/>
+                    <field name="is_locked" invisible="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_running_bills" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="running_bill_count == 0">
+                            <field name="running_bill_count" widget="statinfo" string="Running Bills"/>
+                        </button>
+                        <button name="action_view_mobilization_received" type="object"
+                                class="oe_stat_button" icon="fa-money"
+                                invisible="mobilization_count == 0">
+                            <field name="mobilization_count" widget="statinfo" string="Mobilization Received"/>
+                        </button>
+                        <button name="action_view_retention_release" type="object"
+                                class="oe_stat_button" icon="fa-unlock-alt"
+                                invisible="retention_count == 0">
+                            <field name="retention_count" widget="statinfo" string="Retention Release"/>
+                        </button>
+                        <button name="action_view_project" type="object"
+                                class="oe_stat_button" icon="fa-puzzle-piece"
+                                invisible="project_count == 0">
+                            <field name="project_count" widget="statinfo" string="Project"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Locked"
+                            bg_color="text-bg-secondary"
+                            invisible="not is_locked"/>
+                    <div class="oe_title">
+                        <div class="d-flex flex-wrap column-gap-5">
+                            <div>
+                                <label for="name"/>
+                                <h1>
+                                    <field name="name" readonly="1"/>
+                                </h1>
+                            </div>
+                            <div>
+                                <label for="project_wise_name"/>
+                                <h1>
+                                    <field name="project_wise_name" readonly="1"/>
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <label for="contract_description"/>
+                            <h1>
+                                <field name="contract_description" readonly="is_locked or state in ('closed', 'cancelled')" placeholder="Description of the contract..."/>
+                            </h1>
+                        </div>
+                    </div>
+                    <group string="Contract Details" col="4">
+                        <field name="partner_id" readonly="is_locked or state != 'new'"/>
+                        <field name="sub_company_id" readonly="project_id or is_locked or state != 'new'" force_save="1"/>
+                        <field name="allowed_sales_tax_ids" invisible="1"/>
+                        <field name="allowed_wth_tax_ids" invisible="1"/>
+                        <field name="allowed_wth_on_sales_tax_ids" invisible="1"/>
+                        <field name="date_start" readonly="is_locked or state not in ('new', 'running')"/>
+                        <field name="date_close" readonly="is_locked or state not in ('new', 'running')"/>
+                        <field name="company_id" groups="base.group_multi_company" readonly="is_locked or state != 'new'"/>
+                        <field name="attachment_ids" widget="many2many_binary" string="Documents Attached"
+                                 readonly="is_locked"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    <group string="Amounts" name="amounts" col="1">
+                        <group string="1. Contract Scope" name="amounts_work_progress" col="1">
+                            <field name="scope_project_description"
+                                   placeholder="Project / Company Title (e.g. Al-Hamd Construction Dimension (Pvt.) Ltd.)"
+                                   readonly="is_locked or state in ('closed', 'cancelled')"/>
+                            <group col="2">
+                                <group>
+                                    <field name="total_work_done_value" readonly="is_locked or state in ('closed', 'cancelled') or bool(scope_line_ids)" force_save="1"/>
+                                    <field name="rebate_percent" readonly="is_locked or state in ('closed', 'cancelled')"/>
+                                    <field name="rebate_amount" readonly="is_locked or state in ('closed', 'cancelled')" force_save="1"/>
+                                    <field name="material_recovery" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="work_done_ex_rebate" readonly="1"/>
+                                    <field name="work_done_ex_rebate_mr" readonly="1"/>
+                                </group>
+                            </group>
+                        </group>
+                        <group string="2. Recovery &amp; Retention" name="amounts_recovery_retention" col="2">
+                            <group name="amounts_mobilization">
+                                <field name="mobilization_percent"
+                                         readonly="is_locked or state in ('closed', 'cancelled')"/>
+                                <field name="total_mobilization_amount"
+                                         readonly="is_locked or state in ('closed', 'cancelled')"/>
+                                <field name="wht_on_mobilization"
+                                         readonly="is_locked or state in ('closed', 'cancelled')"/>
+                            </group>
+                            <group name="amounts_retention">
+                                <!-- retention_percent / total_retention_amount / WHT checkbox added by dependent modules -->
+                            </group>
+                        </group>
+                        <group string="3. Taxes &amp; Withholding" name="amounts_taxes" col="2">
+                            <group>
+                                <field name="sales_tax_id"
+                                         readonly="is_locked or state in ('closed', 'cancelled')"
+                                         domain="[('type_tax_use', '=', 'sale'), ('tax_scope', '=', 'service'), ('active', '=', True), ('id', 'in', allowed_sales_tax_ids)]"/>
+                                <field name="sales_tax_amount" readonly="1"/>
+                                <field name="wth_on_sales_tax_id"
+                                         readonly="is_locked or state in ('closed', 'cancelled')"
+                                         domain="[('type_tax_use', '=', 'sale'), ('tax_scope', '=', 'service'), ('active', '=', True), ('amount', '&lt;', 0), ('id', 'in', allowed_wth_on_sales_tax_ids)]"/>
+                                <field name="wth_on_sales_tax_amount" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="wth_tax_id"
+                                         readonly="is_locked or state in ('closed', 'cancelled')"
+                                         domain="[('is_withholding_tax_on_payment', '=', True), ('active', '=', True), ('id', 'in', allowed_wth_tax_ids)]"/>
+                                <field name="wth_amount" readonly="1"/>
+                            </group>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Contract Details" name="contract_details">
+                            <field name="scope_line_ids" readonly="is_locked or state in ('closed', 'cancelled')">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="amount_before_rebate" sum="Total Before Rebate"/>
+                                    <field name="rebate_percent" readonly="1"/>
+                                    <field name="amount_after_rebate" sum="Total After Rebate"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Recovery Material" name="recovery_material">
+                            <field name="material_line_ids" readonly="is_locked or state in ('closed', 'cancelled')">
+                                <list editable="bottom">
+                                    <field name="material"/>
+                                    <field name="quantity" sum="Total Quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="rate"/>
+                                    <field name="amount" sum="Total Amount"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Locations" name="locations">
+                            <group>
+                                <field name="location_id" readonly="1"/>
+                                <field name="project_id" readonly="1"/>
+                            </group>
+                        </page>
+
+                        <page string="Project" name="project">
+                            <group>
+                                <field name="project_id" readonly="1"/>
+                                <field name="analytic_account_id" readonly="1"/>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="date_start" readonly="1"/>
+                                <field name="date_close" readonly="1"/>
+                            </group>
+                        </page>
+
+                        <page string="Account Base" name="account_base">
+                            <group>
+                                <field name="mobilization_amount_base"
+                                         readonly="is_locked or state in ('closed', 'cancelled')"/>
+                                <field name="retention_amount_base"
+                                         readonly="is_locked or state in ('closed', 'cancelled')"/>
+                                <field name="sales_tax_amount_base"
+                                         readonly="is_locked or state in ('closed', 'cancelled')"/>
+                            </group>
+                            <div class="text-muted" colspan="2">
+                                Mobilization, Retention and Sales Tax amounts use the Amount-Base
+                                selected here (defaults from Project Settings → Default Bases).
+                                Changing a base recalculates the related amount.
+                                WTH Amount = WTH % × (Ex Rebate &amp; MR + Sales Tax Amount
+                                − |WTH on Sales Tax| − Mobilization and/or Retention when those
+                                WHT checkboxes are ticked). Sales Tax Amount Base is used only
+                                to compute Sales Tax Amount.
+                            </div>
+                        </page>
+
+                        <page string="Linked Documents" name="linked_docs">
+                            <group>
+                                <field name="mobilization_advance_id" readonly="1"/>
+                                <field name="retention_recovery_id" readonly="1"/>
+                            </group>
+                            <separator string="Running Bills"/>
+                            <field name="running_bill_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ages_contract_search" model="ir.ui.view">
+        <field name="name">ages.contract.search</field>
+        <field name="model">ages.contract</field>
+        <field name="arch" type="xml">
+            <search string="Contracts">
+                <field name="name"/>
+                <field name="project_wise_name"/>
+                <field name="partner_id"/>
+                <field name="sub_company_id"/>
+                <filter name="filter_new" string="New" domain="[('state', '=', 'new')]"/>
+                <filter name="filter_running" string="Running" domain="[('state', '=', 'running')]"/>
+                <filter name="filter_closed" string="Closed" domain="[('state', '=', 'closed')]"/>
+                <filter name="filter_cancelled" string="Cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <group>
+                    <filter name="groupby_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="groupby_customer" string="Client" context="{'group_by': 'partner_id'}"/>
+                    <filter name="groupby_sub_company" string="Active Company" context="{'group_by': 'sub_company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Force our form as the Contracts form view -->
+    <record id="ages_contracts_menu.view_ages_contract_form" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Upgrade existing Contracts action from menu module -->
+    <record id="ages_contracts_menu.action_ages_contract" model="ir.actions.act_window">
+        <field name="name">Contracts</field>
+        <field name="res_model">ages.contract</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_id" ref="view_ages_contract_form"/>
+        <field name="search_view_id" ref="view_ages_contract_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Contract
+            </p>
+            <p>
+                Confirm a contract to auto-create linked Project, Analytic Account and Location.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_ages_contract_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_ages_contract_list"/>
+        <field name="act_window_id" ref="ages_contracts_menu.action_ages_contract"/>
+    </record>
+    <record id="action_ages_contract_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="view_ages_contract_kanban"/>
+        <field name="act_window_id" ref="ages_contracts_menu.action_ages_contract"/>
+    </record>
+    <record id="action_ages_contract_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_ages_contract_form"/>
+        <field name="act_window_id" ref="ages_contracts_menu.action_ages_contract"/>
+    </record>
+
+</odoo>

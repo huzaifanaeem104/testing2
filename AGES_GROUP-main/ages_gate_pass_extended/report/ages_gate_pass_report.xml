@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_ages_gate_pass" model="ir.actions.report">
+        <field name="name">Gate Pass</field>
+        <field name="model">ages.gate.pass</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ages_gate_pass_extended.report_ages_gate_pass_document</field>
+        <field name="report_file">ages_gate_pass_extended.report_ages_gate_pass_document</field>
+        <field name="print_report_name">'Gate Pass - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="ages_gate_pass.model_ages_gate_pass"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_hr_payroll_dashboard_root"
+              name="Dashboard"
+              parent="ages_hr_work_entry_bridge.menu_hr_payroll_root"
+              action="hr_payroll_dashboard_open"
+              sequence="1"
+              groups="ages_hr_payroll.group_hr_payroll_user"/>
+
+    <menuitem id="menu_hr_payroll_employees_root" name="Employees" parent="ages_hr_work_entry_bridge.menu_hr_payroll_root" sequence="10" groups="hr.group_hr_user"/>
+    <menuitem id="menu_hr_payroll_payslips" name="Payslips" parent="ages_hr_work_entry_bridge.menu_hr_payroll_root" sequence="20" groups="ages_hr_payroll.group_hr_payroll_user"/>
+    <menuitem id="menu_hr_payroll_reporting" name="Reporting" parent="ages_hr_work_entry_bridge.menu_hr_payroll_root" sequence="80" groups="ages_hr_payroll.group_hr_payroll_user"/>
+
+    <menuitem id="menu_hr_employee_payroll" name="Employees" action="hr.open_view_employee_list_my" parent="menu_hr_payroll_employees_root" sequence="10"/>
+    <menuitem id="menu_hr_contract_payroll" name="Contracts" action="hr_contract.action_hr_contract" parent="menu_hr_payroll_employees_root" sequence="20"/>
+
+    <menuitem id="menu_hr_payslip_action" name="All Payslips" action="action_view_hr_payslip_form" parent="menu_hr_payroll_payslips" sequence="10"/>
+    <menuitem id="menu_hr_payslip_run" name="Batches" action="action_hr_payslip_run_tree" parent="menu_hr_payroll_payslips" sequence="20"/>
+    <menuitem id="menu_hr_salary_attachment" name="Salary Attachments" action="action_hr_salary_attachment" parent="menu_hr_payroll_payslips" sequence="30"/>
+
+    <menuitem id="menu_hr_payroll_configuration_structures" name="Salary Structures" parent="ages_hr_work_entry_bridge.menu_hr_payroll_configuration" sequence="10"/>
+    <menuitem id="menu_hr_payroll_structure_type" name="Structure Types" action="action_hr_payroll_structure_type" parent="menu_hr_payroll_configuration_structures" sequence="5"/>
+    <menuitem id="menu_hr_payroll_structure_view" name="Structures" action="action_hr_payroll_structure_list" parent="menu_hr_payroll_configuration_structures" sequence="10"/>
+    <menuitem id="menu_hr_salary_rule_category" name="Rule Categories" action="action_hr_salary_rule_category" parent="menu_hr_payroll_configuration_structures" sequence="20"/>
+    <menuitem id="menu_hr_salary_rule" name="Rules" action="action_hr_salary_rule" parent="menu_hr_payroll_configuration_structures" sequence="30"/>
+    <menuitem id="menu_hr_payslip_input_type" name="Other Input Types" action="action_hr_payslip_input_type" parent="ages_hr_work_entry_bridge.menu_hr_payroll_configuration" sequence="40"/>
+    <menuitem id="menu_hr_rule_parameter" name="Rule Parameters" action="action_hr_rule_parameter" parent="ages_hr_work_entry_bridge.menu_hr_payroll_configuration" sequence="45"/>
+    <menuitem id="menu_hr_payroll_note" name="Payslip Notes" action="action_hr_payroll_note" parent="ages_hr_work_entry_bridge.menu_hr_payroll_configuration" sequence="50"/>
+    <menuitem id="menu_hr_payroll_dashboard_warning"
+              name="Dashboard Warnings"
+              action="action_hr_payroll_dashboard_warning"
+              parent="ages_hr_work_entry_bridge.menu_hr_payroll_configuration"
+              sequence="55"
+              groups="ages_hr_payroll.group_hr_payroll_manager"/>
+    <menuitem id="menu_hr_payroll_settings" name="Settings" action="action_hr_payroll_configuration" parent="ages_hr_work_entry_bridge.menu_hr_payroll_configuration" sequence="90" groups="base.group_system"/>
+
+    <menuitem id="menu_hr_payroll_report" name="Payroll Analysis" action="action_hr_payroll_report" parent="menu_hr_payroll_reporting" sequence="10"/>
+    <menuitem id="menu_hr_work_entry_report" name="Work Entries Analysis" action="action_hr_work_entry_report" parent="menu_hr_payroll_reporting" sequence="20"/>
+</odoo>

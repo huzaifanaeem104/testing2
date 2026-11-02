@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="quality_point_view_form_worksheet" model="ir.ui.view">
+        <field name="name">quality.point.form.worksheet</field>
+        <field name="model">quality.point</field>
+        <field name="inherit_id" ref="quality.quality_point_view_form"/>
+        <field name="arch" type="xml">
+            <field name="note" position="after">
+                <field name="worksheet_template" placeholder="Worksheet the operator must complete..."/>
+            </field>
+        </field>
+    </record>
+    <record id="quality_check_view_form_worksheet" model="ir.ui.view">
+        <field name="name">quality.check.form.worksheet</field>
+        <field name="model">quality.check</field>
+        <field name="inherit_id" ref="quality.quality_check_view_form"/>
+        <field name="arch" type="xml">
+            <field name="additional_note" position="after">
+                <field name="worksheet"/>
+            </field>
+        </field>
+    </record>
+</odoo>

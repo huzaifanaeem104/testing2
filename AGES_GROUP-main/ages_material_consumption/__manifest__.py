@@ -1,0 +1,28 @@
+{
+    'name': 'AGES Material Consumption',
+    'summary': 'Material Consumption under Inventory with Stock Valuation journal entry',
+    'version': '18.0.1.1.2',
+    'category': 'Inventory/Inventory',
+    'author': 'Muhammad Sana Ullah',
+    'depends': [
+        'mail',
+        'stock',
+        'stock_account',
+        'account',
+        'analytic',
+        'project',
+        'ages_contracts',
+        'ages_company',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/ir_sequence_data.xml',
+        'wizard/ages_material_consumption_return_views.xml',
+        'views/ages_material_consumption_views.xml',
+        'views/account_move_views.xml',
+    ],
+    'license': 'LGPL-3',
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

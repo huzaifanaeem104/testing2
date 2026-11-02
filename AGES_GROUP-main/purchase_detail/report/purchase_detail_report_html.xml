@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_preview">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page purchase-detail-preview">
+                    <style>
+                        .purchase-detail-preview .awt-header {
+                            display: flex;
+                            align-items: center;
+                            margin-bottom: 16px;
+                            min-height: 70px;
+                        }
+                        .purchase-detail-preview .awt-header-logo {
+                            width: 120px;
+                            flex-shrink: 0;
+                        }
+                        .purchase-detail-preview .awt-header-logo img {
+                            max-width: 110px;
+                            max-height: 65px;
+                        }
+                        .purchase-detail-preview .awt-header-info {
+                            margin-left: 24px;
+                        }
+                        .purchase-detail-preview .awt-company {
+                            font-weight: bold;
+                            font-size: 14px;
+                        }
+                        .purchase-detail-preview .awt-report-title {
+                            font-weight: bold;
+                            font-size: 12px;
+                            margin-top: 4px;
+                        }
+                        .purchase-detail-preview .awt-dates {
+                            font-size: 12px;
+                            margin-top: 4px;
+                        }
+                        .purchase-detail-preview .awt-dates span {
+                            margin-right: 24px;
+                        }
+                        .purchase-detail-preview h2 {
+                            text-align: center;
+                            font-weight: bold;
+                            font-size: 16px;
+                            margin-bottom: 20px;
+                        }
+                        .purchase-detail-preview .filter-table {
+                            margin-bottom: 16px;
+                            width: auto;
+                        }
+                        .purchase-detail-preview .filter-table td {
+                            padding: 2px 12px 2px 0;
+                            border: none;
+                        }
+                        .purchase-detail-preview .filter-label {
+                            font-weight: bold;
+                        }
+                        .purchase-detail-preview .data-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            font-size: 12px;
+                        }
+                        .purchase-detail-preview .data-table th {
+                            background-color: #4F81BD;
+                            color: white;
+                            border: 1px solid #000;
+                            padding: 6px 4px;
+                            text-align: center;
+                            font-weight: bold;
+                        }
+                        .purchase-detail-preview .data-table td {
+                            border: 1px solid #000;
+                            padding: 4px;
+                        }
+                        .purchase-detail-preview .data-table .num {
+                            text-align: right;
+                        }
+                    </style>
+
+<!--                    <div class="awt-header">-->
+<!--                        <div class="awt-header-logo">-->
+<!--                            <img src="/purchase_detail/static/img/awt_logo.jpeg" alt="Allah Wale Foundation"/>-->
+<!--                        </div>-->
+<!--                        <div class="awt-header-info">-->
+<!--                            <div class="awt-company">Allah Wale Foundation</div>-->
+<!--                            <div class="awt-report-title">Purchase Detail Report</div>-->
+<!--                            <div class="awt-dates">-->
+<!--                                <span>Date From: <t t-esc="from_date"/></span>-->
+<!--                                <span>Date To: <t t-esc="to_date"/></span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+                    <table class="filter-table">
+                        <tr>
+                            <td class="filter-label">Suppliers:</td>
+                            <td><t t-esc="suppliers"/></td>
+                        </tr>
+                        <tr>
+                            <td class="filter-label">Projects:</td>
+                            <td><t t-esc="projects"/></td>
+                        </tr>
+                        <tr>
+                            <td class="filter-label">UOM:</td>
+                            <td><t t-esc="uom"/></td>
+                        </tr>
+                        <tr>
+                            <td class="filter-label">City Locations:</td>
+                            <td><t t-esc="city_locations"/></td>
+                        </tr>
+                    </table>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>SR#</th>
+                                <th>Date</th>
+                                <th>Supplier</th>
+                                <th>Bill No</th>
+                                <th>Ref No</th>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="rows" t-as="row">
+                                <tr>
+                                    <td><t t-esc="row['sr_no']"/></td>
+                                    <td><t t-esc="row['invoice_date']"/></td>
+                                    <td><t t-esc="row['supplier']"/></td>
+                                    <td><t t-esc="row['bill_no']"/></td>
+                                    <td><t t-esc="row['ref_no']"/></td>
+                                    <td><t t-esc="row['product']"/></td>
+                                    <td class="num">
+                                        <t t-esc="'{:,.2f}'.format(row['qty'])"/>
+                                    </td>
+                                    <td class="num">
+                                        <t t-esc="'{:,.2f}'.format(row['rate'])"/>
+                                    </td>
+                                    <td class="num">
+                                        <t t-esc="'{:,.2f}'.format(row['amount'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_purchase_detail_report_html" model="ir.actions.report">
+        <field name="name">Purchase Detail Preview</field>
+        <field name="model">purchase.detail.report.wizard</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">purchase_detail.report_preview</field>
+        <field name="report_file">purchase_detail.report_preview</field>
+        <field name="print_report_name">'Purchase Detail Preview'</field>
+    </record>
+
+</odoo>

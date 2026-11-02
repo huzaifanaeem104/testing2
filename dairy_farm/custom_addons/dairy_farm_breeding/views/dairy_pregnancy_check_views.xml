@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dairy_pregnancy_check_search" model="ir.ui.view">
+        <field name="name">dairy.pregnancy.check.search</field>
+        <field name="model">dairy.pregnancy.check</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="animal_id"/>
+                <field name="veterinarian_id"/>
+                <filter name="filter_scheduled" string="Scheduled" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_pregnant" string="Pregnant" domain="[('result', '=', 'pregnant')]"/>
+                <filter name="filter_open" string="Not Pregnant" domain="[('result', '=', 'open')]"/>
+                <filter name="filter_date" string="Date" date="date"/>
+                <group string="Group By">
+                    <filter name="groupby_result" string="Result" context="{'group_by': 'result'}"/>
+                    <filter name="groupby_month" string="Month" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_dairy_pregnancy_check_list" model="ir.ui.view">
+        <field name="name">dairy.pregnancy.check.list</field>
+        <field name="model">dairy.pregnancy.check</field>
+        <field name="arch" type="xml">
+            <list string="Pregnancy Checks" decoration-info="state == 'draft'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="animal_id"/>
+                <field name="breeding_event_id" optional="hide"/>
+                <field name="breeding_date"/>
+                <field name="date"/>
+                <field name="days_after_service" optional="show"/>
+                <field name="method" optional="show"/>
+                <field name="result" widget="badge" decoration-success="result == 'pregnant'" decoration-danger="result == 'open'"/>
+                <field name="expected_calving_date"/>
+                <field name="veterinarian_id" optional="show"/>
+                <field name="state" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dairy_pregnancy_check_form" model="ir.ui.view">
+        <field name="name">dairy.pregnancy.check.form</field>
+        <field name="model">dairy.pregnancy.check</field>
+        <field name="arch" type="xml">
+            <form string="Pregnancy Check">
+                <header>
+                    <button name="action_done" type="object" string="Record Result" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="animal_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="breeding_event_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="breeding_date"/>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="days_after_service"/>
+                        </group>
+                        <group>
+                            <field name="method" readonly="state != 'draft'"/>
+                            <field name="result" readonly="state != 'draft'"/>
+                            <field name="expected_calving_date" invisible="result != 'pregnant'" readonly="state != 'draft'"/>
+                            <field name="veterinarian_id" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <field name="notes" placeholder="Findings"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dairy_pregnancy_check" model="ir.actions.act_window">
+        <field name="name">Pregnancy Checks</field>
+        <field name="res_model">dairy.pregnancy.check</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_dairy_pregnancy_check_due" model="ir.actions.act_window">
+        <field name="name">Pregnancy Checks Due</field>
+        <field name="res_model">dairy.breeding.event</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('event_type', '=', 'breeding'), ('result', '=', 'pending'), ('state', '=', 'done')]</field>
+        <field name="context">{'search_default_filter_check_due': 1}</field>
+    </record>
+</odoo>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_payslip_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.list</field>
+        <field name="model">hr.payslip</field>
+        <field name="arch" type="xml">
+            <list string="Payslips" multi_edit="1" sample="1">
+                <field name="number"/>
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="basic_wage" optional="hide"/>
+                <field name="gross_wage" optional="show"/>
+                <field name="net_wage"/>
+                <field name="state" widget="badge"
+                         decoration-info="state == 'draft'"
+                         decoration-warning="state == 'verify'"
+                         decoration-success="state in ('done', 'paid')"
+                         decoration-danger="state == 'cancel'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_form" model="ir.ui.view">
+        <field name="name">hr.payslip.form</field>
+        <field name="model">hr.payslip</field>
+        <field name="arch" type="xml">
+            <form string="Payslip">
+                <header>
+                    <button name="compute_sheet" string="Compute Sheet" type="object"
+                            invisible="state not in ('draft', 'verify')" class="btn-primary"/>
+                    <button name="action_payslip_done" string="Confirm" type="object"
+                            invisible="state != 'verify'" class="btn-primary" confirm="Confirm this payslip?"/>
+                    <button name="action_payslip_paid" string="Mark as Paid" type="object"
+                            invisible="state != 'done'"/>
+                    <button name="action_payslip_unpaid" string="Unpaid" type="object"
+                            invisible="state != 'paid'" class="btn-secondary"
+                            confirm="Set this payslip back to Done and cancel its payment entry?"/>
+                    <button name="action_refresh_from_work_entries" string="Refresh from Work Entries" type="object"
+                            invisible="state not in ('draft', 'verify') or edited"/>
+                    <button name="action_payslip_draft" string="Set to Draft" type="object"
+                            invisible="state not in ('cancel', 'verify')"/>
+                    <button name="action_payslip_cancel" string="Cancel Payslip" type="object"
+                            invisible="state in ('done', 'paid', 'cancel')" groups="ages_hr_payroll.group_hr_payroll_user"/>
+                    <button name="action_payslip_cancel" string="Cancel Payslip" type="object"
+                            invisible="state not in ('done', 'paid')" groups="ages_hr_payroll.group_hr_payroll_manager"
+                            confirm="Cancel this payslip and reset/cancel its expense and payment entries?"/>
+                    <button name="refund_sheet" string="Refund" type="object"
+                            invisible="state not in ('done', 'paid') or credit_note"/>
+                    <button name="action_edit_payslip_lines" string="Edit" type="object"
+                            invisible="state not in ('draft', 'verify')" groups="ages_hr_payroll.group_hr_payroll_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,verify,done,paid"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(hr_work_entry.hr_work_entry_action)d" type="action" class="oe_stat_button" icon="fa-calendar"
+                                context="{'search_default_employee_id': employee_id}">
+                            <div class="o_stat_info"><span class="o_stat_text">Work Entries</span></div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="employee_id"/>
+                        <h1><field name="employee_id" readonly="state != 'draft'" options="{'no_create': True}"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="number" readonly="1"/>
+                            <field name="struct_id" readonly="state != 'draft'"/>
+                            <field name="contract_id" readonly="state != 'draft'"/>
+                            <field name="credit_note"/>
+                            <field name="edited" invisible="1"/>
+                        </group>
+                        <group>
+                            <label for="date_from" string="Period"/>
+                            <div class="o_row">
+                                <field name="date_from" class="oe_inline" readonly="state != 'draft'"/> -
+                                <field name="date_to" class="oe_inline" readonly="state != 'draft'"/>
+                            </div>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                            <field name="payslip_run_id" readonly="state in ('done', 'paid', 'cancel')"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="wage_type" invisible="1"/>
+                            <field name="use_worked_day_lines" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Worked Days &amp; Inputs" name="worked_days_input" invisible="not use_worked_day_lines">
+                            <separator string="Worked Days"/>
+                            <field name="worked_days_line_ids" readonly="state in ('done', 'paid', 'cancel')">
+                                <list editable="bottom">
+                                    <field name="work_entry_type_id"/>
+                                    <field name="name"/>
+                                    <field name="number_of_days" sum="Total Days"/>
+                                    <field name="number_of_hours" sum="Total Hours" widget="float_time"/>
+                                    <field name="amount" sum="Total Amount"/>
+                                    <field name="is_paid" optional="hide"/>
+                                </list>
+                            </field>
+                            <separator string="Other Inputs"/>
+                            <field name="input_line_ids" readonly="state in ('done', 'paid', 'cancel')">
+                                <list editable="bottom">
+                                    <field name="input_type_id"/>
+                                    <field name="name"/>
+                                    <field name="amount"/>
+                                    <field name="code" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Salary Computation" name="salary_computation">
+                            <field name="line_ids" readonly="1">
+                                <list>
+                                    <field name="sequence" optional="hide"/>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="category_id" optional="show"/>
+                                    <field name="quantity"/>
+                                    <field name="rate"/>
+                                    <field name="amount"/>
+                                    <field name="total" sum="Total"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="basic_wage"/>
+                                <field name="gross_wage"/>
+                                <field name="net_wage" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                        <page string="Other Info" name="other_info">
+                            <group>
+                                <field name="name"/>
+                                <field name="compute_date" readonly="1"/>
+                                <field name="note"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.select</field>
+        <field name="model">hr.payslip</field>
+        <field name="arch" type="xml">
+            <search string="Search Payslips">
+                <field name="employee_id"/>
+                <field name="number"/>
+                <field name="date_from"/>
+                <field name="struct_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Waiting" name="verify" domain="[('state', '=', 'verify')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <filter string="Paid" name="paid" domain="[('state', '=', 'paid')]"/>
+                <separator/>
+                <filter string="My Department" name="my_department" domain="[('employee_id.member_of_department', '=', True)]"/>
+                <group>
+                    <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Structure" name="group_struct" context="{'group_by': 'struct_id'}"/>
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_view_hr_payslip_form" model="ir.actions.act_window">
+        <field name="name">Payslips</field>
+        <field name="res_model">hr.payslip</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_hr_payslip_filter"/>
+        <field name="context">{}</field>
+    </record>
+</odoo>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form_ages_account_dimensions" model="ir.ui.view">
+        <field name="name">account.move.form.ages.account.dimensions</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='header_left_group']/label[@for='partner_id'][1]" position="attributes">
+                <attribute name="string">Client</attribute>
+            </xpath>
+            <!-- Left: Active Company + Contract + Project-Wise (pairs with Contract) -->
+            <xpath expr="//group[@id='header_left_group']" position="inside">
+                <field name="ages_sub_company_id"
+                         readonly="state != 'draft'"
+                         domain="[('company_id', '=', company_id)]"
+                         options="{'no_create': True}"/>
+                <field name="ages_contract_id"
+                         readonly="state != 'draft'"
+                         domain="[('company_id', '=', company_id)]"
+                         options="{'no_create': True}"/>
+                <field name="ages_project_wise_contract" readonly="1"
+                         invisible="not ages_contract_id"/>
+                <field name="ages_contract_description" readonly="1" class="fw-bold"
+                         invisible="not ages_contract_id"/>
+            </xpath>
+            <!-- Right: Project + Analytic after journal -->
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <field name="ages_project_id"
+                         readonly="state != 'draft'"
+                         domain="[('company_id', 'in', [company_id, False])]"
+                         options="{'no_create': True}"
+                         context="{'default_company_id': company_id}"/>
+                <field name="ages_analytic_account_id"
+                         readonly="state != 'draft'"
+                         options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_tree_ages_client_label" model="ir.ui.view">
+        <field name="name">account.invoice.list.ages.client.label</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_partner_display_name'][2]" position="attributes">
+                <attribute name="string">Client</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_form_ages_running_bill_wht_display" model="ir.ui.view">
+        <field name="name">account.move.form.ages.running.bill.wht.display</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="ages_running_bills.view_move_form_ages_running_bill"/>
+        <field name="priority">35</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ages_running_bill_id']" position="after">
+                <field name="ages_wth_amount_display" readonly="1"
+                         invisible="move_type not in ('out_invoice', 'out_refund') or not ages_running_bill_id"/>
+                <field name="ages_wth_on_sales_tax_display" readonly="1"
+                         invisible="move_type not in ('out_invoice', 'out_refund') or not ages_running_bill_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_deletion_audit" model="ir.ui.view">
+        <field name="name">res.config.settings.ages.deletion.audit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Deletion Audit" string="Deletion Audit"
+                     name="ages_deletion_audit" groups="base.group_system">
+                    <block title="Accountability" name="ages_deletion_audit_block">
+                        <setting id="ages_deletion_audit_enabled"
+                                 string="Log deleted business records"
+                                 help="Keep who deleted a business record, which record it was, and a useful snapshot from before deletion. Audit rows are created in the same database transaction as the delete, so a failed delete does not leave a false log.">
+                            <field name="ages_deletion_audit_enabled"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

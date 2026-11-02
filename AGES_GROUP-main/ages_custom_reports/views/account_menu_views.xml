@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account.menu_finance" model="ir.ui.menu">
+        <field name="name">Accounting</field>
+        <field name="web_icon">ages_custom_reports,static/description/account_icon.png</field>
+    </record>
+
+    <record id="account.menu_finance_receivables" model="ir.ui.menu">
+        <field name="sequence">3</field>
+    </record>
+</odoo>

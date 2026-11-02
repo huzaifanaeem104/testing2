@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_payslip_bulk_payment_wizard_form" model="ir.ui.view">
+        <field name="name">hr.payslip.bulk.payment.wizard.form</field>
+        <field name="model">hr.payslip.bulk.payment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bulk Payment">
+                <sheet>
+                    <div class="oe_title">
+                        <h2>Bulk Payment</h2>
+                    </div>
+                    <group>
+                        <group string="PAYMENT SETTINGS">
+                            <field name="payment_journal_id" options="{'no_create': True}"/>
+                            <field name="payment_date"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="SUMMARY">
+                            <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Payslips to Pay" name="payslips_to_pay">
+                            <field name="line_ids">
+                                <list edit="false" create="false" delete="true">
+                                    <field name="payslip_id"/>
+                                    <field name="employee_id"/>
+                                    <field name="partner_id"/>
+                                    <field name="account_id"/>
+                                    <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_register_payment" string="Register Payments" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Bulk Payment -->
+    <record id="action_hr_payslip_bulk_payment" model="ir.actions.server">
+        <field name="name">Bulk Payment</field>
+        <field name="model_id" ref="ages_hr_payroll.model_hr_payslip"/>
+        <field name="binding_model_id" ref="ages_hr_payroll.model_hr_payslip"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+action = records.action_open_bulk_payment_wizard()
+        </field>
+    </record>
+</odoo>
